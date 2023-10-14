@@ -9,7 +9,7 @@ import services.result.LoginRegisterResult;
 public class RegisterService {
     /**
      * Processes a register request
-     * @param request, the given RegisterRequest
+     * @param request the given RegisterRequest
      * @return LoginRegisterResult containing a username, message, and authToken
      */
     public LoginRegisterResult register(RegisterRequest request) {

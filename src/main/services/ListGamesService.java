@@ -9,7 +9,7 @@ import services.result.ListGamesResult;
 public class ListGamesService {
     /**
      * processes a list games request
-     * @param authToken, the authorized user's token
+     * @param authToken the authorized user's token
      * @return ListGamesResult, a list of all games in the database
      */
     public ListGamesResult listGames(AuthToken authToken) {

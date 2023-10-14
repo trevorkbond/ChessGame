@@ -4,15 +4,24 @@ package models;
  * User represents a User or player of a chess game
  */
 public class User {
+    /**
+     * The user's username
+     */
     private String username;
+    /**
+     * The user's password
+     */
     private String password;
+    /**
+     * The user's email
+     */
     private String email;
 
     /**
      * Constructor for a User
-     * @param username, the given username
-     * @param password, the given password
-     * @param email, the given email
+     * @param username the given username
+     * @param password the given password
+     * @param email the given email
      */
     public User(String username, String password, String email) {
         this.username = username;

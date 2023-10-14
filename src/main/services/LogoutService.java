@@ -9,7 +9,7 @@ import models.AuthToken;
 public class LogoutService {
     /**
      * Logs out the user represented by the authToken
-     * @param authToken, the given user (AuthToken)
+     * @param authToken the given user (AuthToken)
      * @return Result of the operation
      */
     public Result logout(AuthToken authToken) {

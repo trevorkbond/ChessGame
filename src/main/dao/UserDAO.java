@@ -11,11 +11,14 @@ import java.util.HashSet;
 
 public class UserDAO {
 
+    /**
+     * The set of Users in the database
+     */
     private HashSet<User> users;
 
     /**
      * Constructor for a UserDAO
-     * @param users, the given set of users
+     * @param users the given set of users
      */
     public UserDAO(HashSet<User> users) {
         this.users = users;
@@ -23,7 +26,7 @@ public class UserDAO {
 
     /**
      * Adds a user to the database
-     * @param user, the given User to add
+     * @param user the given User to add
      * @throws DataAccessException if another User with same username exists in database
      */
     public void createUser(User user) throws DataAccessException {
@@ -32,7 +35,7 @@ public class UserDAO {
 
     /**
      * Gets a user with the given username from the database
-     * @param username, the given username
+     * @param username the given username
      * @throws DataAccessException if User with given username isn't in database
      * @return the found User
      */
@@ -42,7 +45,7 @@ public class UserDAO {
 
     /**
      * Deletes the user with the given username from the database
-     * @param username, the given username
+     * @param username the given username
      * @throws DataAccessException if User with given username isn't in database
      */
     public void deleteUser(String username) throws DataAccessException {
@@ -52,7 +55,7 @@ public class UserDAO {
     /**
      * If User exists with username matching passed in User, all of found User's information is updated to that of passed
      * in user
-     * @param user, the passed in User with desired information to update to
+     * @param user the passed in User with desired information to update to
      * @throws DataAccessException if User with given username isn't in database
      */
     public void updateUser(User user) throws DataAccessException{

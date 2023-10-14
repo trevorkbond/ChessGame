@@ -4,14 +4,20 @@ package services.request;
  * LoginRequest represents a login request object containing a username and password
  */
 public class LoginRequest {
+    /**
+     * The given username
+     */
     private String username;
+    /**
+     * The given password
+     */
     private String password;
 
     /**
      * Constructor for a LoginRequest
      *
-     * @param username, the given username
-     * @param password, the given password
+     * @param username the given username
+     * @param password the given password
      */
     public LoginRequest(String username, String password) {
         this.username = username;

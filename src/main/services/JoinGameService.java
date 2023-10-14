@@ -11,7 +11,7 @@ import services.result.Result;
 public class JoinGameService {
     /**
      * Processes a join game request
-     * @param request, the given JoinGameRequest
+     * @param request the given JoinGameRequest
      * @return the Result of the operation
      */
     public Result joinGame(JoinGameRequest request) {
