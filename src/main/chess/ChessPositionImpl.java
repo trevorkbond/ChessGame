@@ -56,6 +56,6 @@ public class ChessPositionImpl implements ChessPosition {
 
     @Override
     public String toString() {
-        return String.format("row: %d, column: %d", row, column);
+        return String.format("(%d, %d)", row, column);
     }
 }

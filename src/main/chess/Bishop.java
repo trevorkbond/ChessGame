@@ -13,7 +13,6 @@ public class Bishop extends ChessPieceImpl {
         return getMoves(board, position, getTeamColor());
     }
     private ArrayList<ChessMove> getMoves(ChessBoard board, ChessPositionImpl position, ChessGame.TeamColor color) {
-        System.out.println("Position is (outside while): " + position);
         ArrayList<ChessMove> moves = new ArrayList<>();
         moves.addAll(moveUntil(board, position, color, 1, 1));
         moves.addAll(moveUntil(board, position, color, -1, 1));

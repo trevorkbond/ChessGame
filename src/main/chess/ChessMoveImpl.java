@@ -26,11 +26,7 @@ public class ChessMoveImpl implements chess.ChessMove {
 
     @Override
     public String toString() {
-        return "ChessMoveImpl{" +
-                "startPosition=" + startPosition +
-                ", endPosition=" + endPosition +
-                ", promotionPiece=" + promotionPiece +
-                '}';
+        return startPosition.toString() + " -> " + endPosition.toString();
     }
 
     @Override

@@ -15,7 +15,7 @@ public class TestFactory {
     }
 
     public static ChessGame getNewGame(){
-		return null;
+		return new ChessGameImpl();
     }
 
     public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
@@ -26,7 +26,6 @@ public class TestFactory {
             case QUEEN -> new Queen(pieceColor, type);
             case ROOK -> new Rook(pieceColor, type);
             case BISHOP -> new Bishop(pieceColor, type);
-            default -> null;
         };
     }
 

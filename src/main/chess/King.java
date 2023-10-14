@@ -18,14 +18,12 @@ public class King extends ChessPieceImpl {
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 if (!(i == 0 && j == 0)) {
-                    System.out.println("i: " + i + " j: " + j);
                     if (!nullOrTeammate(board, position, color, i, j)) {
                         moves.add(new ChessMoveImpl(position, position.getMixedMove(i, j), null));
                     }
                 }
             }
         }
-        System.out.println(moves);
         return moves;
     }
     private boolean nullOrTeammate(ChessBoard board, ChessPositionImpl position, ChessGame.TeamColor color, int rowMove, int colMove) {

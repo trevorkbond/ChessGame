@@ -12,8 +12,6 @@ public class Knight extends ChessPieceImpl {
 
     @Override
     public ArrayList<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        System.out.println("Current position is " + myPosition.toString());
-        System.out.println("Pawn's color is: " + getTeamColor().toString());
         ChessPositionImpl position = (ChessPositionImpl) myPosition;
         ArrayList<ChessMove> moves = pieceMovesHelper(board, position, getTeamColor(), 2, 1);
         moves.addAll(pieceMovesHelper(board, position, getTeamColor(), 2, -1));
@@ -23,7 +21,6 @@ public class Knight extends ChessPieceImpl {
         moves.addAll(pieceMovesHelper(board, position, getTeamColor(), -1, -2));
         moves.addAll(pieceMovesHelper(board, position, getTeamColor(), -2, 1));
         moves.addAll(pieceMovesHelper(board, position, getTeamColor(), -2, -1));
-        System.out.println("pieceMoves returning: " + moves);
         return moves;
     }
 
