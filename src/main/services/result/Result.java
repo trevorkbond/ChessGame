@@ -5,6 +5,9 @@ package services.result;
  * so that message (String) is stored here
  */
 public abstract class Result {
+    /**
+     * The message of the Result as a string is shared by every Result subobject.
+     */
     private String message;
 
     /**

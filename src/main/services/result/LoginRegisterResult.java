@@ -5,7 +5,13 @@ package services.result;
  * These are shared because the response body of the login and register API is the same.
  */
 public class LoginRegisterResult extends Result {
+    /**
+     * A String representing the resulting authToken
+     */
     private String authToken;
+    /**
+     * A String representing the resulting userName
+     */
     private String username;
 
     /**

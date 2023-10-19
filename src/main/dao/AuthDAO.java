@@ -26,7 +26,7 @@ public class AuthDAO {
 
     /**
      * Adds the given token to the database
-     * @param token the given AuthToken
+     * @param token the given AuthToken to add
      * @throws DataAccessException if given token already in database
      */
     public void addToken(AuthToken token) throws DataAccessException {
@@ -40,5 +40,15 @@ public class AuthDAO {
      */
     public void deleteToken(AuthToken token) throws DataAccessException {
 
+    }
+
+    /**
+     * Finds and retrieves the given token from the database
+     * @param token the given token to retrieve
+     * @return the found AuthToken
+     * @throws DataAccessException if given token isn't in database
+     */
+    public AuthToken findToken(AuthToken token) throws DataAccessException {
+        return null;
     }
 }

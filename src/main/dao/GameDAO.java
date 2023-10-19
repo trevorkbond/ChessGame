@@ -44,6 +44,15 @@ public class GameDAO {
     }
 
     /**
+     * A method that retrieves all games from the database
+     * @return a HashSet of all the games
+     * @throws DataAccessException if there are no games in the database
+     */
+    public HashSet<Game> findAll() throws DataAccessException {
+        return null;
+    }
+
+    /**
      * Reserves a "spot" for a player in a game - the User with given username takes either whitePlayer or blackPlayer
      * @param game the given game to reserve a spot in
      * @param playerColor the desired color for the User to claim
@@ -61,7 +70,7 @@ public class GameDAO {
      * @param chessGame the new name to update to
      * @throws DataAccessException if no game of the given gameID exists
      */
-    public void updateName(int gameID, String chessGame) throws DataAccessException {
+    public void updateGame(int gameID, String chessGame) throws DataAccessException {
 
     }
 

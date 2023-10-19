@@ -5,11 +5,11 @@ package services.request;
  */
 public class LoginRequest {
     /**
-     * The given username
+     * The username of the login User
      */
     private String username;
     /**
-     * The given password
+     * The password of the login User
      */
     private String password;
 

@@ -5,7 +5,7 @@ package services.request;
  */
 public class CreateGameRequest {
     /**
-     * The game's name
+     * The game's name, a String
      */
     private String gameName;
 
