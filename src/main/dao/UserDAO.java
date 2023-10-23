@@ -15,7 +15,7 @@ public class UserDAO {
     /**
      * The set of Users in the database
      */
-    private static HashSet<User> users;
+    private HashSet<User> users;
 
     /**
      * Employing Singleton method to ensure only one UserDAO is ever created
@@ -77,5 +77,12 @@ public class UserDAO {
      */
     public void updateUser(User user) throws DataAccessException{
 
+    }
+
+    /**
+     * Clears all users from the database
+     */
+    public void clearUsers() throws DataAccessException {
+        users.clear();
     }
 }

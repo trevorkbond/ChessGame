@@ -83,4 +83,11 @@ public class AuthDAO {
             return token;
         }
     }
+
+    /**
+     * Clears all tokens from the database
+     */
+    public void clearTokens() throws DataAccessException {
+        tokens.clear();
+    }
 }

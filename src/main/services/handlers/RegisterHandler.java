@@ -35,6 +35,12 @@ public class RegisterHandler extends Handler {
      */
     private RegisterHandler() {}
 
+    /**
+     * Handles a register request from the Server
+     * @param request the HTTP request
+     * @param response the HTTP response
+     * @return a JSON string representing a LoginRegisterResult object
+     */
     public String handleRequest(Request request, Response response) {
         try {
             if (request.requestMethod().equalsIgnoreCase("post")) {

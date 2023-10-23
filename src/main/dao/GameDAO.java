@@ -17,11 +17,25 @@ public class GameDAO {
     private HashSet<Game> games;
 
     /**
-     * Constructor for a GameDAO
-     * @param games the given set of games
+     * Using Singleton method
      */
-    public GameDAO(HashSet<Game> games) {
-        this.games = games;
+    private static GameDAO instance;
+    /**
+     * Constructor for a GameDAO, private to ensure no direct instantiation
+     */
+    private GameDAO() {
+        games = new HashSet<>();
+    }
+
+    /**
+     * getInstance to implement singleton method
+     * @return the sole instance of GameDAO
+     */
+    public static GameDAO getInstance() {
+        if (instance == null) {
+            instance = new GameDAO();
+        }
+        return instance;
     }
 
     /**
@@ -81,5 +95,12 @@ public class GameDAO {
      */
     public void deleteGame(int gameID) throws DataAccessException {
 
+    }
+
+    /**
+     * Clears all of the games from the database
+     */
+    public void clearGames() throws DataAccessException {
+        games.clear();
     }
 }

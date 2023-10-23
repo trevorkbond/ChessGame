@@ -1,5 +1,6 @@
 package server;
 
+import services.handlers.ClearHandler;
 import services.handlers.RegisterHandler;
 import spark.Spark;
 
@@ -19,8 +20,10 @@ public class Server {
         Spark.port(8080);
         Spark.externalStaticFileLocation("/Users/trevorbond/cs240/ChessGame/web");
 
-        RegisterHandler registerHandler= RegisterHandler.getInstance();
+        RegisterHandler registerHandler = RegisterHandler.getInstance();
+        ClearHandler clearHandler = ClearHandler.getInstance();
 
         Spark.post("/user", (registerHandler::handleRequest));
+        Spark.delete("/db", (clearHandler::handleRequest));
     }
 }

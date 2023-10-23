@@ -4,7 +4,7 @@ package services.result;
  * The Result class is a superclass that is extended on by other Result classes. All results share an error message as a field,
  * so that message (String) is stored here
  */
-public abstract class Result {
+public class Result {
     /**
      * The message of the Result as a string is shared by every Result subobject.
      */
