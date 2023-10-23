@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Objects;
+
 /**
  * AuthToken represents an authentication token containing a username and authToken (both Strings)
  */
@@ -12,6 +14,18 @@ public class AuthToken {
      * The user's authToken
      */
     private String authToken;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AuthToken authToken1)) return false;
+        return Objects.equals(getUsername(), authToken1.getUsername()) && Objects.equals(getAuthToken(), authToken1.getAuthToken());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsername(), getAuthToken());
+    }
 
     /**
      * Constructor for an AuthToken

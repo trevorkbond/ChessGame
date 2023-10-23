@@ -9,6 +9,13 @@ public class RegisterRequest extends LoginRequest {
      */
     private String email;
 
+    @Override
+    public String toString() {
+        return super.toString() + "\nRegisterRequest{" +
+                "email='" + email + '\'' +
+                '}';
+    }
+
     /**
      * Constructor for a RegisterRequest
      * @param username the given username
