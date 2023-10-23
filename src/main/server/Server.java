@@ -19,6 +19,8 @@ public class Server {
         Spark.port(8080);
         Spark.externalStaticFileLocation("/Users/trevorbond/cs240/ChessGame/web");
 
-        Spark.post("/user", ((request, response) -> new RegisterHandler().handleRequest(request, response)));
+        RegisterHandler registerHandler= RegisterHandler.getInstance();
+
+        Spark.post("/user", (registerHandler::handleRequest));
     }
 }

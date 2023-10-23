@@ -17,4 +17,10 @@ public class Handler {
         Gson gson = builder.create();
         return gson.fromJson(request.body(), desiredClass);
     }
+
+    public String objectToJson(Object object) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.toJson(object);
+    }
 }

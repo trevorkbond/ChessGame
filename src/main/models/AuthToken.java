@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * AuthToken represents an authentication token containing a username and authToken (both Strings)
@@ -36,6 +37,15 @@ public class AuthToken {
     public AuthToken(String username, String authToken) {
         this.username = username;
         this.authToken = authToken;
+    }
+
+    /**
+     * Constructor for an AuthToken that generates random authToken automatically
+     * @param username the given username
+     */
+    public AuthToken(String username) {
+        this.username = username;
+        authToken = UUID.randomUUID().toString();
     }
 
     public String getUsername() {

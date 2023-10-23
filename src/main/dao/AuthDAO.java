@@ -19,24 +19,31 @@ public class AuthDAO {
     private HashSet<AuthToken> tokens;
 
     /**
-     * Constructor for an AuthDAO
-     * @param tokens the given set of tokens
+     * Using Singleton method, only instance of AuthDAO that will ever exist
      */
-    public AuthDAO(HashSet<AuthToken> tokens) {
-        this.tokens = tokens;
-    }
+    private static AuthDAO instance;
 
     public HashSet<AuthToken> getTokens() {
         return tokens;
     }
 
     /**
-     * Default constructor for AuthDAO with no given hash set
+     * Default constructor for AuthDAO with no given hash set and private to ensure no outside instantiation
      */
-    public AuthDAO() {
+    private AuthDAO() {
         tokens = new HashSet<>();
     }
 
+    /**
+     * Get instance for singleton pattern
+     * @return the sole instance of AuthDAO
+     */
+    public static AuthDAO getInstance() {
+        if (instance == null) {
+            instance = new AuthDAO();
+        }
+        return instance;
+    }
     /**
      * Adds the given token to the database
      * @param token the given AuthToken to add

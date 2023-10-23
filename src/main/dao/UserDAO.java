@@ -3,6 +3,7 @@ package dao;
 import dataAccess.DataAccessException;
 import models.User;
 
+import javax.xml.crypto.Data;
 import java.util.HashSet;
 
 /**
@@ -14,23 +15,39 @@ public class UserDAO {
     /**
      * The set of Users in the database
      */
-    private HashSet<User> users;
+    private static HashSet<User> users;
 
     /**
-     * Constructor for a UserDAO
-     * @param users the given set of users
+     * Employing Singleton method to ensure only one UserDAO is ever created
      */
-    public UserDAO(HashSet<User> users) {
-        this.users = users;
-    }
+    private static UserDAO instance;
 
+    /**
+     * getInstance ensures only one userDAO is ever created
+     * @return the sole instance of userDAO
+     */
+    public static UserDAO getInstance() {
+        if (instance == null) {
+            instance = new UserDAO();
+        }
+        return instance;
+    }
+    /**
+     * Default constructor for a UserDAO with no parameters private to ensure no direct instantiation
+     */
+    private UserDAO() {
+        users = new HashSet<>();
+    }
     /**
      * Adds a user to the database
      * @param user the given User to add
      * @throws DataAccessException if another User with same username exists in database
      */
     public void createUser(User user) throws DataAccessException {
-
+        if (users.contains(user)) {
+            throw new DataAccessException("Error: already taken");
+        }
+        users.add(user);
     }
 
     /**

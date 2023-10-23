@@ -6,13 +6,13 @@ package services.result;
  */
 public class LoginRegisterResult extends Result {
     /**
-     * A String representing the resulting authToken
-     */
-    private String authToken;
-    /**
      * A String representing the resulting userName
      */
     private String username;
+    /**
+     * A String representing the resulting authToken
+     */
+    private String authToken;
 
     /**
      * Constructor for a LoginRegisterResult
