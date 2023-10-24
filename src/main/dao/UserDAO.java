@@ -50,6 +50,10 @@ public class UserDAO {
         users.add(user);
     }
 
+    public HashSet<User> getUsers() {
+        return users;
+    }
+
     /**
      * Gets a user with the given username from the database
      * @param username the given username

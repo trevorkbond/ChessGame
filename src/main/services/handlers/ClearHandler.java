@@ -32,6 +32,12 @@ public class ClearHandler extends Handler {
         return instance;
     }
 
+    /**
+     * Handles a clear API request
+     * @param request the passed in request
+     * @param response the passed in response
+     * @return a JSON string detailing success or error of result
+     */
     public String handleRequest(Request request, Response response) {
         try {
             if (request.requestMethod().equalsIgnoreCase("delete")) {
@@ -41,13 +47,12 @@ public class ClearHandler extends Handler {
                 return objectToJson(result);
             } else {
                 response.status(400);
-                LoginRegisterResult resultObject = new LoginRegisterResult("Error: bad request", null, null);
-                return objectToJson(resultObject);
+                return getErrorMessage("Error: bad request");
             }
         } catch (DataAccessException e) {
             response.status(500);
-            Result result = new Result("Error: There was a DAO exception somewhere in clear methods");
-            return objectToJson(result);
+            return getErrorMessage("Error: There was a DAO exception somewhere in clear methods");
         }
     }
+
 }

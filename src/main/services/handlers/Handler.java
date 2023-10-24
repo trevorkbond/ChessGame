@@ -1,5 +1,7 @@
 package services.handlers;
 import com.google.gson.GsonBuilder;
+import services.result.LoginRegisterResult;
+import services.result.Result;
 import spark.Request;
 import spark.Spark;
 import com.google.gson.Gson;
@@ -18,9 +20,24 @@ public class Handler {
         return gson.fromJson(request.body(), desiredClass);
     }
 
+    /**
+     * Converts an object to a JSON string
+     * @param object the given object to serialize
+     * @return the JSON string
+     */
     public String objectToJson(Object object) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.toJson(object);
+    }
+
+    /**
+     * Generates a custom error message JSON string
+     * @param message the given message
+     * @return the error message formatted as JSON
+     */
+    public String getErrorMessage(String message) {
+        Result resultObject = new Result(message);
+        return objectToJson(resultObject);
     }
 }

@@ -51,18 +51,15 @@ public class RegisterHandler extends Handler {
                 return objectToJson(resultObject);
             } else {
                 response.status(400);
-                LoginRegisterResult resultObject = new LoginRegisterResult("Error: bad request", null, null);
-                return objectToJson(resultObject);
+                return getErrorMessage("Error: bad request");
             }
         } catch (DataAccessException e) {
             if (e.getMessage().equals("Error: already taken")) {
                 response.status(403);
-                LoginRegisterResult resultObject = new LoginRegisterResult("Error: already taken", null, null);
-                return objectToJson(resultObject);
+                return getErrorMessage("Error: already taken");
             } else {
                 response.status(500);
-                LoginRegisterResult resultObject = new LoginRegisterResult("Error: I'm unsure what happened here", null, null);
-                return objectToJson(resultObject);
+                return getErrorMessage("Error: I'm unsure what happened here");
             }
         }
     }
