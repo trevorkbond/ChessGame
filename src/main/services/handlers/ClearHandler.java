@@ -47,9 +47,7 @@ public class ClearHandler extends Handler {
                 response.body(objectToJson(result));
                 return objectToJson(result);
             } else {
-                response.status(400);
-                response.body(getErrorMessage("Error: bad request"));
-                return getErrorMessage("Error: bad request");
+                return setBadRequest(response);
             }
         } catch (DataAccessException e) {
             response.status(500);

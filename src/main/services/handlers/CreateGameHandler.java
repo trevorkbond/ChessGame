@@ -41,15 +41,11 @@ public class CreateGameHandler extends Handler {
                 response.body(objectToJson(result));
                 return objectToJson(result);
             } else {
-                response.status(400);
-                response.body(getErrorMessage("Error: bad request"));
-                return getErrorMessage("Error: bad request");
+                return setBadRequest(response);
             }
         } catch (DataAccessException e) {
             if (e.getMessage().equals("Error: unauthorized")) {
-                response.status(403);
-                response.body(getErrorMessage("Error: unauthorized"));
-                return getErrorMessage("Error: unauthorized");
+                return setUnauthorizedRequest(response);
             } else {
                 response.status(500);
                 response.body(getErrorMessage("Error: I'm unsure what happened here"));

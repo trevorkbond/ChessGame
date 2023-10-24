@@ -2,7 +2,6 @@ package services.handlers;
 
 
 import dataAccess.DataAccessException;
-import org.eclipse.jetty.util.log.Log;
 import services.RegisterService;
 import services.request.RegisterRequest;
 import services.result.LoginRegisterResult;
@@ -51,9 +50,7 @@ public class RegisterHandler extends Handler {
                 response.body(objectToJson(resultObject));
                 return objectToJson(resultObject);
             } else {
-                response.status(400);
-                response.body(getErrorMessage("Error: bad request"));
-                return getErrorMessage("Error: bad request");
+                return setBadRequest(response);
             }
         } catch (DataAccessException e) {
             if (e.getMessage().equals("Error: already taken")) {
@@ -61,9 +58,7 @@ public class RegisterHandler extends Handler {
                 response.body(getErrorMessage("Error: already taken"));
                 return getErrorMessage("Error: already taken");
             } else if (e.getMessage().equals("Error: bad request")) {
-                response.status(400);
-                response.body(getErrorMessage("Error: bad request"));
-                return getErrorMessage("Error: bad request");
+                return setBadRequest(response);
             } else {
                 response.status(500);
                 response.body(getErrorMessage("Error: I'm unsure what happened here"));
@@ -71,4 +66,6 @@ public class RegisterHandler extends Handler {
             }
         }
     }
+
+
 }

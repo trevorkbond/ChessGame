@@ -64,7 +64,7 @@ public class AuthDAO {
      */
     public void deleteToken(AuthToken token) throws DataAccessException {
         if (!tokens.contains(token)) {
-            throw new DataAccessException("The given token isn't in the database");
+            throw new DataAccessException("Error: description");
         } else {
             tokens.remove(token);
         }
