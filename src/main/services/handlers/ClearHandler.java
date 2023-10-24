@@ -44,13 +44,16 @@ public class ClearHandler extends Handler {
                 ClearService service = new ClearService();
                 Result result = service.clear();
                 response.status(200);
+                response.body(objectToJson(result));
                 return objectToJson(result);
             } else {
                 response.status(400);
+                response.body(getErrorMessage("Error: bad request"));
                 return getErrorMessage("Error: bad request");
             }
         } catch (DataAccessException e) {
             response.status(500);
+            response.body(getErrorMessage("Error: There was a DAO exception somewhere in clear methods"));
             return getErrorMessage("Error: There was a DAO exception somewhere in clear methods");
         }
     }

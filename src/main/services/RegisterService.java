@@ -34,6 +34,9 @@ public class RegisterService {
      */
     public LoginRegisterResult register(RegisterRequest request) throws DataAccessException {
         User user = new User(request);
+        if (user.getUsername() == null || user.getPassword() == null || user.getEmail() == null) {
+            throw new DataAccessException("Error: bad request");
+        }
         userDAO.createUser(user);
         AuthToken token = new AuthToken(user.getUsername());
         authDAO.addToken(token);

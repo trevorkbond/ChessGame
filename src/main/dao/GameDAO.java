@@ -44,7 +44,10 @@ public class GameDAO {
      * @throws DataAccessException if game with same ID already exists within the database
      */
     public void createGame(Game game) throws DataAccessException {
-
+        if (games.contains(game)) {
+            throw new DataAccessException("Error: game already in database");
+        }
+        games.add(game);
     }
 
     /**

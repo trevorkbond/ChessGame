@@ -1,6 +1,9 @@
 package models;
 
 import chess.ChessGame;
+import chess.ChessGameImpl;
+
+import java.util.Objects;
 
 /**
  * Game represents a chess game that has been played or is being played. Each game has a unique game ID and contains
@@ -15,6 +18,10 @@ public class Game {
      * the gameID, an integer
      */
     private int gameID;
+    /**
+     * static instance of ID to assign ID's incrementally
+     */
+    private static int nextID = 1;
     /**
      * The username for the player on white team
      */
@@ -43,6 +50,32 @@ public class Game {
         this.whiteUsername = whiteUsername;
         this.blackUsername = blackUsername;
         this.gameName = gameName;
+    }
+
+    public int getGameID() {
+        return gameID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Game game)) return false;
+        return gameID == game.gameID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameID);
+    }
+
+    /**
+     * Constructor that is only passed in a gameName and assigned a unique ID from static private member
+     * @param gameName
+     */
+    public Game(String gameName) {
+        game = new ChessGameImpl();
+        gameID = nextID;
+        nextID++;
     }
 
     public ChessGame getGame() {

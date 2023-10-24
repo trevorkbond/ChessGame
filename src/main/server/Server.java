@@ -1,6 +1,7 @@
 package server;
 
 import services.handlers.ClearHandler;
+import services.handlers.CreateGameHandler;
 import services.handlers.RegisterHandler;
 import spark.Spark;
 
@@ -22,8 +23,10 @@ public class Server {
 
         RegisterHandler registerHandler = RegisterHandler.getInstance();
         ClearHandler clearHandler = ClearHandler.getInstance();
+        CreateGameHandler createGameHandler = CreateGameHandler.getInstance();
 
         Spark.post("/user", (registerHandler::handleRequest));
         Spark.delete("/db", (clearHandler::handleRequest));
+        Spark.post("/game", (createGameHandler::handleRequest));
     }
 }

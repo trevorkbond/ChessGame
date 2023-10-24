@@ -20,12 +20,12 @@ public class AuthToken {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AuthToken authToken1)) return false;
-        return Objects.equals(getUsername(), authToken1.getUsername()) && Objects.equals(getAuthToken(), authToken1.getAuthToken());
+        return Objects.equals(getAuthToken(), authToken1.getAuthToken());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUsername(), getAuthToken());
+        return Objects.hash(getAuthToken());
     }
 
     /**

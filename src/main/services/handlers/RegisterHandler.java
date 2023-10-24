@@ -48,17 +48,25 @@ public class RegisterHandler extends Handler {
                 RegisterService service = new RegisterService();
                 LoginRegisterResult resultObject = service.register(requestObject);
                 response.status(200);
+                response.body(objectToJson(resultObject));
                 return objectToJson(resultObject);
             } else {
                 response.status(400);
+                response.body(getErrorMessage("Error: bad request"));
                 return getErrorMessage("Error: bad request");
             }
         } catch (DataAccessException e) {
             if (e.getMessage().equals("Error: already taken")) {
                 response.status(403);
+                response.body(getErrorMessage("Error: already taken"));
                 return getErrorMessage("Error: already taken");
+            } else if (e.getMessage().equals("Error: bad request")) {
+                response.status(400);
+                response.body(getErrorMessage("Error: bad request"));
+                return getErrorMessage("Error: bad request");
             } else {
                 response.status(500);
+                response.body(getErrorMessage("Error: I'm unsure what happened here"));
                 return getErrorMessage("Error: I'm unsure what happened here");
             }
         }

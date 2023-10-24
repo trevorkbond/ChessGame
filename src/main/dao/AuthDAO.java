@@ -78,7 +78,7 @@ public class AuthDAO {
      */
     public AuthToken findToken(AuthToken token) throws DataAccessException {
         if (!tokens.contains(token)) {
-            throw new DataAccessException("The given token isn't in the database");
+            throw new DataAccessException("Error: unauthorized");
         } else {
             return token;
         }
