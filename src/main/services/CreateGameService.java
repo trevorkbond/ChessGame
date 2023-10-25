@@ -33,7 +33,6 @@ public class CreateGameService {
 
     /**
      * Creates a game from a CreateGameRequest
-     *
      * @param request the given request
      * @param request the given request
      * @return the CreateGameResult of the operation

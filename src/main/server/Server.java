@@ -24,11 +24,13 @@ public class Server {
         CreateGameHandler createGameHandler = CreateGameHandler.getInstance();
         LogoutHandler logoutHandler = LogoutHandler.getInstance();
         LoginHandler loginHandler = LoginHandler.getInstance();
+        JoinGameHandler joinGameHandler = JoinGameHandler.getInstance();
 
         Spark.post("/user", (registerHandler::handleRequest));
         Spark.delete("/db", (clearHandler::handleRequest));
         Spark.post("/game", (createGameHandler::handleRequest));
         Spark.delete("/session", (logoutHandler::handleRequest));
         Spark.post("/session", (loginHandler::handleRequest));
+        Spark.put("/game", (joinGameHandler::handleRequest));
     }
 }

@@ -4,6 +4,7 @@ import chess.ChessGame;
 import dataAccess.DataAccessException;
 import models.Game;
 
+import javax.xml.crypto.Data;
 import java.util.HashSet;
 
 /**
@@ -61,7 +62,12 @@ public class GameDAO {
      * @throws DataAccessException if Game of given gameID isn't in database
      */
     public Game findGame(int gameID) throws DataAccessException {
-        return null;
+        for (Game game : games) {
+            if (game.getGameID() == gameID) {
+                return game;
+            }
+        }
+        throw new DataAccessException("Error: bad request");
     }
 
     /**
@@ -75,14 +81,23 @@ public class GameDAO {
 
     /**
      * Reserves a "spot" for a player in a game - the User with given username takes either whitePlayer or blackPlayer
-     * @param game the given game to reserve a spot in
+     * @param gameID the given gameID to
      * @param playerColor the desired color for the User to claim
      * @param username the given username
      * @throws DataAccessException if the game isn't found, if spot is already taken or if a User with given
      *                              username doesn't exist
      */
-    public void claimSpot(Game game, ChessGame.TeamColor playerColor, String username) throws DataAccessException {
-
+    public void claimSpot(int gameID, ChessGame.TeamColor playerColor, String username) throws DataAccessException {
+        Game foundGame = findGame(gameID);
+        if (playerColor == ChessGame.TeamColor.WHITE && foundGame.getWhiteUsername() == null) {
+            System.out.println("Adding " + username + " to game of ID " + gameID);
+            foundGame.setWhiteUsername(username);
+        } else if (playerColor == ChessGame.TeamColor.BLACK && foundGame.getBlackUsername() == null) {
+            System.out.println("Adding " + username + " to game of ID " + gameID);
+            foundGame.setBlackUsername(username);
+        } else if (playerColor != null){
+            throw new DataAccessException("Error: already taken");
+        }
     }
 
     /**

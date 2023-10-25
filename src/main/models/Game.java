@@ -18,6 +18,23 @@ public class Game {
      * the gameID, an integer
      */
     private int gameID;
+
+    public void setWhiteUsername(String whiteUsername) {
+        this.whiteUsername = whiteUsername;
+    }
+
+    public void setBlackUsername(String blackUsername) {
+        this.blackUsername = blackUsername;
+    }
+
+    public String getWhiteUsername() {
+        return whiteUsername;
+    }
+
+    public String getBlackUsername() {
+        return blackUsername;
+    }
+
     /**
      * static instance of ID to assign ID's incrementally
      */
