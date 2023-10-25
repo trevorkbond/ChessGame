@@ -4,13 +4,13 @@ import dao.AuthDAO;
 import dao.GameDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import services.ClearService;
 import services.CreateGameService;
 import services.request.CreateGameRequest;
-import spark.Request;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CreateGameServiceTest {
 

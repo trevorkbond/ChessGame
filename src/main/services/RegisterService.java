@@ -20,6 +20,7 @@ public class RegisterService {
      * RegisterService has access to the set of authTokens represented by authDAO
      */
     private AuthDAO authDAO;
+
     /**
      * Default constructor for RegisterService that initializes the userDAO and authDAO object
      */
@@ -27,8 +28,10 @@ public class RegisterService {
         userDAO = UserDAO.getInstance();
         authDAO = AuthDAO.getInstance();
     }
+
     /**
      * Processes a register request
+     *
      * @param request the given RegisterRequest
      * @return LoginRegisterResult containing a username, message, and authToken
      */

@@ -2,7 +2,6 @@ package services.handlers;
 
 import dataAccess.DataAccessException;
 import services.ClearService;
-import services.result.LoginRegisterResult;
 import services.result.Result;
 import spark.Request;
 import spark.Response;
@@ -19,10 +18,12 @@ public class ClearHandler extends Handler {
     /**
      * Private constructor to ensure no direct instantiation
      */
-    private ClearHandler() {}
+    private ClearHandler() {
+    }
 
     /**
      * Retrieves static instance of ClearHandler
+     *
      * @return the sole instance of the class
      */
     public static ClearHandler getInstance() {
@@ -34,7 +35,8 @@ public class ClearHandler extends Handler {
 
     /**
      * Handles a clear API request
-     * @param request the passed in request
+     *
+     * @param request  the passed in request
      * @param response the passed in response
      * @return a JSON string detailing success or error of result
      */

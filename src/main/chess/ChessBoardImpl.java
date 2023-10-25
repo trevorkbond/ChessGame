@@ -1,16 +1,14 @@
 package chess;
 
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
-
 import java.util.Arrays;
 
 public class ChessBoardImpl implements chess.ChessBoard {
     private ChessPiece[][] boardArray;
+
     public ChessBoardImpl() {
         boardArray = new ChessPiece[8][8];
     }
+
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
         boardArray[position.getRow() - 1][position.getColumn() - 1] = piece;
@@ -24,12 +22,18 @@ public class ChessBoardImpl implements chess.ChessBoard {
                     ChessPositionImpl position = new ChessPositionImpl(i, j);
                     ChessPiece piece = board.getPiece(position);
                     switch (piece.getPieceType()) {
-                        case PAWN -> cloneBoard.addPiece(position, new Pawn(piece.getTeamColor(), ChessPiece.PieceType.PAWN));
-                        case ROOK -> cloneBoard.addPiece(position, new Rook(piece.getTeamColor(), ChessPiece.PieceType.ROOK));
-                        case BISHOP -> cloneBoard.addPiece(position, new Bishop(piece.getTeamColor(), ChessPiece.PieceType.BISHOP));
-                        case KNIGHT -> cloneBoard.addPiece(position, new Knight(piece.getTeamColor(), ChessPiece.PieceType.KNIGHT));
-                        case QUEEN -> cloneBoard.addPiece(position, new Queen(piece.getTeamColor(), ChessPiece.PieceType.QUEEN));
-                        case KING -> cloneBoard.addPiece(position, new King(piece.getTeamColor(), ChessPiece.PieceType.KING));
+                        case PAWN ->
+                                cloneBoard.addPiece(position, new Pawn(piece.getTeamColor(), ChessPiece.PieceType.PAWN));
+                        case ROOK ->
+                                cloneBoard.addPiece(position, new Rook(piece.getTeamColor(), ChessPiece.PieceType.ROOK));
+                        case BISHOP ->
+                                cloneBoard.addPiece(position, new Bishop(piece.getTeamColor(), ChessPiece.PieceType.BISHOP));
+                        case KNIGHT ->
+                                cloneBoard.addPiece(position, new Knight(piece.getTeamColor(), ChessPiece.PieceType.KNIGHT));
+                        case QUEEN ->
+                                cloneBoard.addPiece(position, new Queen(piece.getTeamColor(), ChessPiece.PieceType.QUEEN));
+                        case KING ->
+                                cloneBoard.addPiece(position, new King(piece.getTeamColor(), ChessPiece.PieceType.KING));
                     }
                 }
             }
@@ -75,11 +79,13 @@ public class ChessBoardImpl implements chess.ChessBoard {
         addPiece(new ChessPositionImpl(8, 7), new Knight(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
         addPiece(new ChessPositionImpl(8, 8), new Rook(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
     }
+
     private void clearBoard() {
         for (ChessPiece[] chessPieces : boardArray) {
             Arrays.fill(chessPieces, null);
         }
     }
+
     public void removePiece(ChessPosition position) {
         boardArray[position.getRow() - 1][position.getColumn() - 1] = null;
     }

@@ -14,14 +14,15 @@ public class JoinGameHandler extends Handler {
      */
     private static JoinGameHandler instance;
 
+    private JoinGameHandler() {
+    }
+
     public static JoinGameHandler getInstance() {
         if (instance == null) {
             instance = new JoinGameHandler();
         }
         return instance;
     }
-
-    private JoinGameHandler() {}
 
     public String handleRequest(Request request, Response response) {
         try {

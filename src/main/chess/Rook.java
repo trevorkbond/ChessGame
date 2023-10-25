@@ -12,6 +12,7 @@ public class Rook extends ChessPieceImpl {
         ChessPositionImpl position = (ChessPositionImpl) myPosition;
         return getMoves(board, position, getTeamColor());
     }
+
     private ArrayList<ChessMove> getMoves(ChessBoard board, ChessPositionImpl position, ChessGame.TeamColor color) {
         // all possibilities with rows increasing
         ArrayList<ChessMove> moves = new ArrayList<>();

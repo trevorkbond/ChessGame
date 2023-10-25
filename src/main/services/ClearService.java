@@ -22,8 +22,10 @@ public class ClearService {
      * ClearService has access to game database via DAO
      */
     private GameDAO gameDAO;
+
     /**
      * Clears the database, removing all Users, Games, and AuthTokens
+     *
      * @return the Result of the operation
      */
 
@@ -32,6 +34,7 @@ public class ClearService {
         userDAO = UserDAO.getInstance();
         gameDAO = GameDAO.getInstance();
     }
+
     public Result clear() throws DataAccessException {
         authDAO.clearTokens();
         userDAO.clearUsers();

@@ -33,6 +33,7 @@ public class LoginService {
 
     /**
      * Processes a login request
+     *
      * @param request a LoginRequest
      * @return LoginResult containing username and authToken
      */

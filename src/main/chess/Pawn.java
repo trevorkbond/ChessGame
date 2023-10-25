@@ -1,7 +1,5 @@
 package chess;
 
-import chess.*;
-
 import java.util.ArrayList;
 
 public class Pawn extends ChessPieceImpl {
@@ -9,6 +7,7 @@ public class Pawn extends ChessPieceImpl {
     public Pawn(ChessGame.TeamColor color, PieceType type) {
         super(color, type);
     }
+
     @Override
     public ArrayList<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPositionImpl position = (ChessPositionImpl) myPosition;
@@ -16,7 +15,7 @@ public class Pawn extends ChessPieceImpl {
         return moves;
     }
 
-    private ArrayList<ChessMove> pieceMovesHelper(ChessBoard board, ChessPositionImpl position,ChessGame.TeamColor color, int rowMove) {
+    private ArrayList<ChessMove> pieceMovesHelper(ChessBoard board, ChessPositionImpl position, ChessGame.TeamColor color, int rowMove) {
         ArrayList<ChessMove> moves = new ArrayList<>();
         int notMovedRow = 2; // this will change if we find it is actually a black piece
         int colMove = 1;

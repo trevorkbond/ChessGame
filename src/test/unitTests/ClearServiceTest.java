@@ -15,8 +15,6 @@ import services.ClearService;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ClearServiceTest {
 
     private UserDAO userDAO;

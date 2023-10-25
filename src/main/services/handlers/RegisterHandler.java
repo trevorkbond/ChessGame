@@ -19,7 +19,14 @@ public class RegisterHandler extends Handler {
     private static RegisterHandler instance;
 
     /**
+     * Private constructor to prevent direct instantiation
+     */
+    private RegisterHandler() {
+    }
+
+    /**
      * Retrieves the static instance of the RegisterHandler
+     *
      * @return instance
      */
     public static RegisterHandler getInstance() {
@@ -30,13 +37,9 @@ public class RegisterHandler extends Handler {
     }
 
     /**
-     * Private constructor to prevent direct instantiation
-     */
-    private RegisterHandler() {}
-
-    /**
      * Handles a register request from the Server
-     * @param request the HTTP request
+     *
+     * @param request  the HTTP request
      * @param response the HTTP response
      * @return a JSON string representing a LoginRegisterResult object
      */

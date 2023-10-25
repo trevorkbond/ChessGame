@@ -1,5 +1,7 @@
 package services.result;
 
+import models.Game;
+
 import java.util.HashSet;
 
 /**
@@ -10,23 +12,24 @@ public class ListGamesResult extends Result {
     /**
      * This hash set represents the list of games that is returned in the result
      */
-    private HashSet<GameResult> games;
+    private HashSet<Game> games;
 
     /**
      * Constructor for ListGameResult
+     *
      * @param message, the given error message
-     * @param games, the given set of games
+     * @param games,   the given set of games
      */
-    public ListGamesResult(String message, HashSet<GameResult> games) {
+    public ListGamesResult(String message, HashSet<Game> games) {
         super(message);
         this.games = games;
     }
 
-    public HashSet<GameResult> getGames() {
+    public HashSet<Game> getGames() {
         return games;
     }
 
-    public void setGames(HashSet<GameResult> games) {
+    public void setGames(HashSet<Game> games) {
         this.games = games;
     }
 }

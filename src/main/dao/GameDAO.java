@@ -4,7 +4,6 @@ import chess.ChessGame;
 import dataAccess.DataAccessException;
 import models.Game;
 
-import javax.xml.crypto.Data;
 import java.util.HashSet;
 
 /**
@@ -13,14 +12,14 @@ import java.util.HashSet;
 public class GameDAO {
 
     /**
+     * Using Singleton method
+     */
+    private static GameDAO instance;
+    /**
      * The set of games in the database
      */
     private HashSet<Game> games;
 
-    /**
-     * Using Singleton method
-     */
-    private static GameDAO instance;
     /**
      * Constructor for a GameDAO, private to ensure no direct instantiation
      */
@@ -30,6 +29,7 @@ public class GameDAO {
 
     /**
      * getInstance to implement singleton method
+     *
      * @return the sole instance of GameDAO
      */
     public static GameDAO getInstance() {
@@ -45,6 +45,7 @@ public class GameDAO {
 
     /**
      * Inserts a game into the database
+     *
      * @param game the game to insert
      * @throws DataAccessException if game with same ID already exists within the database
      */
@@ -57,6 +58,7 @@ public class GameDAO {
 
     /**
      * Finds a game with the given gameID in the database
+     *
      * @param gameID the given gameID
      * @return the found Game
      * @throws DataAccessException if Game of given gameID isn't in database
@@ -72,6 +74,7 @@ public class GameDAO {
 
     /**
      * A method that retrieves all games from the database
+     *
      * @return a HashSet of all the games
      * @throws DataAccessException if there are no games in the database
      */
@@ -81,11 +84,12 @@ public class GameDAO {
 
     /**
      * Reserves a "spot" for a player in a game - the User with given username takes either whitePlayer or blackPlayer
-     * @param gameID the given gameID to
+     *
+     * @param gameID      the given gameID to
      * @param playerColor the desired color for the User to claim
-     * @param username the given username
+     * @param username    the given username
      * @throws DataAccessException if the game isn't found, if spot is already taken or if a User with given
-     *                              username doesn't exist
+     *                             username doesn't exist
      */
     public void claimSpot(int gameID, ChessGame.TeamColor playerColor, String username) throws DataAccessException {
         Game foundGame = findGame(gameID);
@@ -95,14 +99,15 @@ public class GameDAO {
         } else if (playerColor == ChessGame.TeamColor.BLACK && foundGame.getBlackUsername() == null) {
             System.out.println("Adding " + username + " to game of ID " + gameID);
             foundGame.setBlackUsername(username);
-        } else if (playerColor != null){
+        } else if (playerColor != null) {
             throw new DataAccessException("Error: already taken");
         }
     }
 
     /**
      * Updates the game name of the given gameID to the given chessGame name
-     * @param gameID the given gameID
+     *
+     * @param gameID    the given gameID
      * @param chessGame the new name to update to
      * @throws DataAccessException if no game of the given gameID exists
      */
@@ -112,6 +117,7 @@ public class GameDAO {
 
     /**
      * Deletes the game of the given gameID from the database
+     *
      * @param gameID the given gameID
      * @throws DataAccessException if no game of the given gameID exists
      */

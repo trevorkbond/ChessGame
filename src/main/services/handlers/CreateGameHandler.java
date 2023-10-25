@@ -15,7 +15,14 @@ public class CreateGameHandler extends Handler {
     private static CreateGameHandler instance;
 
     /**
+     * private constructor to ensure no direct instantiation outside of getInstance
+     */
+    private CreateGameHandler() {
+    }
+
+    /**
      * getInstance method for singleton pattern
+     *
      * @return the sole instance of CreateGameHandler
      */
     public static CreateGameHandler getInstance() {
@@ -24,11 +31,6 @@ public class CreateGameHandler extends Handler {
         }
         return instance;
     }
-
-    /**
-     * private constructor to ensure no direct instantiation outside of getInstance
-     */
-    private CreateGameHandler() {}
 
     public String handleRequest(Request request, Response response) {
         try {

@@ -33,6 +33,7 @@ public class CreateGameService {
 
     /**
      * Creates a game from a CreateGameRequest
+     *
      * @param request the given request
      * @param request the given request
      * @return the CreateGameResult of the operation
@@ -46,7 +47,8 @@ public class CreateGameService {
 
     /**
      * This is an overloaded method for createGame to allow testing without creating spark Request object
-     * @param request the CreateGameRequest
+     *
+     * @param request     the CreateGameRequest
      * @param httpRequest the hardcoded string request
      * @return result
      * @throws DataAccessException if token isn't in database

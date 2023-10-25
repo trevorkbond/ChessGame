@@ -1,12 +1,10 @@
 package services.handlers;
+
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import services.result.LoginRegisterResult;
 import services.result.Result;
 import spark.Request;
 import spark.Response;
-import spark.Spark;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 /**
  * Handler is a superclass that contains code helpful for parsing JSON strings into Java objects and other shared
@@ -23,6 +21,7 @@ public class Handler {
 
     /**
      * Converts an object to a JSON string
+     *
      * @param object the given object to serialize
      * @return the JSON string
      */
@@ -34,6 +33,7 @@ public class Handler {
 
     /**
      * Generates a custom error message JSON string
+     *
      * @param message the given message
      * @return the error message formatted as JSON
      */
@@ -44,6 +44,7 @@ public class Handler {
 
     /**
      * Generates a bad request error message
+     *
      * @param response the http Response
      * @return error message as a JSON string
      */
@@ -55,6 +56,7 @@ public class Handler {
 
     /**
      * Generates an unauthorized error message
+     *
      * @param response the http Response
      * @return unauthorized message as JSON string
      */

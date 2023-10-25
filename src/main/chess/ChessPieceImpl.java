@@ -1,16 +1,12 @@
 package chess;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
 public abstract class ChessPieceImpl implements chess.ChessPiece {
     private ChessGame.TeamColor color;
     private PieceType type;
+
     public ChessPieceImpl(ChessGame.TeamColor color, PieceType type) {
         this.color = color;
         this.type = type;
@@ -25,6 +21,7 @@ public abstract class ChessPieceImpl implements chess.ChessPiece {
     public PieceType getPieceType() {
         return type;
     }
+
     public ArrayList<ChessMove> moveUntil(ChessBoard board, ChessPositionImpl position, ChessGame.TeamColor color, int rowMove, int colMove) {
         ArrayList<ChessMove> moves = new ArrayList<>();
         ChessPositionImpl ogPosition = position;
@@ -42,6 +39,7 @@ public abstract class ChessPieceImpl implements chess.ChessPiece {
         }
         return moves;
     }
+
     @Override
     public abstract Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition);
 }

@@ -3,9 +3,7 @@ package dao;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 
-import javax.xml.crypto.Data;
 import java.util.HashSet;
-import java.util.Objects;
 
 /**
  * AuthDAO is responsible for handling and retrieving the database's AuthTokens
@@ -14,18 +12,13 @@ import java.util.Objects;
 public class AuthDAO {
 
     /**
-     * The set of AuthTokens in the database
-     */
-    private HashSet<AuthToken> tokens;
-
-    /**
      * Using Singleton method, only instance of AuthDAO that will ever exist
      */
     private static AuthDAO instance;
-
-    public HashSet<AuthToken> getTokens() {
-        return tokens;
-    }
+    /**
+     * The set of AuthTokens in the database
+     */
+    private HashSet<AuthToken> tokens;
 
     /**
      * Default constructor for AuthDAO with no given hash set and private to ensure no outside instantiation
@@ -36,6 +29,7 @@ public class AuthDAO {
 
     /**
      * Get instance for singleton pattern
+     *
      * @return the sole instance of AuthDAO
      */
     public static AuthDAO getInstance() {
@@ -44,8 +38,14 @@ public class AuthDAO {
         }
         return instance;
     }
+
+    public HashSet<AuthToken> getTokens() {
+        return tokens;
+    }
+
     /**
      * Adds the given token to the database
+     *
      * @param token the given AuthToken to add
      * @throws DataAccessException if given token already in database
      */
@@ -59,6 +59,7 @@ public class AuthDAO {
 
     /**
      * Deletes the given token from the database
+     *
      * @param token the given token to delete
      * @throws DataAccessException if given token isn't in database
      */
@@ -72,6 +73,7 @@ public class AuthDAO {
 
     /**
      * Finds and retrieves the given token from the database
+     *
      * @param token the given token to retrieve
      * @return the found AuthToken
      * @throws DataAccessException if given token isn't in database

@@ -12,6 +12,7 @@ public class Bishop extends ChessPieceImpl {
         ChessPositionImpl position = (ChessPositionImpl) myPosition;
         return getMoves(board, position, getTeamColor());
     }
+
     private ArrayList<ChessMove> getMoves(ChessBoard board, ChessPositionImpl position, ChessGame.TeamColor color) {
         ArrayList<ChessMove> moves = new ArrayList<>();
         moves.addAll(moveUntil(board, position, color, 1, 1));

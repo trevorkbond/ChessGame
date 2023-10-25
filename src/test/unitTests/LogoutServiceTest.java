@@ -12,10 +12,7 @@ import services.LogoutService;
 import services.RegisterService;
 import services.request.RegisterRequest;
 
-import javax.xml.crypto.Data;
 import java.util.HashSet;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class LogoutServiceTest {
 

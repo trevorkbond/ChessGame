@@ -1,21 +1,17 @@
 package unitTests;
 
 import dao.AuthDAO;
-import dao.GameDAO;
 import dao.UserDAO;
 import dataAccess.DataAccessException;
-import models.AuthToken;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import services.ClearService;
 import services.LoginService;
-import services.LogoutService;
 import services.RegisterService;
 import services.request.LoginRequest;
 import services.request.RegisterRequest;
-
-import javax.xml.crypto.Data;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class LoginServiceTest {
 

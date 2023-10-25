@@ -17,8 +17,9 @@ public class JoinGameRequest {
 
     /**
      * Constructor for a JoinGameRequest
+     *
      * @param playerColor the given color of type TeamColor
-     * @param gameID the given game's ID
+     * @param gameID      the given game's ID
      */
     public JoinGameRequest(ChessGame.TeamColor playerColor, int gameID) {
         this.playerColor = playerColor;

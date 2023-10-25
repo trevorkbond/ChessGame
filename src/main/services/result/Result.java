@@ -12,6 +12,7 @@ public class Result {
 
     /**
      * Result constructor will be used by the other Results as all contain a message
+     *
      * @param message, the given error message (String)
      */
     public Result(String message) {

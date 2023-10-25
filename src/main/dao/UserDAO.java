@@ -3,7 +3,6 @@ package dao;
 import dataAccess.DataAccessException;
 import models.User;
 
-import javax.xml.crypto.Data;
 import java.util.HashSet;
 
 /**
@@ -13,17 +12,24 @@ import java.util.HashSet;
 public class UserDAO {
 
     /**
+     * Employing Singleton method to ensure only one UserDAO is ever created
+     */
+    private static UserDAO instance;
+    /**
      * The set of Users in the database
      */
     private HashSet<User> users;
 
     /**
-     * Employing Singleton method to ensure only one UserDAO is ever created
+     * Default constructor for a UserDAO with no parameters private to ensure no direct instantiation
      */
-    private static UserDAO instance;
+    private UserDAO() {
+        users = new HashSet<>();
+    }
 
     /**
      * getInstance ensures only one userDAO is ever created
+     *
      * @return the sole instance of userDAO
      */
     public static UserDAO getInstance() {
@@ -32,14 +38,10 @@ public class UserDAO {
         }
         return instance;
     }
-    /**
-     * Default constructor for a UserDAO with no parameters private to ensure no direct instantiation
-     */
-    private UserDAO() {
-        users = new HashSet<>();
-    }
+
     /**
      * Adds a user to the database
+     *
      * @param user the given User to add
      * @throws DataAccessException if another User with same username exists in database
      */
@@ -56,9 +58,10 @@ public class UserDAO {
 
     /**
      * Gets a user with the given username from the database
+     *
      * @param username the given username
-     * @throws DataAccessException if User with given username isn't in database
      * @return the found User
+     * @throws DataAccessException if User with given username isn't in database
      */
     public User findUser(String username) throws DataAccessException {
         User tempUser = new User(username, null, null);
@@ -75,6 +78,7 @@ public class UserDAO {
 
     /**
      * Deletes the user with the given username from the database
+     *
      * @param username the given username
      * @throws DataAccessException if User with given username isn't in database
      */
@@ -85,10 +89,11 @@ public class UserDAO {
     /**
      * If User exists with username matching passed in User, all of found User's information is updated to that of passed
      * in user
+     *
      * @param user the passed in User with desired information to update to
      * @throws DataAccessException if User with given username isn't in database
      */
-    public void updateUser(User user) throws DataAccessException{
+    public void updateUser(User user) throws DataAccessException {
 
     }
 

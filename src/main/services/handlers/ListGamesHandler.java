@@ -1,44 +1,38 @@
 package services.handlers;
 
+import chess.ChessPiece;
 import dataAccess.DataAccessException;
-import services.LoginService;
-import services.request.LoginRequest;
-import services.result.LoginRegisterResult;
+import models.AuthToken;
+import services.ListGamesService;
+import services.result.ListGamesResult;
 import spark.Request;
 import spark.Response;
 
-public class LoginHandler extends Handler {
+import java.util.List;
 
+public class ListGamesHandler extends Handler {
     /**
-     * Using singleton method
+     * singleton method
      */
-    private static LoginHandler instance;
+    private static ListGamesHandler instance;
 
-    /**
-     * Private constructor to ensure no outside instantiation
-     */
-    private LoginHandler() {
-    }
-
-    /**
-     * Get instance of LoginHandler
-     *
-     * @return sole static instance of class
-     */
-    public static LoginHandler getInstance() {
+    public static ListGamesHandler getInstance() {
         if (instance == null) {
-            instance = new LoginHandler();
+            instance = new ListGamesHandler();
         }
         return instance;
     }
 
+    private ListGamesHandler() {}
+
     public String handleRequest(Request request, Response response) {
         try {
-            if (request.requestMethod().equalsIgnoreCase("post")) {
-                LoginRequest requestObject = (LoginRequest) gsonToRequest(LoginRequest.class, request);
-                LoginService service = new LoginService();
-                LoginRegisterResult result = service.login(requestObject);
+            if (request.requestMethod().equalsIgnoreCase("get")) {
+                AuthToken tempToken = new AuthToken(null, request.headers("Authorization"));
+                ListGamesService service = new ListGamesService();
+                ListGamesResult result = service.listGames(tempToken, request);
                 response.status(200);
+                response.body(objectToJson(result));
                 return objectToJson(result);
             } else {
                 return setBadRequest(response);

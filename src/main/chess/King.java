@@ -13,6 +13,7 @@ public class King extends ChessPieceImpl {
         ChessPositionImpl position = (ChessPositionImpl) myPosition;
         return getMoves(board, position, getTeamColor());
     }
+
     private ArrayList<ChessMove> getMoves(ChessBoard board, ChessPositionImpl position, ChessGame.TeamColor color) {
         ArrayList<ChessMove> moves = new ArrayList<>();
         for (int i = -1; i < 2; i++) {
@@ -26,6 +27,7 @@ public class King extends ChessPieceImpl {
         }
         return moves;
     }
+
     private boolean nullOrTeammate(ChessBoard board, ChessPositionImpl position, ChessGame.TeamColor color, int rowMove, int colMove) {
         ChessPositionImpl newPosition = (ChessPositionImpl) position.getMixedMove(rowMove, colMove);
         if (newPosition == null) {

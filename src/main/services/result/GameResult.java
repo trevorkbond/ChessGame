@@ -1,7 +1,5 @@
 package services.result;
 
-import chess.ChessGame;
-
 /**
  * GameResult represents a single game in the database, upon which ListGameResult will draw for a list of all games
  */
@@ -25,6 +23,7 @@ public class GameResult extends Result {
 
     /**
      * A constructor for a GameResult
+     *
      * @param message,       the given error message
      * @param gameID,        the given gameID (int)
      * @param whiteUsername, the username of the white team User

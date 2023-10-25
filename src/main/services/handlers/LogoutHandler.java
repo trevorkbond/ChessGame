@@ -2,7 +2,6 @@ package services.handlers;
 
 import dataAccess.DataAccessException;
 import models.AuthToken;
-import org.eclipse.jetty.util.log.Log;
 import services.LogoutService;
 import services.result.Result;
 import spark.Request;
@@ -16,6 +15,12 @@ public class LogoutHandler extends Handler {
     private static LogoutHandler instance;
 
     /**
+     * private constructor to ensure no outside instantiation
+     */
+    private LogoutHandler() {
+    }
+
+    /**
      * getInstance function for singleton method
      *
      * @return the only instance of LogoutHandler
@@ -25,12 +30,6 @@ public class LogoutHandler extends Handler {
             instance = new LogoutHandler();
         }
         return instance;
-    }
-
-    /**
-     * private constructor to ensure no outside instantiation
-     */
-    private LogoutHandler() {
     }
 
     public String handleRequest(Request request, Response response) {

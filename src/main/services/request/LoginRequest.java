@@ -8,15 +8,6 @@ public class LoginRequest {
      * The username of the login User
      */
     private String username;
-
-    @Override
-    public String toString() {
-        return "LoginRequest{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
-
     /**
      * The password of the login User
      */
@@ -31,6 +22,14 @@ public class LoginRequest {
     public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginRequest{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 
     public String getUsername() {

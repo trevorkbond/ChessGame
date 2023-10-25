@@ -11,6 +11,7 @@ public class CreateGameRequest {
 
     /**
      * Constructor for a CreateGameRequest
+     *
      * @param gameName the given name to assign to the game
      */
     public CreateGameRequest(String gameName) {

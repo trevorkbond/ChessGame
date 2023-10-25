@@ -4,8 +4,10 @@ import dao.AuthDAO;
 import dao.UserDAO;
 import dataAccess.DataAccessException;
 import models.User;
-
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import services.ClearService;
 import services.RegisterService;
 import services.request.RegisterRequest;

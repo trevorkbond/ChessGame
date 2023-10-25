@@ -1,19 +1,18 @@
 package chess;
 
-import chess.ChessPiece;
-import chess.ChessPosition;
-
 import java.util.Objects;
 
 public class ChessMoveImpl implements chess.ChessMove {
     private ChessPosition startPosition;
     private ChessPosition endPosition;
     private ChessPiece.PieceType promotionPiece;
+
     public ChessMoveImpl(ChessPosition start, ChessPosition end, ChessPiece.PieceType piece) {
         startPosition = start;
         endPosition = end;
         promotionPiece = piece;
     }
+
     @Override
     public ChessPosition getStartPosition() {
         return startPosition;

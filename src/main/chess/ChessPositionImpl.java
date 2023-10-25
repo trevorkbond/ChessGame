@@ -5,10 +5,12 @@ import java.util.Objects;
 public class ChessPositionImpl implements ChessPosition {
     private int row;
     private int column;
+
     public ChessPositionImpl(int row, int column) {
         this.row = row;
         this.column = column;
     }
+
     @Override
     public int getRow() {
         return row;
@@ -18,8 +20,9 @@ public class ChessPositionImpl implements ChessPosition {
     public int getColumn() {
         return column;
     }
+
     public ChessPosition getVerticalMove(int rowMove) {
-        if (((row + rowMove) > 8) || (((row + rowMove ) < 1))) {
+        if (((row + rowMove) > 8) || (((row + rowMove) < 1))) {
             return null;
         } else {
             return new ChessPositionImpl(row + rowMove, column);
@@ -27,7 +30,7 @@ public class ChessPositionImpl implements ChessPosition {
     }
 
     public ChessPosition getHorizontal(int colMove) {
-        if (((column + colMove) > 8) || (((column + colMove ) < 1))) {
+        if (((column + colMove) > 8) || (((column + colMove) < 1))) {
             return null;
         } else {
             return new ChessPositionImpl(row, column + colMove);
@@ -35,7 +38,7 @@ public class ChessPositionImpl implements ChessPosition {
     }
 
     public ChessPosition getMixedMove(int rowMove, int colMove) {
-        if ((((row + rowMove) > 8) || (((row + rowMove ) < 1))) || (((column + colMove) > 8) || (((column + colMove) < 1)))) {
+        if ((((row + rowMove) > 8) || (((row + rowMove) < 1))) || (((column + colMove) > 8) || (((column + colMove) < 1)))) {
             return null;
         } else {
             return new ChessPositionImpl(row + rowMove, column + colMove);

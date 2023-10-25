@@ -2,9 +2,8 @@ package services;
 
 import dao.AuthDAO;
 import dataAccess.DataAccessException;
-import services.result.Result;
 import models.AuthToken;
-import spark.Request;
+import services.result.Result;
 
 /**
  * LogoutService implements the logout API functionality
@@ -25,9 +24,10 @@ public class LogoutService {
 
     /**
      * Logs out the user represented by the authToken
+     *
      * @param authToken the given user (AuthToken)
-     * @throws DataAccessException if request doesn't have proper authorization
      * @return Result of the operation
+     * @throws DataAccessException if request doesn't have proper authorization
      */
     public Result logout(AuthToken authToken) throws DataAccessException {
         authDAO.findToken(authToken);

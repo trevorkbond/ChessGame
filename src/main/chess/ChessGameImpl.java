@@ -6,10 +6,23 @@ import java.util.Collection;
 public class ChessGameImpl implements ChessGame {
     private ChessBoard board;
     private TeamColor teamTurn;
+
     public ChessGameImpl() {
         board = new ChessBoardImpl();
         teamTurn = TeamColor.WHITE;
     }
+
+    public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+        return switch (type) {
+            case PAWN -> new Pawn(pieceColor, type);
+            case KNIGHT -> new Knight(pieceColor, type);
+            case KING -> new King(pieceColor, type);
+            case QUEEN -> new Queen(pieceColor, type);
+            case ROOK -> new Rook(pieceColor, type);
+            case BISHOP -> new Bishop(pieceColor, type);
+        };
+    }
+
     @Override
     public TeamColor getTeamTurn() {
         return teamTurn;
@@ -55,22 +68,12 @@ public class ChessGameImpl implements ChessGame {
         }
         return wouldBeInCheck;
     }
+
     public boolean isInCheck(TeamColor teamColor, ChessBoard cloneBoard) {
         TeamColor enemyColor = getOtherColor(teamColor);
         ArrayList<ChessMove> enemyMoves = getAllTeamMoves(enemyColor, cloneBoard);
         ChessPosition kingPosition = findKing(teamColor, cloneBoard);
         return kingInEnemyMoves(enemyMoves, kingPosition);
-    }
-
-    public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
-        return switch (type) {
-            case PAWN -> new Pawn(pieceColor, type);
-            case KNIGHT -> new Knight(pieceColor, type);
-            case KING -> new King(pieceColor, type);
-            case QUEEN -> new Queen(pieceColor, type);
-            case ROOK -> new Rook(pieceColor, type);
-            case BISHOP -> new Bishop(pieceColor, type);
-        };
     }
 
     @Override
@@ -120,6 +123,7 @@ public class ChessGameImpl implements ChessGame {
         ChessPosition kingPosition = findKing(teamColor, board);
         return kingInEnemyMoves(enemyMoves, kingPosition);
     }
+
     private TeamColor getOtherColor(TeamColor ogColor) {
         if (ogColor == TeamColor.WHITE) {
             return TeamColor.BLACK;
@@ -127,6 +131,7 @@ public class ChessGameImpl implements ChessGame {
             return TeamColor.WHITE;
         }
     }
+
     private ArrayList<ChessMove> getAllTeamMoves(TeamColor teamColor, ChessBoard board) {
         ArrayList<ChessPosition> teamPositions = getAllTeamPositions(teamColor);
         ArrayList<ChessMove> enemyMoves = new ArrayList<>();
@@ -137,6 +142,7 @@ public class ChessGameImpl implements ChessGame {
 //        System.out.println(enemyMoves);
         return enemyMoves;
     }
+
     private boolean kingInEnemyMoves(ArrayList<ChessMove> enemyMoves, ChessPosition kingPosition) {
         for (ChessMove move : enemyMoves) {
             if (move.getEndPosition().equals(kingPosition)) {
@@ -145,10 +151,11 @@ public class ChessGameImpl implements ChessGame {
         }
         return false;
     }
+
     private ChessPosition findKing(TeamColor teamColor, ChessBoard board) {
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
-                ChessPositionImpl position = new ChessPositionImpl(i,j);
+                ChessPositionImpl position = new ChessPositionImpl(i, j);
                 if (board.getPiece(position) != null && board.getPiece(position).getTeamColor() == teamColor && board.getPiece(position).getPieceType() == ChessPiece.PieceType.KING) {
                     return position;
                 }
@@ -156,12 +163,13 @@ public class ChessGameImpl implements ChessGame {
         }
         return null;
     }
+
     private ArrayList<ChessPosition> getAllTeamPositions(TeamColor teamColor) {
         ArrayList<ChessPosition> teamPositions = new ArrayList<>();
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
                 if (board.getPiece(new ChessPositionImpl(i, j)) != null && board.getPiece(new ChessPositionImpl(i, j)).getTeamColor() == teamColor) {
-                    teamPositions.add(new ChessPositionImpl(i,j));
+                    teamPositions.add(new ChessPositionImpl(i, j));
                 }
             }
         }
@@ -190,12 +198,12 @@ public class ChessGameImpl implements ChessGame {
     }
 
     @Override
-    public void setBoard(ChessBoard board) {
-        this.board = board;
+    public ChessBoard getBoard() {
+        return board;
     }
 
     @Override
-    public ChessBoard getBoard() {
-        return board;
+    public void setBoard(ChessBoard board) {
+        this.board = board;
     }
 }

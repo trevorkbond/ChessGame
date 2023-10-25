@@ -11,6 +11,10 @@ import java.util.Objects;
  */
 public class Game {
     /**
+     * static instance of ID to assign ID's incrementally
+     */
+    private static int nextID = 1;
+    /**
      * The ChessGame object to perform game functions on
      */
     private ChessGame game;
@@ -18,27 +22,6 @@ public class Game {
      * the gameID, an integer
      */
     private int gameID;
-
-    public void setWhiteUsername(String whiteUsername) {
-        this.whiteUsername = whiteUsername;
-    }
-
-    public void setBlackUsername(String blackUsername) {
-        this.blackUsername = blackUsername;
-    }
-
-    public String getWhiteUsername() {
-        return whiteUsername;
-    }
-
-    public String getBlackUsername() {
-        return blackUsername;
-    }
-
-    /**
-     * static instance of ID to assign ID's incrementally
-     */
-    private static int nextID = 1;
     /**
      * The username for the player on white team
      */
@@ -68,6 +51,32 @@ public class Game {
         this.blackUsername = blackUsername;
         this.gameName = gameName;
     }
+    /**
+     * Constructor that is only passed in a gameName and assigned a unique ID from static private member
+     *
+     * @param gameName
+     */
+    public Game(String gameName) {
+        game = new ChessGameImpl();
+        gameID = nextID;
+        nextID++;
+    }
+
+    public String getWhiteUsername() {
+        return whiteUsername;
+    }
+
+    public void setWhiteUsername(String whiteUsername) {
+        this.whiteUsername = whiteUsername;
+    }
+
+    public String getBlackUsername() {
+        return blackUsername;
+    }
+
+    public void setBlackUsername(String blackUsername) {
+        this.blackUsername = blackUsername;
+    }
 
     public int getGameID() {
         return gameID;
@@ -83,16 +92,6 @@ public class Game {
     @Override
     public int hashCode() {
         return Objects.hash(gameID);
-    }
-
-    /**
-     * Constructor that is only passed in a gameName and assigned a unique ID from static private member
-     * @param gameName
-     */
-    public Game(String gameName) {
-        game = new ChessGameImpl();
-        gameID = nextID;
-        nextID++;
     }
 
     public ChessGame getGame() {

@@ -16,18 +16,6 @@ public class AuthToken {
      */
     private String authToken;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AuthToken authToken1)) return false;
-        return Objects.equals(getAuthToken(), authToken1.getAuthToken());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getAuthToken());
-    }
-
     /**
      * Constructor for an AuthToken
      *
@@ -41,11 +29,24 @@ public class AuthToken {
 
     /**
      * Constructor for an AuthToken that generates random authToken automatically
+     *
      * @param username the given username
      */
     public AuthToken(String username) {
         this.username = username;
         authToken = UUID.randomUUID().toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AuthToken authToken1)) return false;
+        return Objects.equals(getAuthToken(), authToken1.getAuthToken());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getAuthToken());
     }
 
     public String getUsername() {

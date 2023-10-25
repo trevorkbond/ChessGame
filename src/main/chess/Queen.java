@@ -13,6 +13,7 @@ public class Queen extends ChessPieceImpl {
         ArrayList<ChessMove> moves = getMoves(board, position, getTeamColor());
         return moves;
     }
+
     private ArrayList<ChessMove> getMoves(ChessBoard board, ChessPositionImpl position, ChessGame.TeamColor color) {
         // all possibilities with rows increasing
         ArrayList<ChessMove> moves = new ArrayList<>();
