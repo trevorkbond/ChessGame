@@ -44,4 +44,18 @@ public class CreateGameService {
         gameDAO.createGame(addGame);
         return new CreateGameResult(null, addGame.getGameID());
     }
+
+    /**
+     * This is an overloaded method for createGame to allow testing without creating spark Request object
+     * @param request the CreateGameRequest
+     * @param httpRequest the hardcoded string request
+     * @return result
+     * @throws DataAccessException if token isn't in database
+     */
+    public CreateGameResult createGame(CreateGameRequest request, String httpRequest) throws DataAccessException {
+        authDAO.findToken(new AuthToken(null, httpRequest));
+        Game addGame = new Game(request.getGameName());
+        gameDAO.createGame(addGame);
+        return new CreateGameResult(null, addGame.getGameID());
+    }
 }

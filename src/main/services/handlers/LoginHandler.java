@@ -1,43 +1,44 @@
 package services.handlers;
 
 import dataAccess.DataAccessException;
-import services.CreateGameService;
+import org.eclipse.jetty.util.log.Log;
+import services.LoginService;
 import services.request.CreateGameRequest;
-import services.result.CreateGameResult;
+import services.request.LoginRequest;
+import services.result.LoginRegisterResult;
 import spark.Request;
 import spark.Response;
 
-public class CreateGameHandler extends Handler {
+public class LoginHandler extends Handler {
 
     /**
-     * Employing singleton method to ensure one instance is ever created
+     * Using singleton method
      */
-    private static CreateGameHandler instance;
+    private static LoginHandler instance;
 
     /**
-     * getInstance method for singleton pattern
-     * @return the sole instance of CreateGameHandler
+     * Get instance of LoginHandler
+     * @return sole static instance of class
      */
-    public static CreateGameHandler getInstance() {
+    public static LoginHandler getInstance() {
         if (instance == null) {
-            instance = new CreateGameHandler();
+            instance = new LoginHandler();
         }
         return instance;
     }
 
     /**
-     * private constructor to ensure no direct instantiation outside of getInstance
+     * Private constructor to ensure no outside instantiation
      */
-    private CreateGameHandler() {}
+    private LoginHandler() {}
 
     public String handleRequest(Request request, Response response) {
         try {
             if (request.requestMethod().equalsIgnoreCase("post")) {
-                CreateGameRequest requestObject = (CreateGameRequest) gsonToRequest(CreateGameRequest.class, request);
-                CreateGameService service = new CreateGameService();
-                CreateGameResult result = service.createGame(requestObject, request);
+                LoginRequest requestObject = (LoginRequest) gsonToRequest(LoginRequest.class, request);
+                LoginService service = new LoginService();
+                LoginRegisterResult result = service.login(requestObject);
                 response.status(200);
-                response.body(objectToJson(result));
                 return objectToJson(result);
             } else {
                 return setBadRequest(response);
@@ -52,5 +53,4 @@ public class CreateGameHandler extends Handler {
             }
         }
     }
-
 }

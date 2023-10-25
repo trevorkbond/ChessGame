@@ -61,7 +61,16 @@ public class UserDAO {
      * @return the found User
      */
     public User findUser(String username) throws DataAccessException {
-        return null;
+        User tempUser = new User(username, null, null);
+        if (!users.contains(tempUser)) {
+            throw new DataAccessException("Error: unauthorized");
+        }
+        for (User user : users) {
+            if (user.equals(tempUser)) {
+                return user;
+            }
+        }
+        throw new DataAccessException("Error: unauthorized");
     }
 
     /**

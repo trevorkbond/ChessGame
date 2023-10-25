@@ -38,6 +38,10 @@ public class GameDAO {
         return instance;
     }
 
+    public HashSet<Game> getGames() {
+        return games;
+    }
+
     /**
      * Inserts a game into the database
      * @param game the game to insert

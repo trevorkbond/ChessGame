@@ -5,10 +5,8 @@ import dao.UserDAO;
 import dataAccess.DataAccessException;
 import models.User;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import services.ClearService;
 import services.RegisterService;
 import services.request.RegisterRequest;
 
@@ -21,10 +19,12 @@ class RegisterServiceTest {
     private RegisterService registerService;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws DataAccessException {
         userDAO = UserDAO.getInstance();
         authDAO = AuthDAO.getInstance();
         registerService = new RegisterService();
+        ClearService clearService = new ClearService();
+        clearService.clear();
     }
 
     /**
