@@ -30,7 +30,7 @@ public class ListGamesHandler extends Handler {
             if (request.requestMethod().equalsIgnoreCase("get")) {
                 AuthToken tempToken = new AuthToken(null, request.headers("Authorization"));
                 ListGamesService service = new ListGamesService();
-                ListGamesResult result = service.listGames(tempToken, request);
+                ListGamesResult result = service.listGames(tempToken, request.headers("Authorization"));
                 response.status(200);
                 response.body(objectToJson(result));
                 return objectToJson(result);
@@ -38,13 +38,7 @@ public class ListGamesHandler extends Handler {
                 return setBadRequest(response);
             }
         } catch (DataAccessException e) {
-            if (e.getMessage().equals("Error: unauthorized")) {
-                return setUnauthorizedRequest(response);
-            } else {
-                response.status(500);
-                response.body(getErrorMessage("Error: I'm unsure what happened here"));
-                return getErrorMessage("Error: I'm unsure what happened here");
-            }
+            return handleDataException(response, e);
         }
     }
 }

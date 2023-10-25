@@ -52,9 +52,7 @@ public class ClearHandler extends Handler {
                 return setBadRequest(response);
             }
         } catch (DataAccessException e) {
-            response.status(500);
-            response.body(getErrorMessage("Error: There was a DAO exception somewhere in clear methods"));
-            return getErrorMessage("Error: There was a DAO exception somewhere in clear methods");
+            return handleDataException(response, e);
         }
     }
 

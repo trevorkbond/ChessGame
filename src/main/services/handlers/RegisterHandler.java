@@ -56,17 +56,7 @@ public class RegisterHandler extends Handler {
                 return setBadRequest(response);
             }
         } catch (DataAccessException e) {
-            if (e.getMessage().equals("Error: already taken")) {
-                response.status(403);
-                response.body(getErrorMessage("Error: already taken"));
-                return getErrorMessage("Error: already taken");
-            } else if (e.getMessage().equals("Error: bad request")) {
-                return setBadRequest(response);
-            } else {
-                response.status(500);
-                response.body(getErrorMessage("Error: I'm unsure what happened here"));
-                return getErrorMessage("Error: I'm unsure what happened here");
-            }
+            return handleDataException(response, e);
         }
     }
 

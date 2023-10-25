@@ -37,7 +37,7 @@ public class CreateGameHandler extends Handler {
             if (request.requestMethod().equalsIgnoreCase("post")) {
                 CreateGameRequest requestObject = (CreateGameRequest) gsonToRequest(CreateGameRequest.class, request);
                 CreateGameService service = new CreateGameService();
-                CreateGameResult result = service.createGame(requestObject, request);
+                CreateGameResult result = service.createGame(requestObject, request.headers("Authorization"));
                 response.status(200);
                 response.body(objectToJson(result));
                 return objectToJson(result);
@@ -45,13 +45,7 @@ public class CreateGameHandler extends Handler {
                 return setBadRequest(response);
             }
         } catch (DataAccessException e) {
-            if (e.getMessage().equals("Error: unauthorized")) {
-                return setUnauthorizedRequest(response);
-            } else {
-                response.status(500);
-                response.body(getErrorMessage("Error: I'm unsure what happened here"));
-                return getErrorMessage("Error: I'm unsure what happened here");
-            }
+            return handleDataException(response, e);
         }
     }
 

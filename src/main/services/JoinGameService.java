@@ -38,9 +38,9 @@ public class JoinGameService {
      * @param request the given JoinGameRequest
      * @return the Result of the operation
      */
-    public Result joinGame(JoinGameRequest request, Request httpRequest) throws DataAccessException {
+    public Result joinGame(JoinGameRequest request, String httpRequest) throws DataAccessException {
         gameDAO.findGame(request.getGameID());
-        AuthToken authToken = authDAO.findToken(new AuthToken(null, httpRequest.headers("Authorization")));
+        AuthToken authToken = authDAO.findToken(new AuthToken(null, httpRequest));
         gameDAO.claimSpot(request.getGameID(), request.getPlayerColor(), authToken.getUsername());
         return new Result(null);
     }

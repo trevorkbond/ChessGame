@@ -3,6 +3,7 @@ package services.result;
 import models.Game;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * ListGamesResult represents the result of a call to the list games ("\game") API call, containing
@@ -27,6 +28,18 @@ public class ListGamesResult extends Result {
 
     public HashSet<Game> getGames() {
         return games;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ListGamesResult that)) return false;
+        return Objects.equals(getGames(), that.getGames());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getGames());
     }
 
     public void setGames(HashSet<Game> games) {

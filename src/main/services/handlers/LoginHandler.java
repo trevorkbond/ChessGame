@@ -44,13 +44,7 @@ public class LoginHandler extends Handler {
                 return setBadRequest(response);
             }
         } catch (DataAccessException e) {
-            if (e.getMessage().equals("Error: unauthorized")) {
-                return setUnauthorizedRequest(response);
-            } else {
-                response.status(500);
-                response.body(getErrorMessage("Error: I'm unsure what happened here"));
-                return getErrorMessage("Error: I'm unsure what happened here");
-            }
+            return handleDataException(response, e);
         }
     }
 }

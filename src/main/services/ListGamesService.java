@@ -26,8 +26,8 @@ public class ListGamesService {
      * @param authToken the authorized user's token
      * @return ListGamesResult, a list of all games in the database
      */
-    public ListGamesResult listGames(AuthToken authToken, Request httpRequest) throws DataAccessException {
-        authDAO.findToken(new AuthToken(null, httpRequest.headers("Authorization")));
+    public ListGamesResult listGames(AuthToken authToken, String httpRequest) throws DataAccessException {
+        authDAO.findToken(new AuthToken(null, httpRequest));
         return new ListGamesResult(null, gameDAO.getGames());
     }
 }

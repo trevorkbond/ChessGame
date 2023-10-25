@@ -29,7 +29,7 @@ public class JoinGameHandler extends Handler {
             if (request.requestMethod().equalsIgnoreCase("put")) {
                 JoinGameRequest requestObject = (JoinGameRequest) gsonToRequest(JoinGameRequest.class, request);
                 JoinGameService service = new JoinGameService();
-                Result result = service.joinGame(requestObject, request);
+                Result result = service.joinGame(requestObject, request.headers("Authorization"));
                 response.status(200);
                 response.body(objectToJson(result));
                 return objectToJson(result);
@@ -37,19 +37,7 @@ public class JoinGameHandler extends Handler {
                 return setBadRequest(response);
             }
         } catch (DataAccessException e) {
-            if (e.getMessage().equals("Error: unauthorized")) {
-                return setUnauthorizedRequest(response);
-            } else if (e.getMessage().equals("Error: bad request")) {
-                return setBadRequest(response);
-            } else if (e.getMessage().equals("Error: already taken")) {
-                response.status(403);
-                response.body(getErrorMessage("Error: already taken"));
-                return getErrorMessage("Error: already taken");
-            } else {
-                response.status(500);
-                response.body(getErrorMessage("Error: I'm unsure what happened here"));
-                return getErrorMessage("Error: I'm unsure what happened here");
-            }
+            return handleDataException(response, e);
         }
     }
 }

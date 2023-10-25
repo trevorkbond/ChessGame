@@ -2,6 +2,7 @@ package services.handlers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dataAccess.DataAccessException;
 import services.result.Result;
 import spark.Request;
 import spark.Response;
@@ -64,5 +65,29 @@ public class Handler {
         response.status(401);
         response.body(getErrorMessage("Error: unauthorized"));
         return getErrorMessage("Error: unauthorized");
+
+
+    }
+
+    /**
+     * Handles a data exception
+     * @param response the HTTP response
+     * @param e the exception
+     * @return the error message in JSON format
+     */
+    public String handleDataException(Response response, DataAccessException e) {
+        if (e.getMessage().equals("Error: unauthorized")) {
+            return setUnauthorizedRequest(response);
+        } else if (e.getMessage().equals("Error: bad request")) {
+            return setBadRequest(response);
+        } else if (e.getMessage().equals("Error: already taken")) {
+            response.status(403);
+            response.body(getErrorMessage("Error: already taken"));
+            return getErrorMessage("Error: already taken");
+        } else {
+            response.status(500);
+            response.body(getErrorMessage("Error: I'm unsure what happened here"));
+            return getErrorMessage("Error: I'm unsure what happened here");
+        }
     }
 }
