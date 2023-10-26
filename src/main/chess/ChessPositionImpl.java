@@ -3,8 +3,8 @@ package chess;
 import java.util.Objects;
 
 public class ChessPositionImpl implements ChessPosition {
-    private int row;
-    private int column;
+    private final int row;
+    private final int column;
 
     public ChessPositionImpl(int row, int column) {
         this.row = row;
@@ -26,14 +26,6 @@ public class ChessPositionImpl implements ChessPosition {
             return null;
         } else {
             return new ChessPositionImpl(row + rowMove, column);
-        }
-    }
-
-    public ChessPosition getHorizontal(int colMove) {
-        if (((column + colMove) > 8) || (((column + colMove) < 1))) {
-            return null;
-        } else {
-            return new ChessPositionImpl(row, column + colMove);
         }
     }
 

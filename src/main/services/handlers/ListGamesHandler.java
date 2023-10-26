@@ -1,6 +1,5 @@
 package services.handlers;
 
-import chess.ChessPiece;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import services.ListGamesService;
@@ -8,13 +7,14 @@ import services.result.ListGamesResult;
 import spark.Request;
 import spark.Response;
 
-import java.util.List;
-
 public class ListGamesHandler extends Handler {
     /**
      * singleton method
      */
     private static ListGamesHandler instance;
+
+    private ListGamesHandler() {
+    }
 
     public static ListGamesHandler getInstance() {
         if (instance == null) {
@@ -22,8 +22,6 @@ public class ListGamesHandler extends Handler {
         }
         return instance;
     }
-
-    private ListGamesHandler() {}
 
     public String handleRequest(Request request, Response response) {
         try {

@@ -3,7 +3,7 @@ package chess;
 import java.util.Arrays;
 
 public class ChessBoardImpl implements chess.ChessBoard {
-    private ChessPiece[][] boardArray;
+    private final ChessPiece[][] boardArray;
 
     public ChessBoardImpl() {
         boardArray = new ChessPiece[8][8];

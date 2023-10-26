@@ -15,13 +15,13 @@ public class Game {
      */
     private static int nextID = 1;
     /**
+     * the gameID, an integer
+     */
+    private final int gameID;
+    /**
      * The ChessGame object to perform game functions on
      */
     private ChessGame game;
-    /**
-     * the gameID, an integer
-     */
-    private int gameID;
     /**
      * The username for the player on white team
      */
@@ -51,10 +51,11 @@ public class Game {
         this.blackUsername = blackUsername;
         this.gameName = gameName;
     }
+
     /**
      * Constructor that is only passed in a gameName and assigned a unique ID from static private member
      *
-     * @param gameName
+     * @param gameName the given gameName as a String
      */
     public Game(String gameName) {
         game = new ChessGameImpl();
@@ -94,11 +95,4 @@ public class Game {
         return Objects.hash(gameID);
     }
 
-    public ChessGame getGame() {
-        return game;
-    }
-
-    public void setGame(ChessGame game) {
-        this.game = game;
-    }
 }

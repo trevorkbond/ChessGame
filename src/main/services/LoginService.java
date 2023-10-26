@@ -16,12 +16,12 @@ public class LoginService {
     /**
      * LoginService needs access to users in the database
      */
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
 
     /**
      * LoginService needs access to authTokens in the database
      */
-    private AuthDAO authDAO;
+    private final AuthDAO authDAO;
 
     /**
      * Constructor that initializes DAO's to static instances

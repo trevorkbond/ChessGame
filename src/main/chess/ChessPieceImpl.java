@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public abstract class ChessPieceImpl implements chess.ChessPiece {
-    private ChessGame.TeamColor color;
-    private PieceType type;
+    private final ChessGame.TeamColor color;
+    private final PieceType type;
 
     public ChessPieceImpl(ChessGame.TeamColor color, PieceType type) {
         this.color = color;

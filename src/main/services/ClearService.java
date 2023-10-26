@@ -13,20 +13,18 @@ public class ClearService {
     /**
      * ClearService has access to authToken database via DAO
      */
-    private AuthDAO authDAO;
+    private final AuthDAO authDAO;
     /**
      * ClearService has access to user database via DAO
      */
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
     /**
      * ClearService has access to game database via DAO
      */
-    private GameDAO gameDAO;
+    private final GameDAO gameDAO;
 
     /**
-     * Clears the database, removing all Users, Games, and AuthTokens
-     *
-     * @return the Result of the operation
+     * constructor for ClearService
      */
 
     public ClearService() {

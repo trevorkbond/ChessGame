@@ -15,11 +15,11 @@ public class RegisterService {
     /**
      * RegisterService has access to the set of users represented by UserDAO
      */
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
     /**
      * RegisterService has access to the set of authTokens represented by authDAO
      */
-    private AuthDAO authDAO;
+    private final AuthDAO authDAO;
 
     /**
      * Default constructor for RegisterService that initializes the userDAO and authDAO object

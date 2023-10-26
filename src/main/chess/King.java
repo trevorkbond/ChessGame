@@ -34,10 +34,6 @@ public class King extends ChessPieceImpl {
             return true;
         } else if (board.getPiece(newPosition) == null) {
             return false;
-        } else if (board.getPiece(newPosition).getTeamColor() != color) {
-            return false;
-        } else {
-            return true;
-        }
+        } else return board.getPiece(newPosition).getTeamColor() == color;
     }
 }

@@ -4,10 +4,7 @@ import dao.AuthDAO;
 import dao.GameDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import services.ClearService;
 import services.CreateGameService;
 import services.request.CreateGameRequest;
@@ -63,5 +60,11 @@ class CreateGameServiceTest {
         authDAO.getTokens().removeIf(auth -> auth.getUsername().equals("username"));
         Assertions.assertThrows(DataAccessException.class, () -> createGameService.createGame(
                 new CreateGameRequest("fungame"), "authToken17"));
+    }
+
+    @AfterAll
+    static void tearDown() throws DataAccessException {
+        ClearService clearService = new ClearService();
+        clearService.clear();
     }
 }

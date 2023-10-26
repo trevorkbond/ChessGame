@@ -7,10 +7,7 @@ import dao.GameDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.Game;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import services.ClearService;
 import services.JoinGameService;
 import services.ListGamesService;
@@ -35,7 +32,7 @@ class JoinGameServiceTest {
         clearService.clear();
 
         // add a few new games, some with players and some without spots reserved
-        gameDAO.createGame(new Game("nospotsreserved"));
+        gameDAO.createGame(new Game(new ChessGameImpl(), 99, null, null, "noTeamsTaken"));
         gameDAO.createGame(new Game(new ChessGameImpl(), 100, null, "blackTeam", "blackTeamTaken"));
         gameDAO.createGame(new Game(new ChessGameImpl(), 101, "whiteTeam", null, "whiteTeamTaken"));
 
@@ -47,8 +44,8 @@ class JoinGameServiceTest {
     @DisplayName("Join Game Success")
     void joinGameSuccess() throws DataAccessException {
         // ensure both spots can be joined in nospotsreserved
-        Assertions.assertDoesNotThrow(() -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 1), "authToken"));
-        Assertions.assertDoesNotThrow(() -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, 1), "authToken"));
+        Assertions.assertDoesNotThrow(() -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 99), "authToken"));
+        Assertions.assertDoesNotThrow(() -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, 99), "authToken"));
 
         // ensure white team can be joined in blackTeamTaken
         Assertions.assertDoesNotThrow(() -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 100), "authToken"));
@@ -57,8 +54,8 @@ class JoinGameServiceTest {
         Assertions.assertDoesNotThrow(() -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, 101), "authToken"));
 
         // ensure team spots are actually taken for all
-        Assertions.assertNotNull(gameDAO.findGame(1).getWhiteUsername());
-        Assertions.assertNotNull(gameDAO.findGame(1).getBlackUsername());
+        Assertions.assertNotNull(gameDAO.findGame(99).getWhiteUsername());
+        Assertions.assertNotNull(gameDAO.findGame(99).getBlackUsername());
         Assertions.assertNotNull(gameDAO.findGame(100).getWhiteUsername());
         Assertions.assertNotNull(gameDAO.findGame(100).getBlackUsername());
         Assertions.assertNotNull(gameDAO.findGame(101).getWhiteUsername());
@@ -75,7 +72,7 @@ class JoinGameServiceTest {
         Assertions.assertThrows(DataAccessException.class, () -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 101), "authToken"));
 
         // ensure request with invalid ID can't join a team
-        Assertions.assertThrows(DataAccessException.class, () -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 99), "authToken"));
+        Assertions.assertThrows(DataAccessException.class, () -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 0), "authToken"));
 
         // ensure request with invalid authToken can't join game
         Assertions.assertThrows(DataAccessException.class, () -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 100), "authTokenWrong"));
@@ -85,5 +82,11 @@ class JoinGameServiceTest {
         Assertions.assertThrows(DataAccessException.class, () -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, 100), "authToken"));
         Assertions.assertThrows(DataAccessException.class, () -> joinGameService.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 100), "authToken"));
 
+    }
+
+    @AfterAll
+    static void tearDown() throws DataAccessException {
+        ClearService clearService = new ClearService();
+        clearService.clear();
     }
 }

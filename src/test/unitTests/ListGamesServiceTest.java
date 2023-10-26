@@ -6,10 +6,7 @@ import dao.GameDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.Game;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import services.ClearService;
 import services.ListGamesService;
 
@@ -82,5 +79,11 @@ class ListGamesServiceTest {
                 "Complextoken"));
         Assertions.assertThrows(DataAccessException.class, () -> listGamesService.listGames(new AuthToken("thisone", "u80jemdi"),
                 "u80jemdi"));
+    }
+
+    @AfterAll
+    static void tearDown() throws DataAccessException {
+        ClearService clearService = new ClearService();
+        clearService.clear();
     }
 }

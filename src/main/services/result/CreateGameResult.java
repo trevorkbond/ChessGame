@@ -20,11 +20,4 @@ public class CreateGameResult extends Result {
         this.gameID = gameID;
     }
 
-    public int getGameID() {
-        return gameID;
-    }
-
-    public void setGameID(int gameID) {
-        this.gameID = gameID;
-    }
 }

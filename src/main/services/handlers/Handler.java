@@ -71,8 +71,9 @@ public class Handler {
 
     /**
      * Handles a data exception
+     *
      * @param response the HTTP response
-     * @param e the exception
+     * @param e        the exception
      * @return the error message in JSON format
      */
     public String handleDataException(Response response, DataAccessException e) {

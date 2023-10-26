@@ -7,10 +7,7 @@ import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.Game;
 import models.User;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import services.ClearService;
 
 import java.util.UUID;
@@ -20,7 +17,7 @@ class ClearServiceTest {
     private UserDAO userDAO;
     private AuthDAO authDAO;
     private GameDAO gameDAO;
-    private ClearService clearService;
+    private static ClearService clearService;
 
     @BeforeEach
     void setUp() throws DataAccessException {
@@ -28,6 +25,7 @@ class ClearServiceTest {
         authDAO = AuthDAO.getInstance();
         gameDAO = GameDAO.getInstance();
         clearService = new ClearService();
+        clearService.clear();
 
         // populate all DAO's with dummy data
         for (int i = 0; i < 100; i++) {
@@ -69,5 +67,11 @@ class ClearServiceTest {
         Assertions.assertEquals(userDAO.getUsers().size(), 0, "userDAO wasn't cleared");
         Assertions.assertEquals(authDAO.getTokens().size(), 0, "authDAO wasn't cleared");
         Assertions.assertEquals(gameDAO.getGames().size(), 0, "gameDAO wasn't cleared");
+    }
+
+    @AfterAll
+    static void tearDown() throws DataAccessException {
+        clearService = new ClearService();
+        clearService.clear();
     }
 }

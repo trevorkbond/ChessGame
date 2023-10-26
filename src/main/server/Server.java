@@ -3,14 +3,11 @@ package server;
 import services.handlers.*;
 import spark.Spark;
 
-import java.util.List;
-
 /**
  * The Server class sets up the server with JavaSpark and routes requests to their respective handlers.
  */
 public class Server {
     public static void main(String[] args) {
-        Server server = new Server();
         run();
     }
 
@@ -19,7 +16,7 @@ public class Server {
      */
     public static void run() {
         Spark.port(8080);
-        Spark.externalStaticFileLocation("/Users/trevorbond/cs240/ChessGame/web");
+        Spark.externalStaticFileLocation("web");
 
         RegisterHandler registerHandler = RegisterHandler.getInstance();
         ClearHandler clearHandler = ClearHandler.getInstance();

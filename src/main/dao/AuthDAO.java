@@ -18,7 +18,7 @@ public class AuthDAO {
     /**
      * The set of AuthTokens in the database
      */
-    private HashSet<AuthToken> tokens;
+    private final HashSet<AuthToken> tokens;
 
     /**
      * Default constructor for AuthDAO with no given hash set and private to ensure no outside instantiation
@@ -93,7 +93,7 @@ public class AuthDAO {
     /**
      * Clears all tokens from the database
      */
-    public void clearTokens() throws DataAccessException {
+    public void clearTokens() {
         tokens.clear();
     }
 }

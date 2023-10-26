@@ -11,15 +11,15 @@ public class User {
     /**
      * The user's username
      */
-    private String username;
+    private final String username;
     /**
      * The user's password
      */
-    private String password;
+    private final String password;
     /**
      * The user's email
      */
-    private String email;
+    private final String email;
 
     /**
      * Constructor for a User
@@ -61,23 +61,12 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

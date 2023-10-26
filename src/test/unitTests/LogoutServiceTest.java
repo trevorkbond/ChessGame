@@ -3,10 +3,7 @@ package unitTests;
 import dao.AuthDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import services.ClearService;
 import services.LogoutService;
 import services.RegisterService;
@@ -61,5 +58,11 @@ class LogoutServiceTest {
                 new AuthToken("Test", "32u90fnlsfsfa83le,f-")));
         Assertions.assertThrows(DataAccessException.class, () -> logoutService.logout(
                 new AuthToken("Test", "*******")));
+    }
+
+    @AfterAll
+    static void tearDown() throws DataAccessException {
+        ClearService clearService = new ClearService();
+        clearService.clear();
     }
 }

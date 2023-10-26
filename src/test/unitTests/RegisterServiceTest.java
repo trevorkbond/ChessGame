@@ -4,10 +4,7 @@ import dao.AuthDAO;
 import dao.UserDAO;
 import dataAccess.DataAccessException;
 import models.User;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import services.ClearService;
 import services.RegisterService;
 import services.request.RegisterRequest;
@@ -70,5 +67,11 @@ class RegisterServiceTest {
         Assertions.assertThrows(DataAccessException.class, () -> registerService.register(
                 new RegisterRequest("porterrockwell", "moderndaysam", "porter@restoration.com")));
 
+    }
+
+    @AfterAll
+    static void tearDown() throws DataAccessException {
+        ClearService clearService = new ClearService();
+        clearService.clear();
     }
 }

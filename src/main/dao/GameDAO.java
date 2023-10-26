@@ -18,7 +18,7 @@ public class GameDAO {
     /**
      * The set of games in the database
      */
-    private HashSet<Game> games;
+    private final HashSet<Game> games;
 
     /**
      * Constructor for a GameDAO, private to ensure no direct instantiation
@@ -73,16 +73,6 @@ public class GameDAO {
     }
 
     /**
-     * A method that retrieves all games from the database
-     *
-     * @return a HashSet of all the games
-     * @throws DataAccessException if there are no games in the database
-     */
-    public HashSet<Game> findAll() throws DataAccessException {
-        return null;
-    }
-
-    /**
      * Reserves a "spot" for a player in a game - the User with given username takes either whitePlayer or blackPlayer
      *
      * @param gameID      the given gameID to
@@ -105,30 +95,9 @@ public class GameDAO {
     }
 
     /**
-     * Updates the game name of the given gameID to the given chessGame name
-     *
-     * @param gameID    the given gameID
-     * @param chessGame the new name to update to
-     * @throws DataAccessException if no game of the given gameID exists
-     */
-    public void updateGame(int gameID, String chessGame) throws DataAccessException {
-
-    }
-
-    /**
-     * Deletes the game of the given gameID from the database
-     *
-     * @param gameID the given gameID
-     * @throws DataAccessException if no game of the given gameID exists
-     */
-    public void deleteGame(int gameID) throws DataAccessException {
-
-    }
-
-    /**
      * Clears all of the games from the database
      */
-    public void clearGames() throws DataAccessException {
+    public void clearGames() {
         games.clear();
     }
 }

@@ -13,7 +13,7 @@ public class LogoutService {
     /**
      * LogoutService needs access to authToken database
      */
-    private AuthDAO authDAO;
+    private final AuthDAO authDAO;
 
     /**
      * Constructs a logout service and retrieves static instance of DAO

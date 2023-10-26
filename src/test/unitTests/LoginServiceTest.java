@@ -3,10 +3,7 @@ package unitTests;
 import dao.AuthDAO;
 import dao.UserDAO;
 import dataAccess.DataAccessException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import services.ClearService;
 import services.LoginService;
 import services.RegisterService;
@@ -69,5 +66,11 @@ class LoginServiceTest {
         Assertions.assertThrows(DataAccessException.class, () -> loginService.login(new LoginRequest("spongebob", "squrepants")));
         Assertions.assertThrows(DataAccessException.class, () -> loginService.login(new LoginRequest("patrick", "")));
         Assertions.assertThrows(DataAccessException.class, () -> loginService.login(new LoginRequest("eugene", "krabs ")));
+    }
+
+    @AfterAll
+    static void tearDown() throws DataAccessException {
+        ClearService clearService = new ClearService();
+        clearService.clear();
     }
 }

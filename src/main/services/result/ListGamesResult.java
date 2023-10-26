@@ -41,8 +41,4 @@ public class ListGamesResult extends Result {
     public int hashCode() {
         return Objects.hash(getGames());
     }
-
-    public void setGames(HashSet<Game> games) {
-        this.games = games;
-    }
 }

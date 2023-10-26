@@ -7,7 +7,6 @@ import models.AuthToken;
 import models.Game;
 import services.request.CreateGameRequest;
 import services.result.CreateGameResult;
-import spark.Request;
 
 /**
  * CreateGameService implements the create game API functionality
@@ -16,12 +15,12 @@ public class CreateGameService {
     /**
      * CreateGameService has access to games in database via DAO
      */
-    private GameDAO gameDAO;
+    private final GameDAO gameDAO;
 
     /**
      * CreateGameService needs access to authTokens to verify Users are authorized to perform actions
      */
-    private AuthDAO authDAO;
+    private final AuthDAO authDAO;
 
     /**
      * Constructor for service that gets instance of GameDAO
@@ -34,7 +33,7 @@ public class CreateGameService {
     /**
      * Creates a game from a CreateGameRequest
      *
-     * @param request the given request
+     * @param request     the given request
      * @param httpRequest the given request
      * @return the CreateGameResult of the operation
      */

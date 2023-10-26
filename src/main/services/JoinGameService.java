@@ -6,7 +6,6 @@ import dataAccess.DataAccessException;
 import models.AuthToken;
 import services.request.JoinGameRequest;
 import services.result.Result;
-import spark.Request;
 
 /**
  * JoinGameService implements the join game API functionality. Verifies that the specified game exists, and, if a
@@ -18,11 +17,11 @@ public class JoinGameService {
     /**
      * Service needs to access auth database to check if action is authorized
      */
-    private AuthDAO authDAO;
+    private final AuthDAO authDAO;
     /**
      * Service needs access to game database
      */
-    private GameDAO gameDAO;
+    private final GameDAO gameDAO;
 
     /**
      * Constructor for JoinGameService
