@@ -8,6 +8,8 @@ import services.result.LoginRegisterResult;
 import spark.Request;
 import spark.Response;
 
+import java.sql.Connection;
+
 /**
  * RegisterHandler interacts with the RegisterService, which will then be interacting with DAO models and the database
  * to register new Users in the system.
@@ -48,6 +50,7 @@ public class RegisterHandler extends Handler {
             if (request.requestMethod().equalsIgnoreCase("post")) {
                 RegisterRequest requestObject = (RegisterRequest) gsonToRequest(RegisterRequest.class, request);
                 RegisterService service = new RegisterService();
+                Connection connection = getDatabaseConnection();
                 LoginRegisterResult resultObject = service.register(requestObject);
                 response.status(200);
                 response.body(objectToJson(resultObject));

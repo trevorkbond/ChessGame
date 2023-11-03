@@ -3,6 +3,7 @@ package dao;
 import dataAccess.DataAccessException;
 import models.User;
 
+import java.sql.Connection;
 import java.util.HashSet;
 
 /**
@@ -19,6 +20,12 @@ public class UserDAO {
      * The set of Users in the database
      */
     private final HashSet<User> users;
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    private Connection connection;
 
     /**
      * Default constructor for a UserDAO with no parameters private to ensure no direct instantiation

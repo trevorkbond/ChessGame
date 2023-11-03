@@ -1,5 +1,6 @@
 package server;
 
+import dataAccess.Database;
 import services.handlers.*;
 import spark.Spark;
 
@@ -10,6 +11,8 @@ public class Server {
     public static void main(String[] args) {
         run();
     }
+
+    public static Database database = new Database();
 
     /**
      * run() runs the server on port 8080 and routes all requests to their respective handlers.

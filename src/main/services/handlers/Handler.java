@@ -3,9 +3,12 @@ package services.handlers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dataAccess.DataAccessException;
+import server.Server;
 import services.result.Result;
 import spark.Request;
 import spark.Response;
+
+import java.sql.Connection;
 
 /**
  * Handler is a superclass that contains code helpful for parsing JSON strings into Java objects and other shared
@@ -90,5 +93,9 @@ public class Handler {
             response.body(getErrorMessage("Error: I'm unsure what happened here"));
             return getErrorMessage("Error: I'm unsure what happened here");
         }
+    }
+
+    public Connection getDatabaseConnection() throws DataAccessException {
+        return Server.database.getConnection();
     }
 }
