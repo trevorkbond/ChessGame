@@ -1,11 +1,15 @@
 package services.handlers;
 
+import dao.AuthDAO;
+import dao.GameDAO;
 import dataAccess.DataAccessException;
 import services.CreateGameService;
 import services.request.CreateGameRequest;
 import services.result.CreateGameResult;
 import spark.Request;
 import spark.Response;
+
+import java.sql.Connection;
 
 public class CreateGameHandler extends Handler {
 
@@ -37,7 +41,10 @@ public class CreateGameHandler extends Handler {
             if (request.requestMethod().equalsIgnoreCase("post")) {
                 CreateGameRequest requestObject = (CreateGameRequest) gsonToRequest(CreateGameRequest.class, request);
                 CreateGameService service = new CreateGameService();
-                CreateGameResult result = service.createGame(requestObject, request.headers("Authorization"));
+                Connection connection = getDatabaseConnection();
+                AuthDAO authDAO = new AuthDAO(connection);
+                GameDAO gameDAO = new GameDAO(connection);
+                CreateGameResult result = service.createGame(requestObject, request.headers("Authorization"), authDAO, gameDAO);
                 response.status(200);
                 response.body(objectToJson(result));
                 return objectToJson(result);

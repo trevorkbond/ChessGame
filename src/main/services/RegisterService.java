@@ -8,26 +8,12 @@ import models.User;
 import services.request.RegisterRequest;
 import services.result.LoginRegisterResult;
 
+import java.sql.SQLException;
+
 /**
  * RegisterService implements the register API functionality
  */
 public class RegisterService {
-    /**
-     * RegisterService has access to the set of users represented by UserDAO
-     */
-    private final UserDAO userDAO;
-    /**
-     * RegisterService has access to the set of authTokens represented by authDAO
-     */
-    private final AuthDAO authDAO;
-
-    /**
-     * Default constructor for RegisterService that initializes the userDAO and authDAO object
-     */
-    public RegisterService() {
-        userDAO = UserDAO.getInstance();
-        authDAO = AuthDAO.getInstance();
-    }
 
     /**
      * Processes a register request
@@ -35,7 +21,7 @@ public class RegisterService {
      * @param request the given RegisterRequest
      * @return LoginRegisterResult containing a username, message, and authToken
      */
-    public LoginRegisterResult register(RegisterRequest request) throws DataAccessException {
+    public LoginRegisterResult register(RegisterRequest request, UserDAO userDAO, AuthDAO authDAO) throws DataAccessException, SQLException {
         User user = new User(request);
         if (user.getUsername() == null || user.getPassword() == null || user.getEmail() == null) {
             throw new DataAccessException("Error: bad request");

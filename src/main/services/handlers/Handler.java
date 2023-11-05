@@ -9,6 +9,7 @@ import spark.Request;
 import spark.Response;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Handler is a superclass that contains code helpful for parsing JSON strings into Java objects and other shared
@@ -68,8 +69,6 @@ public class Handler {
         response.status(401);
         response.body(getErrorMessage("Error: unauthorized"));
         return getErrorMessage("Error: unauthorized");
-
-
     }
 
     /**
@@ -79,15 +78,25 @@ public class Handler {
      * @param e        the exception
      * @return the error message in JSON format
      */
-    public String handleDataException(Response response, DataAccessException e) {
-        if (e.getMessage().equals("Error: unauthorized")) {
-            return setUnauthorizedRequest(response);
-        } else if (e.getMessage().equals("Error: bad request")) {
-            return setBadRequest(response);
-        } else if (e.getMessage().equals("Error: already taken")) {
-            response.status(403);
-            response.body(getErrorMessage("Error: already taken"));
-            return getErrorMessage("Error: already taken");
+    public String handleDataException(Response response, Exception e) {
+        if (e instanceof DataAccessException) {
+            if (e.getMessage().equals("Error: unauthorized")) {
+                return setUnauthorizedRequest(response);
+            } else if (e.getMessage().equals("Error: bad request")) {
+                return setBadRequest(response);
+            } else if (e.getMessage().equals("Error: already taken")) {
+                response.status(403);
+                response.body(getErrorMessage("Error: already taken"));
+                return getErrorMessage("Error: already taken");
+            } else {
+                response.status(500);
+                response.body(getErrorMessage("Error: I'm unsure what happened here"));
+                return getErrorMessage("Error: I'm unsure what happened here");
+            }
+        } else if (e instanceof SQLException) {
+            response.status(500);
+            response.body(getErrorMessage("Error: SQL Exception: " + e.getMessage()));
+            return getErrorMessage("Error: SQL Exception: " + e.getMessage());
         } else {
             response.status(500);
             response.body(getErrorMessage("Error: I'm unsure what happened here"));

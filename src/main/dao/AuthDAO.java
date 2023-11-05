@@ -2,7 +2,12 @@ package dao;
 
 import dataAccess.DataAccessException;
 import models.AuthToken;
+import models.User;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 
 /**
@@ -11,36 +16,10 @@ import java.util.HashSet;
 
 public class AuthDAO {
 
-    /**
-     * Using Singleton method, only instance of AuthDAO that will ever exist
-     */
-    private static AuthDAO instance;
-    /**
-     * The set of AuthTokens in the database
-     */
-    private final HashSet<AuthToken> tokens;
+    private Connection connection;
 
-    /**
-     * Default constructor for AuthDAO with no given hash set and private to ensure no outside instantiation
-     */
-    private AuthDAO() {
-        tokens = new HashSet<>();
-    }
-
-    /**
-     * Get instance for singleton pattern
-     *
-     * @return the sole instance of AuthDAO
-     */
-    public static AuthDAO getInstance() {
-        if (instance == null) {
-            instance = new AuthDAO();
-        }
-        return instance;
-    }
-
-    public HashSet<AuthToken> getTokens() {
-        return tokens;
+    public AuthDAO(Connection connection) {
+        this.connection = connection;
     }
 
     /**
@@ -49,11 +28,14 @@ public class AuthDAO {
      * @param token the given AuthToken to add
      * @throws DataAccessException if given token already in database
      */
-    public void addToken(AuthToken token) throws DataAccessException {
-        if (tokens.contains(token)) {
-            throw new DataAccessException("The given token is already in the database");
-        } else {
-            tokens.add(token);
+    public void addToken(AuthToken token) throws DataAccessException, SQLException {
+        // TODO: maybe add findToken here if need be?
+        String insertSQL = "insert into authToken (authToken, username) values (?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(insertSQL)) {
+            stmt.setString(1, token.getAuthToken());
+            stmt.setString(2, token.getUsername());
+            stmt.executeUpdate();
         }
     }
 
@@ -64,11 +46,7 @@ public class AuthDAO {
      * @throws DataAccessException if given token isn't in database
      */
     public void deleteToken(AuthToken token) throws DataAccessException {
-        if (!tokens.contains(token)) {
-            throw new DataAccessException("Error: description");
-        } else {
-            tokens.remove(token);
-        }
+        // TODO: implement with database
     }
 
     /**
@@ -79,21 +57,32 @@ public class AuthDAO {
      * @throws DataAccessException if given token isn't in database
      */
     public AuthToken findToken(AuthToken token) throws DataAccessException {
-        if (!tokens.contains(token)) {
-            throw new DataAccessException("Error: unauthorized");
+        // TODO: implement with database
+        return null;
+    }
+
+    public void clearTokens() throws SQLException {
+        String dropSQL = "delete from authToken";
+        try (PreparedStatement stmt = connection.prepareStatement(dropSQL)) {
+            stmt.executeUpdate();
         }
-        for (AuthToken tempToken : tokens) {
-            if (tempToken.equals(token)) {
-                return tempToken;
-            }
-        }
-        throw new DataAccessException("Error: unauthorized");
     }
 
     /**
      * Clears all tokens from the database
      */
-    public void clearTokens() {
-        tokens.clear();
+    public HashSet<AuthToken> getTokens() throws SQLException {
+        String selectSQL = "select * from authToken";
+        HashSet<AuthToken> tokens = new HashSet<>();
+        try (PreparedStatement stmt = connection.prepareStatement(selectSQL);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String authToken = rs.getString(1);
+                String username = rs.getString(2);
+
+                tokens.add(new AuthToken(username, authToken));
+            }
+        }
+        return tokens;
     }
 }

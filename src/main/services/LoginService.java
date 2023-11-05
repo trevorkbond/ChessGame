@@ -8,28 +8,12 @@ import models.User;
 import services.request.LoginRequest;
 import services.result.LoginRegisterResult;
 
+import java.sql.SQLException;
+
 /**
  * LoginService implements the login API functionality
  */
 public class LoginService {
-
-    /**
-     * LoginService needs access to users in the database
-     */
-    private final UserDAO userDAO;
-
-    /**
-     * LoginService needs access to authTokens in the database
-     */
-    private final AuthDAO authDAO;
-
-    /**
-     * Constructor that initializes DAO's to static instances
-     */
-    public LoginService() {
-        userDAO = UserDAO.getInstance();
-        authDAO = AuthDAO.getInstance();
-    }
 
     /**
      * Processes a login request
@@ -37,7 +21,7 @@ public class LoginService {
      * @param request a LoginRequest
      * @return LoginResult containing username and authToken
      */
-    public LoginRegisterResult login(LoginRequest request) throws DataAccessException {
+    public LoginRegisterResult login(LoginRequest request, UserDAO userDAO, AuthDAO authDAO) throws DataAccessException, SQLException {
         User foundUser = userDAO.findUser(request.getUsername());
         if (!foundUser.getUsername().equals(request.getUsername()) || !foundUser.getPassword().equals(request.getPassword())) {
             throw new DataAccessException("Error: unauthorized");

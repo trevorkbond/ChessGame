@@ -1,46 +1,29 @@
 package dao;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dataAccess.DataAccessException;
 import models.Game;
+import models.User;
+import services.handlers.Handler;
+import spark.Request;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
+import java.sql.Connection;
 
 /**
  * GameDAO is responsible for handling and retrieving the database's Games
  */
 public class GameDAO {
 
-    /**
-     * Using Singleton method
-     */
-    private static GameDAO instance;
-    /**
-     * The set of games in the database
-     */
-    private final HashSet<Game> games;
+    private Connection connection;
 
-    /**
-     * Constructor for a GameDAO, private to ensure no direct instantiation
-     */
-    private GameDAO() {
-        games = new HashSet<>();
-    }
-
-    /**
-     * getInstance to implement singleton method
-     *
-     * @return the sole instance of GameDAO
-     */
-    public static GameDAO getInstance() {
-        if (instance == null) {
-            instance = new GameDAO();
-        }
-        return instance;
-    }
-
-    public HashSet<Game> getGames() {
-        return games;
+    public GameDAO(Connection connection) {
+        this.connection = connection;
     }
 
     /**
@@ -50,10 +33,7 @@ public class GameDAO {
      * @throws DataAccessException if game with same ID already exists within the database
      */
     public void createGame(Game game) throws DataAccessException {
-        if (games.contains(game)) {
-            throw new DataAccessException("Error: game already in database");
-        }
-        games.add(game);
+        //TODO: implement with database
     }
 
     /**
@@ -64,12 +44,8 @@ public class GameDAO {
      * @throws DataAccessException if Game of given gameID isn't in database
      */
     public Game findGame(int gameID) throws DataAccessException {
-        for (Game game : games) {
-            if (game.getGameID() == gameID) {
-                return game;
-            }
-        }
-        throw new DataAccessException("Error: bad request");
+        //TODO: implement with database
+        return null;
     }
 
     /**
@@ -98,6 +74,33 @@ public class GameDAO {
      * Clears all of the games from the database
      */
     public void clearGames() {
-        games.clear();
+        //TODO: implement with database
+    }
+
+    public HashSet<Game> getGames() throws SQLException {
+        String selectSQL = "select * from game";
+        HashSet<Game> games = new HashSet<>();
+        try (PreparedStatement stmt = connection.prepareStatement(selectSQL);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                int gameID = rs.getInt(1);
+                String whiteUsername = rs.getString(2);
+                String blackUsername = rs.getString(3);
+                String gameName = rs.getString(4);
+                String gameJSON = rs.getString(5);
+
+                ChessGame game = gameFromJSON(gameJSON);
+                games.add(new Game(game, gameID, whiteUsername, blackUsername, gameName));
+            }
+        }
+        return games;
+    }
+
+    private ChessGame gameFromJSON(String json) {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+
+        Gson gson = builder.create();
+        return gson.fromJson(json, ChessGame.class);
     }
 }

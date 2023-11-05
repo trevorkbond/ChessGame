@@ -1,6 +1,8 @@
 package services.handlers;
 
 
+import dao.AuthDAO;
+import dao.UserDAO;
 import dataAccess.DataAccessException;
 import services.RegisterService;
 import services.request.RegisterRequest;
@@ -9,6 +11,7 @@ import spark.Request;
 import spark.Response;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * RegisterHandler interacts with the RegisterService, which will then be interacting with DAO models and the database
@@ -51,14 +54,16 @@ public class RegisterHandler extends Handler {
                 RegisterRequest requestObject = (RegisterRequest) gsonToRequest(RegisterRequest.class, request);
                 RegisterService service = new RegisterService();
                 Connection connection = getDatabaseConnection();
-                LoginRegisterResult resultObject = service.register(requestObject);
+                UserDAO userDAO = new UserDAO(connection);
+                AuthDAO authDAO = new AuthDAO(connection);
+                LoginRegisterResult resultObject = service.register(requestObject, userDAO, authDAO);
                 response.status(200);
                 response.body(objectToJson(resultObject));
                 return objectToJson(resultObject);
             } else {
                 return setBadRequest(response);
             }
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | SQLException e) {
             return handleDataException(response, e);
         }
     }

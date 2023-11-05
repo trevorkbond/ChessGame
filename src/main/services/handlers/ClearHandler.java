@@ -1,10 +1,16 @@
 package services.handlers;
 
+import dao.AuthDAO;
+import dao.GameDAO;
+import dao.UserDAO;
 import dataAccess.DataAccessException;
 import services.ClearService;
 import services.result.Result;
 import spark.Request;
 import spark.Response;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * ClearHandler handles calls to the clear API
@@ -44,14 +50,18 @@ public class ClearHandler extends Handler {
         try {
             if (request.requestMethod().equalsIgnoreCase("delete")) {
                 ClearService service = new ClearService();
-                Result result = service.clear();
+                Connection connection = getDatabaseConnection();
+                UserDAO userDAO = new UserDAO(connection);
+                AuthDAO authDAO = new AuthDAO(connection);
+                GameDAO gameDAO = new GameDAO(connection);
+                Result result = service.clear(userDAO, authDAO, gameDAO);
                 response.status(200);
                 response.body(objectToJson(result));
                 return objectToJson(result);
             } else {
                 return setBadRequest(response);
             }
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | SQLException e) {
             return handleDataException(response, e);
         }
     }

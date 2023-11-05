@@ -1,49 +1,29 @@
 package dao;
 
+import com.mysql.cj.x.protobuf.MysqlxPrepare;
 import dataAccess.DataAccessException;
 import models.User;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.util.HashSet;
 
 /**
  * UserDAO is responsible for handling and retrieving the database's Users
  */
 
-public class UserDAO {
-
-    /**
-     * Employing Singleton method to ensure only one UserDAO is ever created
-     */
-    private static UserDAO instance;
-    /**
-     * The set of Users in the database
-     */
-    private final HashSet<User> users;
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
-    }
+public class UserDAO extends DAO {
 
     private Connection connection;
 
     /**
      * Default constructor for a UserDAO with no parameters private to ensure no direct instantiation
      */
-    private UserDAO() {
-        users = new HashSet<>();
-    }
-
-    /**
-     * getInstance ensures only one userDAO is ever created
-     *
-     * @return the sole instance of userDAO
-     */
-    public static UserDAO getInstance() {
-        if (instance == null) {
-            instance = new UserDAO();
-        }
-        return instance;
+    public UserDAO(Connection connection) {
+        this.connection = connection;
     }
 
     /**
@@ -53,15 +33,18 @@ public class UserDAO {
      * @throws DataAccessException if another User with same username exists in database
      */
     public void createUser(User user) throws DataAccessException {
-        if (users.contains(user)) {
-            throw new DataAccessException("Error: already taken");
+        String insertSQL = "insert into user (username, password, email) values (?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(insertSQL)) {
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getEmail());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleSQLException(e);
         }
-        users.add(user);
     }
 
-    public HashSet<User> getUsers() {
-        return users;
-    }
 
     /**
      * Gets a user with the given username from the database
@@ -71,22 +54,55 @@ public class UserDAO {
      * @throws DataAccessException if User with given username isn't in database
      */
     public User findUser(String username) throws DataAccessException {
-        User tempUser = new User(username, null, null);
-        if (!users.contains(tempUser)) {
-            throw new DataAccessException("Error: unauthorized");
-        }
-        for (User user : users) {
-            if (user.equals(tempUser)) {
-                return user;
+        String selectSQL = "select * from user where username = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(selectSQL)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String foundUsername = rs.getString(1);
+                String foundPassword = rs.getString(2);
+                String foundEmail = rs.getString(3);
+
+                return new User(foundUsername, foundPassword, foundEmail);
             }
+        } catch (SQLException e) {
+            handleSQLException(e);
         }
-        throw new DataAccessException("Error: unauthorized");
+        return null;
     }
 
     /**
      * Clears all users from the database
      */
-    public void clearUsers() {
-        users.clear();
+    public void clearUsers() throws DataAccessException {
+        String dropSQL = "delete from user";
+        try (PreparedStatement stmt = connection.prepareStatement(dropSQL)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+    }
+
+    /**
+     * This function returns a set of all users from the database for testing purposes.
+     * @return A set of all users
+     * @throws DataAccessException if there's an SQL exception
+     */
+    public HashSet<User> getAllUsers() throws DataAccessException {
+        String selectSQL = "select * from user";
+        HashSet<User> users = new HashSet<>();
+        try (PreparedStatement stmt = connection.prepareStatement(selectSQL);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String username = rs.getString(1);
+                String password = rs.getString(2);
+                String email = rs.getString(3);
+
+                users.add(new User(username, password, email));
+            }
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+        return users;
     }
 }

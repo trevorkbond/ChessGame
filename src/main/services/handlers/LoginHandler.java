@@ -1,11 +1,16 @@
 package services.handlers;
 
+import dao.AuthDAO;
+import dao.UserDAO;
 import dataAccess.DataAccessException;
 import services.LoginService;
 import services.request.LoginRequest;
 import services.result.LoginRegisterResult;
 import spark.Request;
 import spark.Response;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class LoginHandler extends Handler {
 
@@ -37,13 +42,16 @@ public class LoginHandler extends Handler {
             if (request.requestMethod().equalsIgnoreCase("post")) {
                 LoginRequest requestObject = (LoginRequest) gsonToRequest(LoginRequest.class, request);
                 LoginService service = new LoginService();
-                LoginRegisterResult result = service.login(requestObject);
+                Connection connection = getDatabaseConnection();
+                UserDAO userDAO = new UserDAO(connection);
+                AuthDAO authDAO = new AuthDAO(connection);
+                LoginRegisterResult result = service.login(requestObject, userDAO, authDAO);
                 response.status(200);
                 return objectToJson(result);
             } else {
                 return setBadRequest(response);
             }
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | SQLException e) {
             return handleDataException(response, e);
         }
     }

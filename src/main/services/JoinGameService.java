@@ -15,29 +15,12 @@ import services.result.Result;
 public class JoinGameService {
 
     /**
-     * Service needs to access auth database to check if action is authorized
-     */
-    private final AuthDAO authDAO;
-    /**
-     * Service needs access to game database
-     */
-    private final GameDAO gameDAO;
-
-    /**
-     * Constructor for JoinGameService
-     */
-    public JoinGameService() {
-        authDAO = AuthDAO.getInstance();
-        gameDAO = GameDAO.getInstance();
-    }
-
-    /**
      * Processes a join game request
      *
      * @param request the given JoinGameRequest
      * @return the Result of the operation
      */
-    public Result joinGame(JoinGameRequest request, String httpRequest) throws DataAccessException {
+    public Result joinGame(JoinGameRequest request, String httpRequest, AuthDAO authDAO, GameDAO gameDAO) throws DataAccessException {
         gameDAO.findGame(request.getGameID());
         AuthToken authToken = authDAO.findToken(new AuthToken(null, httpRequest));
         gameDAO.claimSpot(request.getGameID(), request.getPlayerColor(), authToken.getUsername());

@@ -1,4 +1,4 @@
-package unitTests;
+package unitTests.ServiceTests;
 
 import chess.ChessGameImpl;
 import dao.AuthDAO;
@@ -6,30 +6,29 @@ import dao.GameDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.Game;
+import org.glassfish.grizzly.http.io.BinaryNIOInputSource;
 import org.junit.jupiter.api.*;
+import server.Server;
 import services.ClearService;
 import services.ListGamesService;
+import unitTests.UnitTests;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ListGamesServiceTest {
+class ListGamesServiceTest extends UnitTests {
 
-    private HashSet<Game> testGames;
-    private GameDAO gameDAO;
     private ListGamesService listGamesService;
-    private AuthDAO authDAO;
-
+    private HashSet<Game> testGames;
 
     @BeforeEach
-    void setUp() throws DataAccessException {
-        gameDAO = GameDAO.getInstance();
-        authDAO = AuthDAO.getInstance();
+    void setUp() throws DataAccessException, SQLException {
+        initializeAndClearDAOs();
         listGamesService = new ListGamesService();
-        ClearService clearService = new ClearService();
         testGames = new HashSet<>();
-        clearService.clear();
 
         // add list of test games to hashset
         testGames.add(new Game(new ChessGameImpl(), 1, "whiteTeam", "blackTeam", "test1"));
@@ -47,21 +46,21 @@ class ListGamesServiceTest {
 
     @Test
     @DisplayName("List Games Success")
-    void listGamesSuccess() throws DataAccessException {
+    void listGamesSuccess() throws DataAccessException, SQLException {
         // test if games in test set equal to games in DAO retrieved from listGames API
-        Assertions.assertEquals(listGamesService.listGames(new AuthToken("username", "complexToken"), "complexToken").getGames()
+        Assertions.assertEquals(listGamesService.listGames(new AuthToken("username", "complexToken"), "complexToken", authDAO, gameDAO).getGames()
             , testGames, "List games returned different list of games");
 
         // add a game to both
         testGames.add(new Game(new ChessGameImpl(), 4, "whiteTeam", "blackTeam", "test4"));
         gameDAO.createGame(new Game(new ChessGameImpl(), 4, "whiteTeam", "blackTeam", "test4"));
-        Assertions.assertEquals(listGamesService.listGames(new AuthToken("username", "complexToken"), "complexToken").getGames()
+        Assertions.assertEquals(listGamesService.listGames(new AuthToken("username", "complexToken"), "complexToken", authDAO, gameDAO).getGames()
                 , testGames, "List games returned different list of games");
 
         // clear both and then list
         testGames.clear();
         gameDAO.clearGames();
-        Assertions.assertEquals(listGamesService.listGames(new AuthToken("username", "complexToken"), "complexToken").getGames()
+        Assertions.assertEquals(listGamesService.listGames(new AuthToken("username", "complexToken"), "complexToken", authDAO, gameDAO).getGames()
                 , testGames, "List games returned different list of games after clearing");
     }
 
@@ -70,20 +69,15 @@ class ListGamesServiceTest {
     void listGamesFailure() {
         // try with multiple invalid authtokens and assure exception is thrown
         Assertions.assertThrows(DataAccessException.class, () -> listGamesService.listGames(new AuthToken("thisone", "doesn't match"),
-                "doesn't match"));
+                "doesn't match", authDAO, gameDAO));
         Assertions.assertThrows(DataAccessException.class, () -> listGamesService.listGames(new AuthToken("thisoneisempty", ""),
-                ""));
+                "", authDAO, gameDAO));
         Assertions.assertThrows(DataAccessException.class, () -> listGamesService.listGames(new AuthToken("", "authToken"),
-                "authToken"));
+                "authToken", authDAO, gameDAO));
         Assertions.assertThrows(DataAccessException.class, () -> listGamesService.listGames(new AuthToken("", "Complextoken"),
-                "Complextoken"));
+                "Complextoken", authDAO, gameDAO));
         Assertions.assertThrows(DataAccessException.class, () -> listGamesService.listGames(new AuthToken("thisone", "u80jemdi"),
-                "u80jemdi"));
+                "u80jemdi", authDAO, gameDAO));
     }
 
-    @AfterAll
-    static void tearDown() throws DataAccessException {
-        ClearService clearService = new ClearService();
-        clearService.clear();
-    }
 }

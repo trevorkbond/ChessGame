@@ -6,18 +6,12 @@ import dataAccess.DataAccessException;
 import models.AuthToken;
 import services.result.ListGamesResult;
 
+import java.sql.SQLException;
+
 /**
  * ListGamesService implements the list games ("/games") API functionality
  */
 public class ListGamesService {
-
-    private final AuthDAO authDAO;
-    private final GameDAO gameDAO;
-
-    public ListGamesService() {
-        authDAO = AuthDAO.getInstance();
-        gameDAO = GameDAO.getInstance();
-    }
 
     /**
      * processes a list games request
@@ -25,7 +19,7 @@ public class ListGamesService {
      * @param authToken the authorized user's token
      * @return ListGamesResult, a list of all games in the database
      */
-    public ListGamesResult listGames(AuthToken authToken, String httpRequest) throws DataAccessException {
+    public ListGamesResult listGames(AuthToken authToken, String httpRequest, AuthDAO authDAO, GameDAO gameDAO) throws DataAccessException, SQLException {
         authDAO.findToken(new AuthToken(null, httpRequest));
         return new ListGamesResult(null, gameDAO.getGames());
     }
