@@ -18,7 +18,6 @@ public class LogoutService {
      * @throws DataAccessException if request doesn't have proper authorization
      */
     public Result logout(AuthToken authToken, AuthDAO authDAO) throws DataAccessException {
-        authDAO.findToken(authToken);
         AuthToken tempToken = new AuthToken(authToken.getUsername(), authToken.getAuthToken());
         authDAO.deleteToken(tempToken);
         return new Result(null);

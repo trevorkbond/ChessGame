@@ -64,6 +64,8 @@ public class UserDAO extends DAO {
                 String foundEmail = rs.getString(3);
 
                 return new User(foundUsername, foundPassword, foundEmail);
+            } else {
+                return null;
             }
         } catch (SQLException e) {
             handleSQLException(e);

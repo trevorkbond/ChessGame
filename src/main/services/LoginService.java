@@ -23,6 +23,9 @@ public class LoginService {
      */
     public LoginRegisterResult login(LoginRequest request, UserDAO userDAO, AuthDAO authDAO) throws DataAccessException, SQLException {
         User foundUser = userDAO.findUser(request.getUsername());
+        if (foundUser == null) {
+            throw new DataAccessException("Error: unauthorized");
+        }
         if (!foundUser.getUsername().equals(request.getUsername()) || !foundUser.getPassword().equals(request.getPassword())) {
             throw new DataAccessException("Error: unauthorized");
         }

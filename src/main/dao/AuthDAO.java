@@ -14,7 +14,7 @@ import java.util.HashSet;
  * AuthDAO is responsible for handling and retrieving the database's AuthTokens
  */
 
-public class AuthDAO {
+public class AuthDAO extends DAO {
 
     private Connection connection;
 
@@ -28,14 +28,15 @@ public class AuthDAO {
      * @param token the given AuthToken to add
      * @throws DataAccessException if given token already in database
      */
-    public void addToken(AuthToken token) throws DataAccessException, SQLException {
-        // TODO: maybe add findToken here if need be?
+    public void addToken(AuthToken token) throws DataAccessException {
         String insertSQL = "insert into authToken (authToken, username) values (?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(insertSQL)) {
             stmt.setString(1, token.getAuthToken());
             stmt.setString(2, token.getUsername());
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleSQLException(e);
         }
     }
 
@@ -46,7 +47,17 @@ public class AuthDAO {
      * @throws DataAccessException if given token isn't in database
      */
     public void deleteToken(AuthToken token) throws DataAccessException {
-        // TODO: implement with database
+        AuthToken foundToken = findToken(token);
+        if (foundToken == null) {
+            throw new DataAccessException("Error: unauthorized");
+        }
+        String deleteSQL = "delete from authToken where authToken = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(deleteSQL)) {
+            stmt.setString(1, token.getAuthToken());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
     }
 
     /**
@@ -57,21 +68,37 @@ public class AuthDAO {
      * @throws DataAccessException if given token isn't in database
      */
     public AuthToken findToken(AuthToken token) throws DataAccessException {
-        // TODO: implement with database
+        String selectSQL = "select * from authToken where authToken = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(selectSQL)) {
+            stmt.setString(1, token.getAuthToken());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String authToken = rs.getString(1);
+                String username = rs.getString(2);
+
+                return new AuthToken(authToken, username);
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
         return null;
     }
 
-    public void clearTokens() throws SQLException {
+    public void clearTokens() throws DataAccessException {
         String dropSQL = "delete from authToken";
         try (PreparedStatement stmt = connection.prepareStatement(dropSQL)) {
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleSQLException(e);
         }
     }
 
     /**
      * Clears all tokens from the database
      */
-    public HashSet<AuthToken> getTokens() throws SQLException {
+    public HashSet<AuthToken> getTokens() throws DataAccessException {
         String selectSQL = "select * from authToken";
         HashSet<AuthToken> tokens = new HashSet<>();
         try (PreparedStatement stmt = connection.prepareStatement(selectSQL);
@@ -82,6 +109,8 @@ public class AuthDAO {
 
                 tokens.add(new AuthToken(username, authToken));
             }
+        } catch (SQLException e) {
+            handleSQLException(e);
         }
         return tokens;
     }
