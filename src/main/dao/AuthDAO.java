@@ -76,7 +76,7 @@ public class AuthDAO extends DAO {
                 String authToken = rs.getString(1);
                 String username = rs.getString(2);
 
-                return new AuthToken(authToken, username);
+                return new AuthToken(username, authToken);
             } else {
                 return null;
             }
