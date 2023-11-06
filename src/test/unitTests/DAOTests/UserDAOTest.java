@@ -8,16 +8,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import services.RegisterService;
 import services.request.RegisterRequest;
-import unitTests.UnitTests;
+import unitTests.UnitTest;
 
-import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class UserDAOTest extends UnitTests {
+class UserDAOTest extends UnitTest {
 
     private HashSet<User> testUsers;
 

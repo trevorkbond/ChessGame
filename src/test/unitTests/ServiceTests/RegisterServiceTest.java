@@ -1,21 +1,16 @@
 package unitTests.ServiceTests;
 
-import dao.AuthDAO;
-import dao.UserDAO;
 import dataAccess.DataAccessException;
 import models.User;
 import org.junit.jupiter.api.*;
-import server.Server;
-import services.ClearService;
 import services.RegisterService;
 import services.request.RegisterRequest;
-import unitTests.UnitTests;
+import unitTests.UnitTest;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashSet;
 
-class RegisterServiceTest extends UnitTests {
+class RegisterServiceTest extends UnitTest {
     private RegisterService registerService;
 
     @BeforeEach

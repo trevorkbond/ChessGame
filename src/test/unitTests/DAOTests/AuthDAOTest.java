@@ -1,9 +1,7 @@
 package unitTests.DAOTests;
 
-import com.mysql.cj.log.Log;
 import dataAccess.DataAccessException;
 import models.AuthToken;
-import models.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,15 +9,13 @@ import org.junit.jupiter.api.Test;
 import services.LogoutService;
 import services.RegisterService;
 import services.request.RegisterRequest;
-import unitTests.UnitTests;
+import unitTests.UnitTest;
 
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class AuthDAOTest extends UnitTests {
+class AuthDAOTest extends UnitTest {
 
     private HashSet<AuthToken> testTokens;
 

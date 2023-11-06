@@ -1,22 +1,16 @@
 package unitTests.ServiceTests;
 
-import dao.AuthDAO;
-import dao.GameDAO;
-import dao.UserDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.Game;
 import models.User;
 import org.junit.jupiter.api.*;
-import server.Server;
-import services.ClearService;
-import unitTests.UnitTests;
+import unitTests.UnitTest;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.UUID;
 
-class ClearServiceTest extends UnitTests {
+class ClearServiceTest extends UnitTest {
 
     @BeforeEach
     void setUp() throws DataAccessException, SQLException {

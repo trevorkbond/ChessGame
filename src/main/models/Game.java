@@ -72,6 +72,10 @@ public class Game {
         return game;
     }
 
+    public static void setNextID(int nextID) {
+        Game.nextID = nextID;
+    }
+
     public String getWhiteUsername() {
         return whiteUsername;
     }

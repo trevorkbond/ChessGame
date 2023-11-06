@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 
-public class UnitTests {
+public class UnitTest {
     public Connection connection;
     public UserDAO userDAO;
     public AuthDAO authDAO;

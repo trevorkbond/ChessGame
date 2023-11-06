@@ -1,23 +1,16 @@
 package unitTests.ServiceTests;
 
-import dao.AuthDAO;
-import dao.GameDAO;
-import dao.UserDAO;
 import dataAccess.DataAccessException;
-import models.Game;
 import org.junit.jupiter.api.*;
-import server.Server;
-import services.ClearService;
 import services.LoginService;
 import services.RegisterService;
 import services.request.LoginRequest;
 import services.request.RegisterRequest;
-import unitTests.UnitTests;
+import unitTests.UnitTest;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
-class LoginServiceTest extends UnitTests {
+class LoginServiceTest extends UnitTest {
 
     private LoginService loginService;
     private RegisterService registerService;

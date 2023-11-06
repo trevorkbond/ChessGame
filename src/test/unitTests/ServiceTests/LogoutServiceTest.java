@@ -1,23 +1,17 @@
 package unitTests.ServiceTests;
 
-import dao.AuthDAO;
-import dao.UserDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
-import models.User;
 import org.junit.jupiter.api.*;
-import server.Server;
-import services.ClearService;
 import services.LogoutService;
 import services.RegisterService;
 import services.request.RegisterRequest;
-import unitTests.UnitTests;
+import unitTests.UnitTest;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashSet;
 
-class LogoutServiceTest extends UnitTests {
+class LogoutServiceTest extends UnitTest {
     private LogoutService logoutService;
     private RegisterService registerService;
     private HashSet<AuthToken> authTokens;

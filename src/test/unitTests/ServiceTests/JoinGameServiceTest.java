@@ -2,27 +2,17 @@ package unitTests.ServiceTests;
 
 import chess.ChessGame;
 import chess.ChessGameImpl;
-import dao.AuthDAO;
-import dao.GameDAO;
-import dao.UserDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.Game;
 import org.junit.jupiter.api.*;
-import server.Server;
-import services.ClearService;
 import services.JoinGameService;
-import services.ListGamesService;
 import services.request.JoinGameRequest;
-import unitTests.UnitTests;
+import unitTests.UnitTest;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class JoinGameServiceTest extends UnitTests {
+class JoinGameServiceTest extends UnitTest {
 
     private JoinGameService joinGameService;
 

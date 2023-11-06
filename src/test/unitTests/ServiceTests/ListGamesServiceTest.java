@@ -1,25 +1,17 @@
 package unitTests.ServiceTests;
 
 import chess.ChessGameImpl;
-import dao.AuthDAO;
-import dao.GameDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.Game;
-import org.glassfish.grizzly.http.io.BinaryNIOInputSource;
 import org.junit.jupiter.api.*;
-import server.Server;
-import services.ClearService;
 import services.ListGamesService;
-import unitTests.UnitTests;
+import unitTests.UnitTest;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ListGamesServiceTest extends UnitTests {
+class ListGamesServiceTest extends UnitTest {
 
     private ListGamesService listGamesService;
     private HashSet<Game> testGames;
