@@ -21,7 +21,12 @@ public class JoinGameService {
      * @return the Result of the operation
      */
     public Result joinGame(JoinGameRequest request, String httpRequest, AuthDAO authDAO, GameDAO gameDAO) throws DataAccessException {
-        gameDAO.findGame(request.getGameID());
+        if (gameDAO.findGame(request.getGameID()) == null) {
+            throw new DataAccessException("Error: bad request");
+        }
+        if (authDAO.findToken(new AuthToken(null, httpRequest)) == null) {
+            throw new DataAccessException("Error: unauthorized");
+        }
         AuthToken authToken = authDAO.findToken(new AuthToken(null, httpRequest));
         gameDAO.claimSpot(request.getGameID(), request.getPlayerColor(), authToken.getUsername());
         return new Result(null);

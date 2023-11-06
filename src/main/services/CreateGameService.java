@@ -21,7 +21,9 @@ public class CreateGameService {
      * @return the CreateGameResult of the operation
      */
     public CreateGameResult createGame(CreateGameRequest request, String httpRequest, AuthDAO authDAO, GameDAO gameDAO) throws DataAccessException {
-        authDAO.findToken(new AuthToken(null, httpRequest));
+        if (authDAO.findToken(new AuthToken(null, httpRequest)) == null) {
+            throw new DataAccessException("Error: unauthorized");
+        }
         Game addGame = new Game(request.getGameName());
         gameDAO.createGame(addGame);
         return new CreateGameResult(null, addGame.getGameID());

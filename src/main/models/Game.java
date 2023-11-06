@@ -21,7 +21,7 @@ public class Game {
     /**
      * The ChessGame object to perform game functions on
      */
-    private ChessGame game;
+    private ChessGameImpl game;
     /**
      * The username for the player on white team
      */
@@ -44,12 +44,16 @@ public class Game {
      * @param gameName      the game name (String)
      * @param game          the given ChessGame object
      */
-    public Game(ChessGame game, int gameID, String whiteUsername, String blackUsername, String gameName) {
+    public Game(ChessGameImpl game, int gameID, String whiteUsername, String blackUsername, String gameName) {
         this.game = game;
         this.gameID = gameID;
         this.whiteUsername = whiteUsername;
         this.blackUsername = blackUsername;
         this.gameName = gameName;
+    }
+
+    public String getGameName() {
+        return gameName;
     }
 
     /**
@@ -59,8 +63,13 @@ public class Game {
      */
     public Game(String gameName) {
         game = new ChessGameImpl();
+        this.gameName = gameName;
         gameID = nextID;
         nextID++;
+    }
+
+    public ChessGameImpl getGame() {
+        return game;
     }
 
     public String getWhiteUsername() {

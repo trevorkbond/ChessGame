@@ -47,10 +47,7 @@ public class AuthDAO extends DAO {
      * @throws DataAccessException if given token isn't in database
      */
     public void deleteToken(AuthToken token) throws DataAccessException {
-        AuthToken foundToken = findToken(token);
-        if (foundToken == null) {
-            throw new DataAccessException("Error: unauthorized");
-        }
+        confirmAuthorization(token, this);
         String deleteSQL = "delete from authToken where authToken = ?";
         try (PreparedStatement stmt = connection.prepareStatement(deleteSQL)) {
             stmt.setString(1, token.getAuthToken());

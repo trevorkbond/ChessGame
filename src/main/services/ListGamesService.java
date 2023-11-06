@@ -19,8 +19,10 @@ public class ListGamesService {
      * @param authToken the authorized user's token
      * @return ListGamesResult, a list of all games in the database
      */
-    public ListGamesResult listGames(AuthToken authToken, String httpRequest, AuthDAO authDAO, GameDAO gameDAO) throws DataAccessException, SQLException {
-        authDAO.findToken(new AuthToken(null, httpRequest));
+    public ListGamesResult listGames(AuthToken authToken, String httpRequest, AuthDAO authDAO, GameDAO gameDAO) throws DataAccessException {
+        if (authDAO.findToken(new AuthToken(null, httpRequest)) == null) {
+            throw new DataAccessException("Error: unauthorized");
+        }
         return new ListGamesResult(null, gameDAO.getGames());
     }
 }

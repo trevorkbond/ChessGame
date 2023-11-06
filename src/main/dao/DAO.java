@@ -1,6 +1,7 @@
 package dao;
 
 import dataAccess.DataAccessException;
+import models.AuthToken;
 
 import javax.xml.crypto.Data;
 import java.sql.SQLException;
@@ -14,6 +15,13 @@ public class DAO {
             throw new DataAccessException("Error: already taken");
         } else {
             throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    public void confirmAuthorization(AuthToken token, AuthDAO authDAO) throws DataAccessException {
+        AuthToken foundToken = authDAO.findToken(token);
+        if (foundToken == null) {
+            throw new DataAccessException("Error: unauthorized");
         }
     }
 }

@@ -29,6 +29,7 @@ public class ListGamesHandler extends Handler {
     }
 
     public String handleRequest(Request request, Response response) {
+        System.out.println("in listgameshandler");
         try {
             if (request.requestMethod().equalsIgnoreCase("get")) {
                 AuthToken tempToken = new AuthToken(null, request.headers("Authorization"));
@@ -43,7 +44,7 @@ public class ListGamesHandler extends Handler {
             } else {
                 return setBadRequest(response);
             }
-        } catch (DataAccessException | SQLException e) {
+        } catch (DataAccessException e) {
             return handleDataException(response, e);
         }
     }

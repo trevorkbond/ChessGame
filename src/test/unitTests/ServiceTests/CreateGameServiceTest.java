@@ -32,7 +32,7 @@ class CreateGameServiceTest extends UnitTests {
 
     @Test
     @DisplayName("Create Game Success")
-    void createGameSuccess() throws SQLException {
+    void createGameSuccess() throws DataAccessException {
         Assertions.assertDoesNotThrow(() -> createGameService.createGame(
                 new CreateGameRequest("fungame"), "authToken17", authDAO, gameDAO));
         Assertions.assertEquals(gameDAO.getGames().size(), 1, "Game wasn't created");
