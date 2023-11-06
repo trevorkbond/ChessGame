@@ -74,8 +74,8 @@ class ListGamesServiceTest extends UnitTests {
                 "", authDAO, gameDAO));
         Assertions.assertThrows(DataAccessException.class, () -> listGamesService.listGames(new AuthToken("", "authToken"),
                 "authToken", authDAO, gameDAO));
-        Assertions.assertThrows(DataAccessException.class, () -> listGamesService.listGames(new AuthToken("", "Complextoken"),
-                "Complextoken", authDAO, gameDAO));
+        Assertions.assertThrows(DataAccessException.class, () -> listGamesService.listGames(new AuthToken("", "Complex token"),
+                "Complex token", authDAO, gameDAO));
         Assertions.assertThrows(DataAccessException.class, () -> listGamesService.listGames(new AuthToken("thisone", "u80jemdi"),
                 "u80jemdi", authDAO, gameDAO));
     }

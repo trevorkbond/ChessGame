@@ -123,6 +123,7 @@ class AuthDAOTest extends UnitTests {
     }
 
     @Test
+    @DisplayName("Clear Tokens")
     void clearTokens() throws DataAccessException {
         for (int i = 0; i < 100; i++) {
             authDAO.addToken(new AuthToken(UUID.randomUUID().toString().substring(0, 24), UUID.randomUUID().toString().substring(0, 24)));

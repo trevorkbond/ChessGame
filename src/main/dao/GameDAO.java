@@ -127,7 +127,6 @@ public class GameDAO extends DAO {
     }
 
     public HashSet<Game> getGames() throws DataAccessException {
-        System.out.println("in getGames DAO");
         String selectSQL = "select * from game";
         HashSet<Game> games = new HashSet<>();
         try (PreparedStatement stmt = connection.prepareStatement(selectSQL);

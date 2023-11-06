@@ -24,13 +24,14 @@ class ClearServiceTest extends UnitTests {
 
         // populate all DAO's with dummy data
         for (int i = 0; i < 100; i++) {
-            userDAO.createUser(new User(UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString()));
+            userDAO.createUser(new User(UUID.randomUUID().toString().substring(0, 24), UUID.randomUUID().toString().substring(0, 24),
+                    UUID.randomUUID().toString().substring(0, 24)));
         }
         for (int i = 0; i < 100; i++) {
-            authDAO.addToken(new AuthToken(UUID.randomUUID().toString(), UUID.randomUUID().toString()));
+            authDAO.addToken(new AuthToken(UUID.randomUUID().toString().substring(0, 24), UUID.randomUUID().toString().substring(0, 24)));
         }
         for (int i = 0; i < 100; i++) {
-            gameDAO.createGame(new Game(UUID.randomUUID().toString()));
+            gameDAO.createGame(new Game(UUID.randomUUID().toString().substring(0, 24)));
         }
     }
 

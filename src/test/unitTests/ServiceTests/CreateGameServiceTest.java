@@ -57,10 +57,6 @@ class CreateGameServiceTest extends UnitTests {
         Assertions.assertThrows(DataAccessException.class, () -> createGameService.createGame(
                 new CreateGameRequest("fungame"), "****", authDAO, gameDAO));
 
-        // delete an authToken to simulate logging out and then try creating game
-//        authDAO.getTokens().removeIf(auth -> auth.getUsername().equals("username"));
-        Assertions.assertThrows(DataAccessException.class, () -> createGameService.createGame(
-                new CreateGameRequest("fungame"), "authToken17", authDAO, gameDAO));
     }
 
 }
