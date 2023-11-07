@@ -3,7 +3,6 @@ package dao;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 
-import javax.xml.crypto.Data;
 import java.sql.SQLException;
 
 /**

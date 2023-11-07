@@ -53,7 +53,7 @@ class UserDAOTest extends UnitTest {
                 "circlepants", "krustykrab@gmail.com")));
         // ensure any attempt with empty fields will be rejected
         RegisterService registerService = new RegisterService();
-        Assertions.assertThrows(DataAccessException.class, () -> registerService.register(new RegisterRequest(null ,
+        Assertions.assertThrows(DataAccessException.class, () -> registerService.register(new RegisterRequest(null,
                 "squarepants", "garycomehome@gmail.com"), userDAO, authDAO));
         Assertions.assertThrows(DataAccessException.class, () -> registerService.register(new RegisterRequest("spongebob",
                 null, "garycomehome@gmail.com"), userDAO, authDAO));
@@ -74,6 +74,14 @@ class UserDAOTest extends UnitTest {
                 userDAO, authDAO);
         User patrick = new User("patrick", "star", "liveunderarock@gmail.com");
         Assertions.assertEquals(userDAO.findUser("patrick"), patrick, "User not added through Register");
+    }
+
+    @Test
+    @DisplayName("Find User Failure")
+    void findUserFailure() throws DataAccessException {
+        // try to find with no users
+        User foundUser = userDAO.findUser("Gary");
+        Assertions.assertNull(foundUser);
     }
 
     @Test

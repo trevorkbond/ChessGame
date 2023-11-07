@@ -10,7 +10,6 @@ import spark.Request;
 import spark.Response;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public class ListGamesHandler extends Handler {
     /**

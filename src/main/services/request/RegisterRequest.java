@@ -7,7 +7,7 @@ public class RegisterRequest extends LoginRequest {
     /**
      * The given login email
      */
-    private String email;
+    private final String email;
 
     /**
      * Constructor for a RegisterRequest

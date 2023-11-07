@@ -1,27 +1,23 @@
 package dao;
 
 import chess.*;
-import com.google.gson.*;
-import java.lang.reflect.Type;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dataAccess.DataAccessException;
-import models.AuthToken;
 import models.Game;
-import models.User;
-import services.handlers.Handler;
-import spark.Request;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
-import java.sql.Connection;
 
 /**
  * GameDAO is responsible for handling and retrieving the database's Games
  */
 public class GameDAO extends DAO {
 
-    private Connection connection;
+    private final Connection connection;
 
     public GameDAO(Connection connection) {
         this.connection = connection;

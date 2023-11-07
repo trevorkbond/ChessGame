@@ -1,14 +1,12 @@
 package dao;
 
-import com.mysql.cj.x.protobuf.MysqlxPrepare;
 import dataAccess.DataAccessException;
 import models.User;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 
 /**
@@ -17,7 +15,7 @@ import java.util.HashSet;
 
 public class UserDAO extends DAO {
 
-    private Connection connection;
+    private final Connection connection;
 
     /**
      * Default constructor for a UserDAO with no parameters private to ensure no direct instantiation
@@ -87,6 +85,7 @@ public class UserDAO extends DAO {
 
     /**
      * This function returns a set of all users from the database for testing purposes.
+     *
      * @return A set of all users
      * @throws DataAccessException if there's an SQL exception
      */

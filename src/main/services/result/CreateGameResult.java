@@ -7,7 +7,7 @@ public class CreateGameResult extends Result {
     /**
      * An integer that represents the gameID of the result
      */
-    private int gameID;
+    private final int gameID;
 
     /**
      * Constructor for a CreateGameResult

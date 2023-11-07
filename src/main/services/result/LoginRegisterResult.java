@@ -8,11 +8,11 @@ public class LoginRegisterResult extends Result {
     /**
      * A String representing the resulting userName
      */
-    private String username;
+    private final String username;
     /**
      * A String representing the resulting authToken
      */
-    private String authToken;
+    private final String authToken;
 
     /**
      * Constructor for a LoginRegisterResult

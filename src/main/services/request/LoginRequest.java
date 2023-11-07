@@ -7,11 +7,11 @@ public class LoginRequest {
     /**
      * The username of the login User
      */
-    private String username;
+    private final String username;
     /**
      * The password of the login User
      */
-    private String password;
+    private final String password;
 
     /**
      * Constructor for a LoginRequest

@@ -8,7 +8,7 @@ public class Result {
     /**
      * The message of the Result as a string is shared by every Result subobject.
      */
-    private String message;
+    private final String message;
 
     /**
      * Result constructor will be used by the other Results as all contain a message

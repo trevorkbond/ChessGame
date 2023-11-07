@@ -7,7 +7,7 @@ public class CreateGameRequest {
     /**
      * The game's name, a String
      */
-    private String gameName;
+    private final String gameName;
 
     /**
      * Constructor for a CreateGameRequest

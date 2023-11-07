@@ -10,11 +10,11 @@ public class AuthToken {
     /**
      * The user's username
      */
-    private String username;
+    private final String username;
     /**
      * The user's authToken
      */
-    private String authToken;
+    private final String authToken;
 
     /**
      * Constructor for an AuthToken

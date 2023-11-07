@@ -8,11 +8,11 @@ import spark.Spark;
  * The Server class sets up the server with JavaSpark and routes requests to their respective handlers.
  */
 public class Server {
+    public static Database database = new Database();
+
     public static void main(String[] args) {
         run();
     }
-
-    public static Database database = new Database();
 
     /**
      * run() runs the server on port 8080 and routes all requests to their respective handlers.

@@ -6,8 +6,6 @@ import dataAccess.DataAccessException;
 import models.AuthToken;
 import services.result.ListGamesResult;
 
-import java.sql.SQLException;
-
 /**
  * ListGamesService implements the list games ("/games") API functionality
  */

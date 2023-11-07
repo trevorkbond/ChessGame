@@ -9,11 +9,11 @@ public class JoinGameRequest {
     /**
      * The playerColor specified in the request
      */
-    private ChessGame.TeamColor playerColor;
+    private final ChessGame.TeamColor playerColor;
     /**
      * The gameID specified in the request
      */
-    private int gameID;
+    private final int gameID;
 
     /**
      * Constructor for a JoinGameRequest

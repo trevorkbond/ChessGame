@@ -7,19 +7,19 @@ public class GameResult extends Result {
     /**
      * An integer representing gameID
      */
-    private int gameID;
+    private final int gameID;
     /**
      * The username of the User for the white team
      */
-    private String whiteUsername;
+    private final String whiteUsername;
     /**
      * The username of the User for the black team
      */
-    private String blackUsername;
+    private final String blackUsername;
     /**
      * The resulting gameName as a String
      */
-    private String gameName;
+    private final String gameName;
 
     /**
      * A constructor for a GameResult

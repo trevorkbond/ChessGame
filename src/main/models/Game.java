@@ -1,6 +1,5 @@
 package models;
 
-import chess.ChessGame;
 import chess.ChessGameImpl;
 
 import java.util.Objects;
@@ -21,7 +20,7 @@ public class Game {
     /**
      * The ChessGame object to perform game functions on
      */
-    private ChessGameImpl game;
+    private final ChessGameImpl game;
     /**
      * The username for the player on white team
      */
@@ -33,7 +32,7 @@ public class Game {
     /**
      * The game's name, a String
      */
-    private String gameName;
+    private final String gameName;
 
     /**
      * A constructor for a Game model
@@ -52,10 +51,6 @@ public class Game {
         this.gameName = gameName;
     }
 
-    public String getGameName() {
-        return gameName;
-    }
-
     /**
      * Constructor that is only passed in a gameName and assigned a unique ID from static private member
      *
@@ -68,12 +63,16 @@ public class Game {
         nextID++;
     }
 
-    public ChessGameImpl getGame() {
-        return game;
-    }
-
     public static void setNextID(int nextID) {
         Game.nextID = nextID;
+    }
+
+    public String getGameName() {
+        return gameName;
+    }
+
+    public ChessGameImpl getGame() {
+        return game;
     }
 
     public String getWhiteUsername() {

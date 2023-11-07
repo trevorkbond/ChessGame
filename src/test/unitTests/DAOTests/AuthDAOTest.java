@@ -24,6 +24,7 @@ class AuthDAOTest extends UnitTest {
         initializeAndClearDAOs();
         testTokens = new HashSet<>();
     }
+
     @Test
     @DisplayName("Successful Add Token")
     void addTokenSuccess() throws DataAccessException, SQLException {

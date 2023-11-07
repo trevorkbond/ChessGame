@@ -2,7 +2,6 @@ package dao;
 
 import dataAccess.DataAccessException;
 import models.AuthToken;
-import models.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +15,7 @@ import java.util.HashSet;
 
 public class AuthDAO extends DAO {
 
-    private Connection connection;
+    private final Connection connection;
 
     public AuthDAO(Connection connection) {
         this.connection = connection;

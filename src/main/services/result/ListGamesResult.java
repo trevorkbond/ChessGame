@@ -13,7 +13,7 @@ public class ListGamesResult extends Result {
     /**
      * This hash set represents the list of games that is returned in the result
      */
-    private HashSet<Game> games;
+    private final HashSet<Game> games;
 
     /**
      * Constructor for ListGameResult

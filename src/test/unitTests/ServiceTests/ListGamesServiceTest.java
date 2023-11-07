@@ -4,7 +4,10 @@ import chess.ChessGameImpl;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.Game;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import services.ListGamesService;
 import unitTests.UnitTest;
 
@@ -41,7 +44,7 @@ class ListGamesServiceTest extends UnitTest {
     void listGamesSuccess() throws DataAccessException, SQLException {
         // test if games in test set equal to games in DAO retrieved from listGames API
         Assertions.assertEquals(listGamesService.listGames(new AuthToken("username", "complexToken"), "complexToken", authDAO, gameDAO).getGames()
-            , testGames, "List games returned different list of games");
+                , testGames, "List games returned different list of games");
 
         // add a game to both
         testGames.add(new Game(new ChessGameImpl(), 4, "whiteTeam", "blackTeam", "test4"));
