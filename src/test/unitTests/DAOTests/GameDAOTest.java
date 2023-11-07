@@ -1,7 +1,6 @@
 package unitTests.DAOTests;
 
-import chess.ChessGame;
-import chess.ChessGameImpl;
+import chess.*;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.Game;
@@ -120,6 +119,50 @@ class GameDAOTest extends UnitTest {
         Assertions.assertThrows(DataAccessException.class, () -> gameDAO.claimSpot(2, ChessGame.TeamColor.BLACK, "nada"));
 
     }
+
+    @Test
+    @DisplayName("Update Game Success")
+    void updateGameSuccess() throws DataAccessException, InvalidMoveException {
+        ChessGameImpl gameState = new ChessGameImpl();
+        gameState.getBoard().resetBoard();
+
+        // make some valid moves
+        gameDAO.createGame(new Game(gameState, 100, null, null, "Please work"));
+        Assertions.assertDoesNotThrow(() -> gameDAO.updateGame(100, new ChessMoveImpl(new ChessPositionImpl(2, 3),
+                new ChessPositionImpl(4, 3), null)));
+        Assertions.assertDoesNotThrow(() -> gameDAO.updateGame(100, new ChessMoveImpl(new ChessPositionImpl(7, 3),
+                new ChessPositionImpl(5, 3), null)));
+
+        // assert those pieces actually moved
+        ChessPiece movedPiece = gameDAO.findGame(100).getGame().getBoard().getPiece(new ChessPositionImpl(2, 3));
+        Assertions.assertNull(movedPiece);
+        movedPiece = gameDAO.findGame(100).getGame().getBoard().getPiece(new ChessPositionImpl(7, 3));
+        Assertions.assertNull(movedPiece);
+
+        // assert other pieces are there
+        ChessPiece existingPiece = gameDAO.findGame(100).getGame().getBoard().getPiece(new ChessPositionImpl(1, 3));
+        Assertions.assertNotNull(existingPiece);
+    }
+
+    @Test
+    @DisplayName("Update Game Failure")
+    void updateGameFailure() throws DataAccessException, InvalidMoveException {
+        ChessGameImpl gameState = new ChessGameImpl();
+        gameState.getBoard().resetBoard();
+
+        // attempt invalid moves
+        gameDAO.createGame(new Game(gameState, 100, null, null, "Please work"));
+        Assertions.assertThrows(InvalidMoveException.class, () -> gameDAO.updateGame(100, new ChessMoveImpl(
+                new ChessPositionImpl(1, 1), new ChessPositionImpl(1, 3), null)));
+        Assertions.assertThrows(InvalidMoveException.class, () -> gameDAO.updateGame(100, new ChessMoveImpl(
+                new ChessPositionImpl(2, 1), new ChessPositionImpl(3, 2), null)));
+
+        // try to make move then make move with same team
+        gameDAO.updateGame(100, new ChessMoveImpl(new ChessPositionImpl(2, 3), new ChessPositionImpl(3, 3), null));
+        Assertions.assertThrows(InvalidMoveException.class, () -> gameDAO.updateGame(100, new ChessMoveImpl(
+                new ChessPositionImpl(2, 7), new ChessPositionImpl(3, 7), null)));
+    }
+
 
     @Test
     @DisplayName("Clear Games")

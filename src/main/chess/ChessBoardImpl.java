@@ -47,6 +47,19 @@ public class ChessBoardImpl implements chess.ChessBoard {
     }
 
     @Override
+    public String toString() {
+        StringBuilder boardString = new StringBuilder();
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
+                if (getPiece(new ChessPositionImpl(i, j)) != null) {
+                    boardString.append("(").append(i).append(", ").append(j).append(") -> ").append(getPiece(new ChessPositionImpl(i, j)).getPieceType()).append("\n");
+                }
+            }
+        }
+        return boardString.toString();
+    }
+
+    @Override
     public void resetBoard() {
         clearBoard();
         // set white pieces

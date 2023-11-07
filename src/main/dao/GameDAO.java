@@ -1,9 +1,6 @@
 package dao;
 
-import chess.ChessBoard;
-import chess.ChessBoardImpl;
-import chess.ChessGame;
-import chess.ChessGameImpl;
+import chess.*;
 import com.google.gson.*;
 import java.lang.reflect.Type;
 import dataAccess.DataAccessException;
@@ -114,6 +111,24 @@ public class GameDAO extends DAO {
         }
     }
 
+    public void updateGame(int gameID, ChessMove move) throws DataAccessException, InvalidMoveException {
+        Game foundGame = findGame(gameID);
+        if (foundGame == null) {
+            throw new DataAccessException("Error: bad request");
+        }
+        ChessGameImpl gameState = foundGame.getGame();
+        gameState.makeMove(move);
+        String serializedGame = gameToJson(gameState);
+        String updateSQL = "update game set game = ? where gameID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(updateSQL)) {
+            stmt.setString(1, serializedGame);
+            stmt.setInt(2, gameID);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+    }
+
     /**
      * Clears all of the games from the database
      */
@@ -145,12 +160,6 @@ public class GameDAO extends DAO {
             handleSQLException(e);
         }
         return games;
-    }
-
-    static class ChessBoardAdapter implements JsonDeserializer<ChessBoard> {
-        public ChessBoard deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
-            return new Gson().fromJson(el, ChessBoardImpl.class);
-        }
     }
 
     private ChessGameImpl gameFromJSON(String json) {
