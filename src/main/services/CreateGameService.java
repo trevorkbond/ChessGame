@@ -5,8 +5,8 @@ import dao.GameDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.Game;
-import services.request.CreateGameRequest;
-import services.result.CreateGameResult;
+import request.CreateGameRequest;
+import result.CreateGameResult;
 
 /**
  * CreateGameService implements the create game API functionality

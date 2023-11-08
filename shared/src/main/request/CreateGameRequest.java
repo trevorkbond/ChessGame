@@ -1,4 +1,4 @@
-package services.request;
+package request;
 
 /**
  * CreateGameRequest represents a request to create a game

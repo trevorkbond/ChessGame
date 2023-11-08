@@ -4,7 +4,7 @@ import dao.AuthDAO;
 import dao.GameDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
-import services.result.ListGamesResult;
+import result.ListGamesResult;
 
 /**
  * ListGamesService implements the list games ("/games") API functionality

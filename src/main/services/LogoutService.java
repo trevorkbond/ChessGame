@@ -3,7 +3,7 @@ package services;
 import dao.AuthDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
-import services.result.Result;
+import result.Result;
 
 /**
  * LogoutService implements the logout API functionality

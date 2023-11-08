@@ -4,8 +4,8 @@ import dao.AuthDAO;
 import dao.GameDAO;
 import dataAccess.DataAccessException;
 import services.JoinGameService;
-import services.request.JoinGameRequest;
-import services.result.Result;
+import request.JoinGameRequest;
+import result.Result;
 import spark.Request;
 import spark.Response;
 

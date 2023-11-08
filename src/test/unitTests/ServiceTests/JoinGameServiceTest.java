@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import services.JoinGameService;
-import services.request.JoinGameRequest;
+import request.JoinGameRequest;
 import unitTests.UnitTest;
 
 import java.sql.SQLException;

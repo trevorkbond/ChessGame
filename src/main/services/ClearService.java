@@ -4,7 +4,7 @@ import dao.AuthDAO;
 import dao.GameDAO;
 import dao.UserDAO;
 import dataAccess.DataAccessException;
-import services.result.Result;
+import result.Result;
 
 import java.sql.SQLException;
 

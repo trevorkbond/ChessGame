@@ -5,7 +5,7 @@ import dao.GameDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import services.ListGamesService;
-import services.result.ListGamesResult;
+import result.ListGamesResult;
 import spark.Request;
 import spark.Response;
 

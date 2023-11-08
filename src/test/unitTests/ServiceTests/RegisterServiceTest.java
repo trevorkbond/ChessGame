@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import services.RegisterService;
-import services.request.RegisterRequest;
+import request.RegisterRequest;
 import unitTests.UnitTest;
 
 import java.sql.SQLException;

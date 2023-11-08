@@ -1,4 +1,4 @@
-package services.request;
+package request;
 
 /**
  * RegisterRequest extends from LoginRequest as the only new unique field is an email

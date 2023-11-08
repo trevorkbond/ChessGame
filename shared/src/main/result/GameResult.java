@@ -1,4 +1,4 @@
-package services.result;
+package result;
 
 /**
  * GameResult represents a single game in the database, upon which ListGameResult will draw for a list of all games

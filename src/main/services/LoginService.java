@@ -5,8 +5,8 @@ import dao.UserDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.User;
-import services.request.LoginRequest;
-import services.result.LoginRegisterResult;
+import request.LoginRequest;
+import result.LoginRegisterResult;
 
 import java.sql.SQLException;
 

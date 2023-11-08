@@ -1,4 +1,4 @@
-package services.result;
+package result;
 
 /**
  * CreateGameResult represents the result of a create game API call, returning the gameID

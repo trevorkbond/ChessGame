@@ -4,7 +4,7 @@ import dao.AuthDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import services.LogoutService;
-import services.result.Result;
+import result.Result;
 import spark.Request;
 import spark.Response;
 

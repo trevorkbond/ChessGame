@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dataAccess.DataAccessException;
 import server.Server;
-import services.result.Result;
+import result.Result;
 import spark.Request;
 import spark.Response;
 

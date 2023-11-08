@@ -1,6 +1,6 @@
 package models;
 
-import services.request.RegisterRequest;
+import request.RegisterRequest;
 
 import java.util.Objects;
 

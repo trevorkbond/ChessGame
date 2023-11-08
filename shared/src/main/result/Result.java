@@ -1,4 +1,4 @@
-package services.result;
+package result;
 
 /**
  * The Result class is a superclass that is extended on by other Result classes. All results share an error message as a field,

@@ -1,4 +1,4 @@
-package services.request;
+package request;
 
 /**
  * LoginRequest represents a login request object containing a username and password

@@ -4,8 +4,8 @@ import dao.AuthDAO;
 import dao.GameDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
-import services.request.JoinGameRequest;
-import services.result.Result;
+import request.JoinGameRequest;
+import result.Result;
 
 /**
  * JoinGameService implements the join game API functionality. Verifies that the specified game exists, and, if a

@@ -5,7 +5,7 @@ import dao.GameDAO;
 import dao.UserDAO;
 import dataAccess.DataAccessException;
 import services.ClearService;
-import services.result.Result;
+import result.Result;
 import spark.Request;
 import spark.Response;
 

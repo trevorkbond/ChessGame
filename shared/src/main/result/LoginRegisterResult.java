@@ -1,4 +1,4 @@
-package services.result;
+package result;
 
 /**
  * LoginRegisterResult represents a login result or register result object containing a username and authToken (Strings).

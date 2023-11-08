@@ -4,8 +4,8 @@ import dao.AuthDAO;
 import dao.UserDAO;
 import dataAccess.DataAccessException;
 import services.LoginService;
-import services.request.LoginRequest;
-import services.result.LoginRegisterResult;
+import request.LoginRequest;
+import result.LoginRegisterResult;
 import spark.Request;
 import spark.Response;
 
