@@ -9,14 +9,11 @@ import java.util.Objects;
  * information about the teams, along with a Game name
  */
 public class Game {
-    /**
-     * static instance of ID to assign ID's incrementally
-     */
-    private static int nextID = 1;
+
     /**
      * the gameID, an integer
      */
-    private final int gameID;
+    private int gameID;
     /**
      * The ChessGame object to perform game functions on
      */
@@ -51,6 +48,13 @@ public class Game {
         this.gameName = gameName;
     }
 
+    public Game(ChessGameImpl game, String whiteUsername, String blackUsername, String gameName) {
+        this.game = game;
+        this.whiteUsername = whiteUsername;
+        this.blackUsername = blackUsername;
+        this.gameName = gameName;
+    }
+
     /**
      * Constructor that is only passed in a gameName and assigned a unique ID from static private member
      *
@@ -59,12 +63,10 @@ public class Game {
     public Game(String gameName) {
         game = new ChessGameImpl();
         this.gameName = gameName;
-        gameID = nextID;
-        nextID++;
     }
 
-    public static void setNextID(int nextID) {
-        Game.nextID = nextID;
+    public void setGameID(int gameID) {
+        this.gameID = gameID;
     }
 
     public String getGameName() {

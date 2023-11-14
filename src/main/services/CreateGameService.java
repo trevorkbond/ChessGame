@@ -25,7 +25,8 @@ public class CreateGameService {
             throw new DataAccessException("Error: unauthorized");
         }
         Game addGame = new Game(request.getGameName());
-        gameDAO.createGame(addGame);
+        int gameID = gameDAO.createGame(addGame);
+        addGame.setGameID(gameID);
         return new CreateGameResult(null, addGame.getGameID());
     }
 }

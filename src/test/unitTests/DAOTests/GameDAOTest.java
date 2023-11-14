@@ -24,7 +24,7 @@ class GameDAOTest extends UnitTest {
     void setUp() throws SQLException, DataAccessException {
         initializeAndClearDAOs();
         testGames = new HashSet<>();
-        Game.setNextID(1);
+        gameDAO.resetIDCounter();
     }
 
     @Test
@@ -127,20 +127,20 @@ class GameDAOTest extends UnitTest {
         gameState.getBoard().resetBoard();
 
         // make some valid moves
-        gameDAO.createGame(new Game(gameState, 100, null, null, "Please work"));
-        Assertions.assertDoesNotThrow(() -> gameDAO.updateGame(100, new ChessMoveImpl(new ChessPositionImpl(2, 3),
+        gameDAO.createGame(new Game(gameState, null, null, "Please work"));
+        Assertions.assertDoesNotThrow(() -> gameDAO.updateGame(1, new ChessMoveImpl(new ChessPositionImpl(2, 3),
                 new ChessPositionImpl(4, 3), null)));
-        Assertions.assertDoesNotThrow(() -> gameDAO.updateGame(100, new ChessMoveImpl(new ChessPositionImpl(7, 3),
+        Assertions.assertDoesNotThrow(() -> gameDAO.updateGame(1, new ChessMoveImpl(new ChessPositionImpl(7, 3),
                 new ChessPositionImpl(5, 3), null)));
 
         // assert those pieces actually moved
-        ChessPiece movedPiece = gameDAO.findGame(100).getGame().getBoard().getPiece(new ChessPositionImpl(2, 3));
+        ChessPiece movedPiece = gameDAO.findGame(1).getGame().getBoard().getPiece(new ChessPositionImpl(2, 3));
         Assertions.assertNull(movedPiece);
-        movedPiece = gameDAO.findGame(100).getGame().getBoard().getPiece(new ChessPositionImpl(7, 3));
+        movedPiece = gameDAO.findGame(1).getGame().getBoard().getPiece(new ChessPositionImpl(7, 3));
         Assertions.assertNull(movedPiece);
 
         // assert other pieces are there
-        ChessPiece existingPiece = gameDAO.findGame(100).getGame().getBoard().getPiece(new ChessPositionImpl(1, 3));
+        ChessPiece existingPiece = gameDAO.findGame(1).getGame().getBoard().getPiece(new ChessPositionImpl(1, 3));
         Assertions.assertNotNull(existingPiece);
     }
 
@@ -151,15 +151,15 @@ class GameDAOTest extends UnitTest {
         gameState.getBoard().resetBoard();
 
         // attempt invalid moves
-        gameDAO.createGame(new Game(gameState, 100, null, null, "Please work"));
-        Assertions.assertThrows(InvalidMoveException.class, () -> gameDAO.updateGame(100, new ChessMoveImpl(
+        gameDAO.createGame(new Game(gameState, null, null, "Please work"));
+        Assertions.assertThrows(InvalidMoveException.class, () -> gameDAO.updateGame(1, new ChessMoveImpl(
                 new ChessPositionImpl(1, 1), new ChessPositionImpl(1, 3), null)));
-        Assertions.assertThrows(InvalidMoveException.class, () -> gameDAO.updateGame(100, new ChessMoveImpl(
+        Assertions.assertThrows(InvalidMoveException.class, () -> gameDAO.updateGame(1, new ChessMoveImpl(
                 new ChessPositionImpl(2, 1), new ChessPositionImpl(3, 2), null)));
 
         // try to make move then make move with same team
-        gameDAO.updateGame(100, new ChessMoveImpl(new ChessPositionImpl(2, 3), new ChessPositionImpl(3, 3), null));
-        Assertions.assertThrows(InvalidMoveException.class, () -> gameDAO.updateGame(100, new ChessMoveImpl(
+        gameDAO.updateGame(1, new ChessMoveImpl(new ChessPositionImpl(2, 3), new ChessPositionImpl(3, 3), null));
+        Assertions.assertThrows(InvalidMoveException.class, () -> gameDAO.updateGame(1, new ChessMoveImpl(
                 new ChessPositionImpl(2, 7), new ChessPositionImpl(3, 7), null)));
     }
 

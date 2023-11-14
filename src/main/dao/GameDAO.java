@@ -6,10 +6,7 @@ import com.google.gson.GsonBuilder;
 import dataAccess.DataAccessException;
 import models.Game;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashSet;
 
 /**
@@ -29,20 +26,27 @@ public class GameDAO extends DAO {
      * @param game the game to insert
      * @throws DataAccessException if game with same ID already exists within the database
      */
-    public void createGame(Game game) throws DataAccessException {
+    public int createGame(Game game) throws DataAccessException {
         if (findGame(game.getGameID()) != null) {
             throw new DataAccessException("Error: already taken");
         }
-        String insertSQL = "insert into game (gameID, gameName, game) values (?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(insertSQL)) {
-            stmt.setInt(1, game.getGameID());
-            stmt.setString(2, game.getGameName());
-            stmt.setString(3, gameToJson(game.getGame()));
+        String insertSQL = "insert into game (gameName, game) values (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(insertSQL,
+                Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, game.getGameName());
+            stmt.setString(2, gameToJson(game.getGame()));
 
-            stmt.executeUpdate();
+            if (stmt.executeUpdate() == 1) {
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    generatedKeys.next();
+                    int id = generatedKeys.getInt(1);
+                    return id;
+                }
+            }
         } catch (SQLException e) {
             handleSQLException(e);
         }
+        return -1;
     }
 
     /**
@@ -131,6 +135,15 @@ public class GameDAO extends DAO {
     public void clearGames() throws DataAccessException {
         String dropSQL = "delete from game";
         try (PreparedStatement stmt = connection.prepareStatement(dropSQL)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+    }
+
+    public void resetIDCounter() throws DataAccessException {
+        String alterSQL = "alter table game auto_increment = 1";
+        try (PreparedStatement stmt = connection.prepareStatement(alterSQL)) {
             stmt.executeUpdate();
         } catch (SQLException e) {
             handleSQLException(e);

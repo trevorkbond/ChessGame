@@ -24,6 +24,7 @@ class ListGamesServiceTest extends UnitTest {
         initializeAndClearDAOs();
         listGamesService = new ListGamesService();
         testGames = new HashSet<>();
+        gameDAO.resetIDCounter();
 
         // add list of test games to hashset
         testGames.add(new Game(new ChessGameImpl(), 1, "whiteTeam", "blackTeam", "test1"));
@@ -31,9 +32,9 @@ class ListGamesServiceTest extends UnitTest {
         testGames.add(new Game(new ChessGameImpl(), 3, "whiteTeam", "blackTeam", "test3"));
 
         // add same test games to gameDAO
-        gameDAO.createGame(new Game(new ChessGameImpl(), 1, "whiteTeam", "blackTeam", "test1"));
-        gameDAO.createGame(new Game(new ChessGameImpl(), 2, "whiteTeam", "blackTeam", "test2"));
-        gameDAO.createGame(new Game(new ChessGameImpl(), 3, "whiteTeam", "blackTeam", "test3"));
+        gameDAO.createGame(new Game(new ChessGameImpl(), "whiteTeam", "blackTeam", "test1"));
+        gameDAO.createGame(new Game(new ChessGameImpl(), "whiteTeam", "blackTeam", "test2"));
+        gameDAO.createGame(new Game(new ChessGameImpl(), "whiteTeam", "blackTeam", "test3"));
 
         // add an authToken to authenticate action
         authDAO.addToken(new AuthToken("username", "complexToken"));
