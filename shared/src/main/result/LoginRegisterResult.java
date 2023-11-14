@@ -27,4 +27,7 @@ public class LoginRegisterResult extends Result {
         this.username = username;
     }
 
+    public String getUsername() {
+        return username;
+    }
 }
