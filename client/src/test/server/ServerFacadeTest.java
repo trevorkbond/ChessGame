@@ -1,11 +1,13 @@
 package server;
 
+import chess.ChessGame;
 import facade.ServerFacade;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import request.CreateGameRequest;
+import request.JoinGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
 import result.CreateGameResult;
@@ -182,5 +184,72 @@ class ServerFacadeTest {
         } catch (IOException e) {
             Assertions.assertEquals("401", e.getMessage(), "Response code on invalid list games wasn't 401");
         }
+    }
+
+    @Test
+    @DisplayName("Join Game Success")
+    public void joinGameSuccess() throws IOException {
+        // register a user
+        RegisterRequest request = new RegisterRequest("Trevor", "Bond", "email@gmail.com");
+        LoginRegisterResult result = serverFacade.register(request);
+        String authToken = result.getAuthToken();
+
+        CreateGameResult gameResult = serverFacade.createGame(new CreateGameRequest("yay"), authToken);
+
+        int gameID = gameResult.getGameID();
+        JoinGameRequest joinRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE, gameID);
+        JoinGameRequest joinRequest2 = new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID);
+        Result joinResult = Assertions.assertDoesNotThrow(() -> serverFacade.joinGame(joinRequest, authToken));
+        Assertions.assertNull(joinResult.getMessage());
+        joinResult = Assertions.assertDoesNotThrow(() -> serverFacade.joinGame(joinRequest2, authToken));
+        Assertions.assertNull(joinResult.getMessage());
+    }
+
+    @Test
+    @DisplayName("Join Game Failure")
+    public void joinGameFailure() throws IOException {
+        // try to join game without game existing
+        assertThrows(IOException.class, () -> serverFacade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 0), null));
+        try {
+            serverFacade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 0), "someToken");
+        } catch (IOException e) {
+            assertEquals("400", e.getMessage(), "Incorrect error thrown (not 400 bad request)");
+        }
+
+        // try to join game without authentication
+        RegisterRequest request = new RegisterRequest("Trevor", "Bond", "email@gmail.com");
+        LoginRegisterResult result = serverFacade.register(request);
+        String authToken = result.getAuthToken();
+
+        CreateGameResult gameResult = serverFacade.createGame(new CreateGameRequest("yay"), authToken);
+        int gameID = gameResult.getGameID();
+        assertThrows(IOException.class, () -> serverFacade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, gameID), "someToken"));
+        try {
+            serverFacade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, gameID), "someToken");
+        } catch (IOException e) {
+            assertEquals("401", e.getMessage(), "Incorrect error thrown (not 401 unauthorized)");
+        }
+
+        // then try to join spots that have been filled
+        serverFacade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, gameID), authToken);
+        serverFacade.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID), authToken);
+
+        assertThrows(IOException.class, () -> serverFacade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, gameID), authToken));
+        assertThrows(IOException.class, () -> serverFacade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, gameID), authToken));
+
+        // assert correct error codes thrown
+        try {
+            serverFacade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, gameID), authToken);
+        } catch (IOException e) {
+            assertEquals("403", e.getMessage(), "Incorrect error thrown (not 403 already taken)");
+        }
+
+        try {
+            serverFacade.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID), authToken);
+        } catch (IOException e) {
+            assertEquals("403", e.getMessage(), "Incorrect error thrown (not 403 already  taken)");
+        }
+
+
     }
 }

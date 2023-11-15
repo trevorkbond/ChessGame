@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import models.ChessBoardAdapter;
 import request.CreateGameRequest;
+import request.JoinGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
 import result.CreateGameResult;
@@ -44,6 +45,11 @@ public class ServerFacade {
     public ListGamesResult listGames(String authToken) throws IOException {
         HttpURLConnection connection = makeRequest(null, "/game", "GET", authToken);
         return (ListGamesResult) getResponse(connection, ListGamesResult.class);
+    }
+
+    public Result joinGame(JoinGameRequest request, String authToken) throws IOException {
+        HttpURLConnection connection = makeRequest(request, "/game", "PUT", authToken);
+        return (Result) getResponse(connection, Result.class);
     }
 
     public void clear() throws IOException {
