@@ -20,4 +20,7 @@ public class CreateGameResult extends Result {
         this.gameID = gameID;
     }
 
+    public int getGameID() {
+        return gameID;
+    }
 }

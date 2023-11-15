@@ -5,8 +5,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import request.CreateGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
+import result.CreateGameResult;
 import result.LoginRegisterResult;
 import result.Result;
 
@@ -47,7 +49,7 @@ class ServerFacadeTest {
         try {
             serverFacade.register(request);
         } catch (IOException e) {
-            Assertions.assertEquals(e.getMessage(), "403", "Incorrect response code thrown");
+            Assertions.assertEquals("403", e.getMessage(), "Incorrect response code thrown");
         }
 
         // attempt bad request with null parameter(s)
@@ -57,7 +59,7 @@ class ServerFacadeTest {
         try {
             serverFacade.register(badRequest);
         } catch (IOException e) {
-            Assertions.assertEquals(e.getMessage(), "400", "Incorrect response code thrown");
+            Assertions.assertEquals("400", e.getMessage(), "Incorrect response code thrown");
         }
     }
 
@@ -85,7 +87,7 @@ class ServerFacadeTest {
         try {
             serverFacade.login(loginRequest);
         } catch (IOException e) {
-            Assertions.assertEquals(e.getMessage(), "401", "Incorrect response code thrown");
+            Assertions.assertEquals("401", e.getMessage(), "Incorrect response code thrown");
         }
 
         // register a user then try login with bad credentials
@@ -116,12 +118,37 @@ class ServerFacadeTest {
         try {
             serverFacade.logout("someToken");
         } catch (IOException e) {
-            Assertions.assertEquals(e.getMessage(), "401", "Response code on invalid login wasn't 401");
+            Assertions.assertEquals("401", e.getMessage(), "Response code on invalid login wasn't 401");
         }
 
         // register a user but attempt logout with bad authToken
         RegisterRequest request = new RegisterRequest("Trevor", "Bond", "email@gmail.com");
         serverFacade.register(request);
         Assertions.assertThrows(IOException.class, () -> serverFacade.logout("IDKwhatTokengotaddedbfjdksfds"));
+    }
+
+    @Test
+    @DisplayName("Create Game Success")
+    public void createGamesSuccess() throws IOException {
+        // register a user
+        RegisterRequest request = new RegisterRequest("Trevor", "Bond", "email@gmail.com");
+        LoginRegisterResult result = serverFacade.register(request);
+        String authToken = result.getAuthToken();
+
+        CreateGameRequest gameRequest = new CreateGameRequest("Cool Game");
+        CreateGameResult gameResult = Assertions.assertDoesNotThrow(() -> serverFacade.createGame(gameRequest, authToken));
+        Assertions.assertNull(gameResult.getMessage());
+    }
+
+    @Test
+    @DisplayName("Create Game Failure")
+    public void createGameFailure() throws IOException {
+        // try to create game without authentication
+        Assertions.assertThrows(IOException.class, () -> serverFacade.createGame(new CreateGameRequest("yay"), null));
+        try {
+            serverFacade.createGame(new CreateGameRequest("yay"), "someToken");
+        } catch (IOException e) {
+            Assertions.assertEquals("401", e.getMessage(), "Response code on invalid create game wasn't 401");
+        }
     }
 }

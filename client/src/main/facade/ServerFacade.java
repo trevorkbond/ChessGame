@@ -2,8 +2,11 @@ package facade;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import request.CreateGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
+import result.CreateGameResult;
+import result.ListGamesResult;
 import result.LoginRegisterResult;
 import result.Result;
 
@@ -31,6 +34,16 @@ public class ServerFacade {
         return (Result) getResponse(connection, Result.class);
     }
 
+    public CreateGameResult createGame(CreateGameRequest request, String authToken) throws IOException {
+        HttpURLConnection connection = makeRequest(request, "/game", "POST", authToken);
+        return (CreateGameResult) getResponse(connection, CreateGameResult.class);
+    }
+
+    public ListGamesResult listGames(String authToken) throws IOException {
+        HttpURLConnection connection = makeRequest(null, "/game", "GET", authToken);
+        return (ListGamesResult) getResponse(connection, ListGamesResult.class);
+    }
+
     public void clear() throws IOException {
         HttpURLConnection connection = makeRequest(null, "/db", "DELETE", null);
         getResponse(connection, LoginRegisterResult.class);
@@ -42,12 +55,12 @@ public class ServerFacade {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setReadTimeout(5000);
         connection.setRequestMethod(method);
+        if (authToken != null) {
+            connection.setRequestProperty("Authorization", authToken);
+        }
         connection.setDoOutput(true);
         if (request != null) {
             writeBody(request, connection);
-        }
-        if (authToken != null) {
-            connection.setRequestProperty("Authorization", authToken);
         }
         connection.connect();
 
