@@ -2,6 +2,7 @@ package facade;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import request.LoginRequest;
 import request.RegisterRequest;
 import result.LoginRegisterResult;
 
@@ -14,9 +15,13 @@ public class ServerFacade {
     private final String BASE_URL = "http://localhost:8080";
     private final int HTTP_OK = 200;
 
-
     public LoginRegisterResult register(RegisterRequest request) throws IOException {
         HttpURLConnection connection = makeRequest(request, "/user", "POST");
+        return (LoginRegisterResult) getResponse(connection, LoginRegisterResult.class);
+    }
+
+    public LoginRegisterResult login(LoginRequest request) throws IOException {
+        HttpURLConnection connection = makeRequest(request, "/session", "POST");
         return (LoginRegisterResult) getResponse(connection, LoginRegisterResult.class);
     }
 
@@ -38,7 +43,7 @@ public class ServerFacade {
         connection.connect();
 
         if (connection.getResponseCode() != HTTP_OK) {
-            throw new IOException("Failure. HTTP response code: " + connection.getResponseCode());
+            throw new IOException(String.valueOf(connection.getResponseCode()));
         }
         return connection;
     }
