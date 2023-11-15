@@ -31,6 +31,7 @@ class ServerFacadeTest {
         LoginRegisterResult actualResult = serverFacade.register(request);
 
         Assertions.assertEquals(exptectedResult.getUsername(), actualResult.getUsername(), "User wasn't created properly");
+        Assertions.assertNotNull(actualResult.getAuthToken(), "Registered user wasn't given an authToken");
     }
 
     @Test
