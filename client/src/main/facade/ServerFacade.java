@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import request.LoginRequest;
 import request.RegisterRequest;
 import result.LoginRegisterResult;
+import result.Result;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -16,21 +17,26 @@ public class ServerFacade {
     private final int HTTP_OK = 200;
 
     public LoginRegisterResult register(RegisterRequest request) throws IOException {
-        HttpURLConnection connection = makeRequest(request, "/user", "POST");
+        HttpURLConnection connection = makeRequest(request, "/user", "POST", null);
         return (LoginRegisterResult) getResponse(connection, LoginRegisterResult.class);
     }
 
     public LoginRegisterResult login(LoginRequest request) throws IOException {
-        HttpURLConnection connection = makeRequest(request, "/session", "POST");
+        HttpURLConnection connection = makeRequest(request, "/session", "POST", null);
         return (LoginRegisterResult) getResponse(connection, LoginRegisterResult.class);
     }
 
+    public Result logout(String authToken) throws IOException {
+        HttpURLConnection connection = makeRequest(null, "/session", "DELETE", authToken);
+        return (Result) getResponse(connection, Result.class);
+    }
+
     public void clear() throws IOException {
-        HttpURLConnection connection = makeRequest(null, "/db", "DELETE");
+        HttpURLConnection connection = makeRequest(null, "/db", "DELETE", null);
         getResponse(connection, LoginRegisterResult.class);
     }
 
-    private HttpURLConnection makeRequest(Object request, String path, String method) throws IOException {
+    private HttpURLConnection makeRequest(Object request, String path, String method, String authToken) throws IOException {
         URL url = new URL(BASE_URL + path);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -39,6 +45,9 @@ public class ServerFacade {
         connection.setDoOutput(true);
         if (request != null) {
             writeBody(request, connection);
+        }
+        if (authToken != null) {
+            connection.setRequestProperty("Authorization", authToken);
         }
         connection.connect();
 

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import request.LoginRequest;
 import request.RegisterRequest;
 import result.LoginRegisterResult;
+import result.Result;
 
 import javax.xml.crypto.Data;
 import java.io.IOException;
@@ -92,5 +93,35 @@ class ServerFacadeTest {
         serverFacade.register(request);
         LoginRequest badRequest = new LoginRequest("trevor", "Bond");
         Assertions.assertThrows(IOException.class, () -> serverFacade.login(badRequest));
+    }
+
+    @Test
+    @DisplayName("Logout Success")
+    public void logoutSuccess() throws IOException {
+        // register (and login) a user then log the user out
+        RegisterRequest request = new RegisterRequest("Trevor", "Bond", "email@gmail.com");
+        LoginRegisterResult result = serverFacade.register(request);
+        String authToken = result.getAuthToken();
+        Result logoutResult = Assertions.assertDoesNotThrow(() -> serverFacade.logout(authToken));
+
+        // assert logoutResult message is null as it should be (no error codes)
+        Assertions.assertNull(logoutResult.getMessage());
+    }
+
+    @Test
+    @DisplayName("Logout Failure")
+    public void logoutFailure() throws IOException {
+        // attempt to logout a user that isn't registered or logged in
+        Assertions.assertThrows(IOException.class, () -> serverFacade.logout("someToken"));
+        try {
+            serverFacade.logout("someToken");
+        } catch (IOException e) {
+            Assertions.assertEquals(e.getMessage(), "401", "Response code on invalid login wasn't 401");
+        }
+
+        // register a user but attempt logout with bad authToken
+        RegisterRequest request = new RegisterRequest("Trevor", "Bond", "email@gmail.com");
+        serverFacade.register(request);
+        Assertions.assertThrows(IOException.class, () -> serverFacade.logout("IDKwhatTokengotaddedbfjdksfds"));
     }
 }
