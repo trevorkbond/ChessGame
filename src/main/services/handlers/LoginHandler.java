@@ -3,9 +3,9 @@ package services.handlers;
 import dao.AuthDAO;
 import dao.UserDAO;
 import dataAccess.DataAccessException;
-import services.LoginService;
 import request.LoginRequest;
 import result.LoginRegisterResult;
+import services.LoginService;
 import spark.Request;
 import spark.Response;
 

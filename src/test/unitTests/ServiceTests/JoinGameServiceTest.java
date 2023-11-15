@@ -1,7 +1,6 @@
 package unitTests.ServiceTests;
 
 import chess.ChessGame;
-import chess.ChessGameImpl;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.Game;
@@ -9,8 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import services.JoinGameService;
 import request.JoinGameRequest;
+import services.JoinGameService;
 import unitTests.UnitTest;
 
 import java.sql.SQLException;

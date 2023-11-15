@@ -15,10 +15,10 @@ import result.ListGamesResult;
 import result.LoginRegisterResult;
 import result.Result;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ServerFacadeTest {
 

@@ -10,10 +10,6 @@ public class Result {
      */
     private final String message;
 
-    public String getMessage() {
-        return message;
-    }
-
     /**
      * Result constructor will be used by the other Results as all contain a message
      *
@@ -21,6 +17,10 @@ public class Result {
      */
     public Result(String message) {
         this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
 }

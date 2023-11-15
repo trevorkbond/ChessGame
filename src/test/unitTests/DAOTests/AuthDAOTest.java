@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import request.RegisterRequest;
 import services.LogoutService;
 import services.RegisterService;
-import request.RegisterRequest;
 import unitTests.UnitTest;
 
 import java.sql.SQLException;

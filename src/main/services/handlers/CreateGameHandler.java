@@ -3,9 +3,9 @@ package services.handlers;
 import dao.AuthDAO;
 import dao.GameDAO;
 import dataAccess.DataAccessException;
-import services.CreateGameService;
 import request.CreateGameRequest;
 import result.CreateGameResult;
+import services.CreateGameService;
 import spark.Request;
 import spark.Response;
 

@@ -3,8 +3,8 @@ package services.handlers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dataAccess.DataAccessException;
-import server.Server;
 import result.Result;
+import server.Server;
 import spark.Request;
 import spark.Response;
 

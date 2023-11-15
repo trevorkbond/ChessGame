@@ -22,6 +22,16 @@ public class ServerFacade {
     private final String BASE_URL = "http://localhost:8080";
     private final int HTTP_OK = 200;
 
+    private static void writeBody(Object request, HttpURLConnection http) throws IOException {
+        if (request != null) {
+            http.addRequestProperty("Content-Type", "application/json");
+            String reqData = new Gson().toJson(request);
+            try (OutputStream reqBody = http.getOutputStream()) {
+                reqBody.write(reqData.getBytes());
+            }
+        }
+    }
+
     public LoginRegisterResult register(RegisterRequest request) throws IOException {
         HttpURLConnection connection = makeRequest(request, "/user", "POST", null);
         return (LoginRegisterResult) getResponse(connection, LoginRegisterResult.class);
@@ -105,16 +115,6 @@ public class ServerFacade {
             return response.toString();
         } catch (IOException e) {
             throw new IOException(e);
-        }
-    }
-
-    private static void writeBody(Object request, HttpURLConnection http) throws IOException {
-        if (request != null) {
-            http.addRequestProperty("Content-Type", "application/json");
-            String reqData = new Gson().toJson(request);
-            try (OutputStream reqBody = http.getOutputStream()) {
-                reqBody.write(reqData.getBytes());
-            }
         }
     }
 }

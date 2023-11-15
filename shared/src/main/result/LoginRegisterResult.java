@@ -14,10 +14,6 @@ public class LoginRegisterResult extends Result {
      */
     private final String authToken;
 
-    public String getAuthToken() {
-        return authToken;
-    }
-
     /**
      * Constructor for a LoginRegisterResult
      *
@@ -29,6 +25,10 @@ public class LoginRegisterResult extends Result {
         super(message);
         this.authToken = authToken;
         this.username = username;
+    }
+
+    public String getAuthToken() {
+        return authToken;
     }
 
     public String getUsername() {

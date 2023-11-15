@@ -11,13 +11,17 @@ import java.util.Objects;
 public class Game {
 
     /**
-     * the gameID, an integer
-     */
-    private int gameID;
-    /**
      * The ChessGame object to perform game functions on
      */
     private final ChessGameImpl game;
+    /**
+     * The game's name, a String
+     */
+    private final String gameName;
+    /**
+     * the gameID, an integer
+     */
+    private int gameID;
     /**
      * The username for the player on white team
      */
@@ -26,10 +30,6 @@ public class Game {
      * The username for the player on black team
      */
     private String blackUsername;
-    /**
-     * The game's name, a String
-     */
-    private final String gameName;
 
     /**
      * A constructor for a Game model
@@ -65,10 +65,6 @@ public class Game {
         this.gameName = gameName;
     }
 
-    public void setGameID(int gameID) {
-        this.gameID = gameID;
-    }
-
     public String getGameName() {
         return gameName;
     }
@@ -95,6 +91,10 @@ public class Game {
 
     public int getGameID() {
         return gameID;
+    }
+
+    public void setGameID(int gameID) {
+        this.gameID = gameID;
     }
 
     @Override

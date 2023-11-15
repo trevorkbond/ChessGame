@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import services.CreateGameService;
 import request.CreateGameRequest;
+import services.CreateGameService;
 import unitTests.UnitTest;
 
 import java.sql.SQLException;

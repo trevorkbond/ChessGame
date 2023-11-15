@@ -3,8 +3,8 @@ package services.handlers;
 import dao.AuthDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
-import services.LogoutService;
 import result.Result;
+import services.LogoutService;
 import spark.Request;
 import spark.Response;
 
