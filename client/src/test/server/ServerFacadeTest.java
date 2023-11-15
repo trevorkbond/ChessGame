@@ -9,6 +9,7 @@ import request.CreateGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
 import result.CreateGameResult;
+import result.ListGamesResult;
 import result.LoginRegisterResult;
 import result.Result;
 
@@ -149,6 +150,37 @@ class ServerFacadeTest {
             serverFacade.createGame(new CreateGameRequest("yay"), "someToken");
         } catch (IOException e) {
             Assertions.assertEquals("401", e.getMessage(), "Response code on invalid create game wasn't 401");
+        }
+    }
+
+    @Test
+    @DisplayName("List Games Success")
+    public void listGameSuccess() throws IOException {
+        // register a user
+        RegisterRequest request = new RegisterRequest("Trevor", "Bond", "email@gmail.com");
+        LoginRegisterResult result = serverFacade.register(request);
+        String authToken = result.getAuthToken();
+
+        CreateGameRequest request1 = new CreateGameRequest("Game 1");
+        CreateGameRequest request2 = new CreateGameRequest("Game 2");
+        CreateGameRequest request3 = new CreateGameRequest("Game 3");
+        serverFacade.createGame(request1, authToken);
+        serverFacade.createGame(request2, authToken);
+        serverFacade.createGame(request3, authToken);
+
+        ListGamesResult gameResult = Assertions.assertDoesNotThrow(() -> serverFacade.listGames(authToken));
+        Assertions.assertEquals(3, gameResult.getGames().size(), "All 3 games not listed");
+    }
+
+    @Test
+    @DisplayName("List Game Failure")
+    public void listGameFailure() throws IOException {
+        // try to list games without authentication
+        Assertions.assertThrows(IOException.class, () -> serverFacade.listGames("Bad Token"));
+        try {
+            serverFacade.listGames("Bad Token");
+        } catch (IOException e) {
+            Assertions.assertEquals("401", e.getMessage(), "Response code on invalid list games wasn't 401");
         }
     }
 }

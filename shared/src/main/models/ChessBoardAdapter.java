@@ -1,4 +1,4 @@
-package dao;
+package models;
 
 import chess.ChessBoard;
 import chess.ChessBoardImpl;

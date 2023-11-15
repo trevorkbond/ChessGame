@@ -1,7 +1,9 @@
 package facade;
 
+import chess.ChessBoard;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import models.ChessBoardAdapter;
 import request.CreateGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
@@ -78,6 +80,7 @@ public class ServerFacade {
     private Object responseToObject(String response, Class desiredClass) {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
+        builder.registerTypeAdapter(ChessBoard.class, new ChessBoardAdapter());
 
         Gson gson = builder.create();
         return gson.fromJson(response, desiredClass);

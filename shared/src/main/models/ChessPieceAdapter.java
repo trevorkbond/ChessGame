@@ -1,4 +1,4 @@
-package dao;
+package models;
 
 import chess.*;
 import com.google.gson.*;
