@@ -1,4 +1,4 @@
-package facade;
+package client;
 
 import chess.ChessBoard;
 import com.google.gson.Gson;

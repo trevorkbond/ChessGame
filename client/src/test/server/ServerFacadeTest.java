@@ -1,7 +1,7 @@
 package server;
 
 import chess.ChessGame;
-import facade.ServerFacade;
+import client.ServerFacade;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
