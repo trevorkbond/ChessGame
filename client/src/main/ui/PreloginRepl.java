@@ -16,8 +16,7 @@ public class PreloginRepl extends Repl {
 
     public PreloginRepl() {
         validLengths = new HashMap<>();
-        client = new ChessClient();
-        setState(ClientState.LOGGED_OUT);
+        client = ChessClient.getInstance();
         validLengths.put("register", 4);
         validLengths.put("login", 3);
         validLengths.put("quit", 1);
@@ -42,8 +41,9 @@ public class PreloginRepl extends Repl {
                 } else if (!result.equals("quit")) {
                     setInfoPrinting();
                     System.out.println(result);
-                    setState(ClientState.LOGGED_IN);
-                    break;
+                    if (client.getState().equals(ChessClient.ClientState.LOGGED_IN)) {
+                        break;
+                    }
                 }
             }
             catch (InvalidResponseException e) {
@@ -64,8 +64,10 @@ public class PreloginRepl extends Repl {
         } else if (command.equals("help")) {
             return "help";
         } else if (command.equals("quit")) {
+            client.setState(ChessClient.ClientState.QUIT);
             return "quit";
         }
+
         ArrayList<String> subParams = new ArrayList<>(params.subList(1, params.size()));
         try {
             return client.executeCommand(command, subParams);
@@ -105,6 +107,6 @@ public class PreloginRepl extends Repl {
     }
 
     private void setInputPrinting() {
-        System.out.print(EscapeSequences.SET_TEXT_COLOR_RED + "[" + getState() + "]>>> ");
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_RED + "[" + client.getState() + "]>>> ");
     }
 }
