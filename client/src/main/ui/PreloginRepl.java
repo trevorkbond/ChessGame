@@ -13,6 +13,7 @@ public class PreloginRepl extends Repl {
 
     private HashMap<String, Integer> validLengths;
     private ChessClient client;
+    private boolean firstTime = true;
 
     public PreloginRepl() {
         validLengths = new HashMap<>();
@@ -25,7 +26,12 @@ public class PreloginRepl extends Repl {
 
     public void run() {
         System.out.println(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
-        System.out.println("Welcome to ChessGame. Please sign in or register to play.\n");
+        if (firstTime) {
+            System.out.println("Welcome to ChessGame. Please sign in or register to play.\n");
+            firstTime = false;
+        } else {
+            System.out.println("Welcome back! Feel free to login again or quit.");
+        }
         setInfoPrinting();
         System.out.println(help());
         Scanner scanner = new Scanner(System.in);
@@ -98,15 +104,4 @@ public class PreloginRepl extends Repl {
         """;
     }
 
-    private void setInfoPrinting() {
-        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE);
-    }
-
-    private void resetTextPrinting() {
-        System.out.print(EscapeSequences.RESET_TEXT_COLOR);
-    }
-
-    private void setInputPrinting() {
-        System.out.print(EscapeSequences.SET_TEXT_COLOR_RED + "[" + client.getState() + "]>>> ");
-    }
 }

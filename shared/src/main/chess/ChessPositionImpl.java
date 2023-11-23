@@ -3,8 +3,17 @@ package chess;
 import java.util.Objects;
 
 public class ChessPositionImpl implements ChessPosition {
-    private final int row;
-    private final int column;
+    private int row;
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    private int column;
 
     public ChessPositionImpl(int row, int column) {
         this.row = row;
