@@ -115,7 +115,7 @@ public class Repl {
                     join <ID> <BLACK|WHITE> - join a game
                     observe <ID> - observe a game
                     logout - logout and go to prelogin
-                    quit - quit chess game
+                    quit - quit chess game (only valid after joining/observing game)
                     help - list possible commands
                     """;
         } else {

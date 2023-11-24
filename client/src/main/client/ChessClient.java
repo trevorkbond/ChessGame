@@ -111,7 +111,7 @@ public class ChessClient {
         int gameID = Integer.parseInt(params.get(0));
         Integer databaseID = userIDToDatabaseID.get(gameID);
         if (databaseID == null) {
-            throw new InvalidResponseException("You must list games first before you join a game.");
+            throw new InvalidResponseException("Error joining game. Try listing games again or check given game ID.");
         }
         if (!params.get(1).equals("WHITE") && !params.get(1).equals("BLACK")) {
             throw new InvalidResponseException("Bad request. Please try again");
@@ -128,7 +128,7 @@ public class ChessClient {
         int gameID = Integer.parseInt(params.get(0));
         Integer databaseID = userIDToDatabaseID.get(gameID);
         if (databaseID == null) {
-            throw new InvalidResponseException("You must list games first before you observe a game.");
+            throw new InvalidResponseException("Error observing game. Try listing games again or check given game ID.");
         }
 
         JoinGameRequest request = new JoinGameRequest(null, databaseID);
