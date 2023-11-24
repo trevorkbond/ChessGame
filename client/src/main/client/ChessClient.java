@@ -1,7 +1,9 @@
 package client;
 
+import request.CreateGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
+import result.CreateGameResult;
 import result.LoginRegisterResult;
 
 import java.io.IOException;
@@ -42,6 +44,7 @@ public class ChessClient {
         return switch (command) {
             case "register" -> register(params);
             case "login" -> login(params);
+            case "create" -> createGame(params);
             default -> throw new IllegalStateException("Unexpected value: " + command);
         };
     }
@@ -65,6 +68,13 @@ public class ChessClient {
         authToken = result.getAuthToken();
         setState(ClientState.LOGGED_IN);
         return String.format("You have logged in as %s.", result.getUsername());
+    }
+
+    public String createGame(ArrayList<String> params) throws IOException {
+        String gameName = params.get(0);
+        CreateGameRequest request = new CreateGameRequest(gameName);
+        CreateGameResult result = serverFacade.createGame(request, authToken);
+        return String.format("Created game with name %s and ID %d.", gameName, result.getGameID());
     }
 
     public enum ClientState {

@@ -31,11 +31,13 @@ public class GameDAO extends DAO {
         if (findGame(game.getGameID()) != null) {
             throw new DataAccessException("Error: already taken");
         }
+        ChessGameImpl chessGame = game.getGame();
+        chessGame.getBoard().resetBoard();
         String insertSQL = "insert into game (gameName, game) values (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(insertSQL,
                 Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, game.getGameName());
-            stmt.setString(2, gameToJson(game.getGame()));
+            stmt.setString(2, gameToJson(chessGame));
 
             if (stmt.executeUpdate() == 1) {
                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
