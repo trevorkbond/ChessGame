@@ -1,7 +1,9 @@
 package client;
 
+import chess.ChessGame;
 import models.Game;
 import request.CreateGameRequest;
+import request.JoinGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
 import result.CreateGameResult;
@@ -19,7 +21,7 @@ public class ChessClient {
     private final ServerFacade serverFacade;
     private ClientState state;
     private static ChessClient instance;
-    private static HashMap<Integer, Integer> gameIDs;
+    private static HashMap<Integer, Integer> userIDToDatabaseID;
     private static TreeMap<Integer, Game> userIDToGame;
 
     public static ChessClient getInstance() {
@@ -33,7 +35,7 @@ public class ChessClient {
         serverFacade = new ServerFacade();
         state = ClientState.LOGGED_OUT;
         authToken = null;
-        gameIDs = new HashMap<>();
+        userIDToDatabaseID = new HashMap<>();
         userIDToGame = new TreeMap<>();
     }
 
@@ -49,13 +51,16 @@ public class ChessClient {
         this.state = state;
     }
 
-    public String executeCommand(String command, ArrayList<String> params) throws IOException {
+    public String executeCommand(String command, ArrayList<String> params) throws IOException, InvalidResponseException {
         return switch (command) {
             case "register" -> register(params);
             case "login" -> login(params);
             case "create" -> createGame(params);
             case "logout" -> logout();
             case "list" -> list();
+            case "join" -> join(params);
+            case "clear" -> clear();
+            case "observe" -> observe(params);
             default -> throw new IllegalStateException("Unexpected value: " + command);
         };
     }
@@ -102,6 +107,42 @@ public class ChessClient {
         return gameListToString();
     }
 
+    public String join(ArrayList<String> params) throws IOException, InvalidResponseException {
+        int gameID = Integer.parseInt(params.get(0));
+        Integer databaseID = userIDToDatabaseID.get(gameID);
+        if (databaseID == null) {
+            throw new InvalidResponseException("You must list games first before you join a game.");
+        }
+        if (!params.get(1).equals("WHITE") && !params.get(1).equals("BLACK")) {
+            throw new InvalidResponseException("Bad request. Please try again");
+        }
+        ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(params.get(1));
+
+        JoinGameRequest request = new JoinGameRequest(team, databaseID);
+        serverFacade.joinGame(request, authToken);
+        setState(ClientState.IN_GAME);
+        return String.format("You have joined game with ID %d", gameID);
+    }
+
+    public String observe(ArrayList<String> params) throws IOException, InvalidResponseException {
+        int gameID = Integer.parseInt(params.get(0));
+        Integer databaseID = userIDToDatabaseID.get(gameID);
+        if (databaseID == null) {
+            throw new InvalidResponseException("You must list games first before you observe a game.");
+        }
+
+        JoinGameRequest request = new JoinGameRequest(null, databaseID);
+        serverFacade.joinGame(request, authToken);
+        setState(ClientState.IN_GAME);
+        return String.format("You are observing game with ID %d", gameID);
+    }
+
+    public String clear() throws IOException {
+        serverFacade.clear();
+        setState(ClientState.LOGGED_OUT);
+        return "All databases have been cleared";
+    }
+
     private String gameListToString() {
         StringBuilder listString = new StringBuilder();
         for (Integer userFacingID : userIDToGame.keySet()) {
@@ -112,11 +153,11 @@ public class ChessClient {
     }
 
     private void updateGameIDs(HashSet<Game> games) {
-        gameIDs.clear();
+        userIDToDatabaseID.clear();
         userIDToGame.clear();
         int userFacingID = 1;
         for (Game game : games) {
-            gameIDs.put(userFacingID, game.getGameID());
+            userIDToDatabaseID.put(userFacingID, game.getGameID());
             userIDToGame.put(userFacingID, game);
             userFacingID++;
         }
@@ -125,6 +166,7 @@ public class ChessClient {
     public enum ClientState {
         LOGGED_OUT,
         LOGGED_IN,
+        IN_GAME,
         QUIT
     }
 

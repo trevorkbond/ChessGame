@@ -42,6 +42,9 @@ public class Repl {
                         break;
                     } else if (quitState.equals(ChessClient.ClientState.LOGGED_OUT) && client.getState().equals(ChessClient.ClientState.LOGGED_OUT)) {
                         break;
+                    } else if (quitState.equals(ChessClient.ClientState.LOGGED_OUT) && client.getState().equals(ChessClient.ClientState.IN_GAME)) {
+                        resetTextPrint();
+                        break;
                     }
                 }
             }
@@ -130,6 +133,10 @@ public class Repl {
 
     public void setBackground(String background) {
         System.out.print(background);
+    }
+
+    public void resetTextPrint() {
+        System.out.print("\u001b[0m");
     }
 
     public void setInputPrinting() {

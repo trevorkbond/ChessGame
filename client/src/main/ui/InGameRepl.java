@@ -1,16 +1,37 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPositionImpl;
+import chess.*;
+import client.ChessClient;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 public class InGameRepl extends Repl {
 
     private static final int BOARD_SIZE_IN_SQUARES = 9;
+
+    public InGameRepl() {
+        super();
+    }
+
+    public void run() {
+        ChessBoardImpl chessBoard = new ChessBoardImpl();
+        chessBoard.resetBoard();
+        printBoard(chessBoard, ChessGame.TeamColor.WHITE);
+        printBoard(chessBoard, ChessGame.TeamColor.BLACK);
+        Scanner scanner = new Scanner(System.in);
+        String result = "";
+        while (true) {
+            result = scanner.nextLine();
+            if (result.equals("quit")) {
+                client.setState(ChessClient.ClientState.LOGGED_IN);
+                break;
+            }
+            printBoard(chessBoard, ChessGame.TeamColor.WHITE);
+            printBoard(chessBoard, ChessGame.TeamColor.BLACK);
+        }
+    }
 
     public void printBoard(ChessBoard board, ChessGame.TeamColor teamView) {
         printHeader(teamView);
@@ -65,15 +86,10 @@ public class InGameRepl extends Repl {
         }
     }
 
-    private void printHeaderHelper(char begin, char end) {
-
-    }
-
-
     private String getBackground(int row, int column) {
         if (row % 2 == 0) {
             if (column % 2 == 0) {
-                return EscapeSequences.SET_BG_COLOR_BLACK;
+                return EscapeSequences.SET_BG_COLOR_DARK_GREY;
             } else {
                 return EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
             }
@@ -81,7 +97,7 @@ public class InGameRepl extends Repl {
             if (column % 2 == 0) {
                 return EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
             } else {
-                return EscapeSequences.SET_BG_COLOR_BLACK;
+                return EscapeSequences.SET_BG_COLOR_DARK_GREY;
             }
         }
     }
