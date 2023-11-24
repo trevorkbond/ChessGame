@@ -105,6 +105,13 @@ public class Game {
     }
 
     @Override
+    public String toString() {
+        return gameName + ":\n" +
+                "\tWhite Player: " + (whiteUsername == null ? "not taken" : whiteUsername) + '\n' +
+                "\tBlack Player: " + (blackUsername == null ? "not taken" : blackUsername) + '\n';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(gameID);
     }

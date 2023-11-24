@@ -1,14 +1,18 @@
 package client;
 
+import models.Game;
 import request.CreateGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
 import result.CreateGameResult;
+import result.ListGamesResult;
 import result.LoginRegisterResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.TreeMap;
 
 public class ChessClient {
     private static String authToken;
@@ -16,6 +20,7 @@ public class ChessClient {
     private ClientState state;
     private static ChessClient instance;
     private static HashMap<Integer, Integer> gameIDs;
+    private static TreeMap<Integer, Game> userIDToGame;
 
     public static ChessClient getInstance() {
         if (instance == null) {
@@ -29,6 +34,7 @@ public class ChessClient {
         state = ClientState.LOGGED_OUT;
         authToken = null;
         gameIDs = new HashMap<>();
+        userIDToGame = new TreeMap<>();
     }
 
     public static String getAuthToken() {
@@ -79,7 +85,7 @@ public class ChessClient {
         String gameName = params.get(0);
         CreateGameRequest request = new CreateGameRequest(gameName);
         CreateGameResult result = serverFacade.createGame(request, authToken);
-        return String.format("Created game with name %s and ID %d.", gameName, result.getGameID());
+        return String.format("Created game with name %s.", gameName);
     }
 
     public String logout() throws IOException {
@@ -90,8 +96,30 @@ public class ChessClient {
     }
 
     public String list() throws IOException {
-        serverFacade.listGames(authToken);
-        return null;
+        ListGamesResult result = serverFacade.listGames(authToken);
+        HashSet<Game> games = result.getGames();
+        updateGameIDs(games);
+        return gameListToString();
+    }
+
+    private String gameListToString() {
+        StringBuilder listString = new StringBuilder();
+        for (Integer userFacingID : userIDToGame.keySet()) {
+            listString.append(userFacingID).append(": ");
+            listString.append(userIDToGame.get(userFacingID).toString());
+        }
+        return listString.toString();
+    }
+
+    private void updateGameIDs(HashSet<Game> games) {
+        gameIDs.clear();
+        userIDToGame.clear();
+        int userFacingID = 1;
+        for (Game game : games) {
+            gameIDs.put(userFacingID, game.getGameID());
+            userIDToGame.put(userFacingID, game);
+            userFacingID++;
+        }
     }
 
     public enum ClientState {
