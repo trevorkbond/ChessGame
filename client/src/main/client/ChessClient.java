@@ -8,12 +8,14 @@ import result.LoginRegisterResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ChessClient {
     private static String authToken;
     private final ServerFacade serverFacade;
     private ClientState state;
     private static ChessClient instance;
+    private static HashMap<Integer, Integer> gameIDs;
 
     public static ChessClient getInstance() {
         if (instance == null) {
@@ -26,6 +28,7 @@ public class ChessClient {
         serverFacade = new ServerFacade();
         state = ClientState.LOGGED_OUT;
         authToken = null;
+        gameIDs = new HashMap<>();
     }
 
     public static String getAuthToken() {
@@ -45,6 +48,8 @@ public class ChessClient {
             case "register" -> register(params);
             case "login" -> login(params);
             case "create" -> createGame(params);
+            case "logout" -> logout();
+            case "list" -> list();
             default -> throw new IllegalStateException("Unexpected value: " + command);
         };
     }
@@ -75,6 +80,18 @@ public class ChessClient {
         CreateGameRequest request = new CreateGameRequest(gameName);
         CreateGameResult result = serverFacade.createGame(request, authToken);
         return String.format("Created game with name %s and ID %d.", gameName, result.getGameID());
+    }
+
+    public String logout() throws IOException {
+        serverFacade.logout(authToken);
+        setState(ClientState.LOGGED_OUT);
+        authToken = null;
+        return "You have logged out.";
+    }
+
+    public String list() throws IOException {
+        serverFacade.listGames(authToken);
+        return null;
     }
 
     public enum ClientState {

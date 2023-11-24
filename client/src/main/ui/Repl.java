@@ -40,6 +40,8 @@ public class Repl {
                     System.out.println(result);
                     if (quitState.equals(ChessClient.ClientState.QUIT) && client.getState().equals(ChessClient.ClientState.LOGGED_IN)) {
                         break;
+                    } else if (quitState.equals(ChessClient.ClientState.LOGGED_OUT) && client.getState().equals(ChessClient.ClientState.LOGGED_OUT)) {
+                        break;
                     }
                 }
             }

@@ -1,13 +1,5 @@
 package ui;
 
-import client.ChessClient;
-import client.InvalidResponseException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Scanner;
-
 public class PostLoginRepl extends Repl{
 
     public PostLoginRepl() {

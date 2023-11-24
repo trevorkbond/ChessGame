@@ -1,14 +1,5 @@
 package ui;
 
-import client.ChessClient;
-import client.InvalidResponseException;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Scanner;
-
 public class PreloginRepl extends Repl {
 
     public PreloginRepl() {
