@@ -6,7 +6,6 @@ import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
-import result.CreateGameResult;
 import result.ListGamesResult;
 import result.LoginRegisterResult;
 
@@ -89,7 +88,7 @@ public class ChessClient {
     public String createGame(ArrayList<String> params) throws IOException {
         String gameName = params.get(0);
         CreateGameRequest request = new CreateGameRequest(gameName);
-        CreateGameResult result = serverFacade.createGame(request, authToken);
+        serverFacade.createGame(request, authToken);
         return String.format("Created game with name %s.", gameName);
     }
 
@@ -108,7 +107,12 @@ public class ChessClient {
     }
 
     public String join(ArrayList<String> params) throws IOException, InvalidResponseException {
-        int gameID = Integer.parseInt(params.get(0));
+        int gameID;
+        try {
+            gameID = Integer.parseInt(params.get(0));
+        } catch (NumberFormatException e) {
+            throw new InvalidResponseException("Bad request. Please try again.");
+        }
         Integer databaseID = userIDToDatabaseID.get(gameID);
         if (databaseID == null) {
             throw new InvalidResponseException("Error joining game. Try listing games again or check given game ID.");
