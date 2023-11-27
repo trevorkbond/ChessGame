@@ -47,8 +47,7 @@ public class Repl {
                         break;
                     }
                 }
-            }
-            catch (InvalidResponseException e) {
+            } catch (InvalidResponseException e) {
                 setInfoPrinting();
                 System.out.println(e.getMessage());
                 System.out.println(help());
@@ -102,22 +101,22 @@ public class Repl {
         if (client.getState().equals(ChessClient.ClientState.LOGGED_OUT)) {
             return
                     """
-                    register <USERNAME> <PASSWORD> <EMAIL> - to register as a user
-                    login <USERNAME> PASSWORD> - to login and play chess
-                    quit - to quit the program
-                    help - to display command options again
-                    """;
+                            register <USERNAME> <PASSWORD> <EMAIL> - to register as a user
+                            login <USERNAME> PASSWORD> - to login and play chess
+                            quit - to quit the program
+                            help - to display command options again
+                            """;
         } else if (client.getState().equals(ChessClient.ClientState.LOGGED_IN)) {
             return
                     """
-                    create <NAME> - create a game
-                    list - get list of all games
-                    join <ID> <BLACK|WHITE> - join a game
-                    observe <ID> - observe a game
-                    logout - logout and go to prelogin
-                    quit - quit chess game (only valid after joining/observing game)
-                    help - list possible commands
-                    """;
+                            create <NAME> - create a game
+                            list - get list of all games
+                            join <ID> <BLACK|WHITE> - join a game
+                            observe <ID> - observe a game
+                            logout - logout and go to prelogin
+                            quit - quit chess game (only valid after joining/observing game)
+                            help - list possible commands
+                            """;
         } else {
             return null;
         }

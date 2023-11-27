@@ -18,18 +18,11 @@ import java.util.TreeMap;
 
 public class ChessClient {
     private static String authToken;
-    private final ServerFacade serverFacade;
-    private ClientState state;
     private static ChessClient instance;
     private static HashMap<Integer, Integer> userIDToDatabaseID;
     private static TreeMap<Integer, Game> userIDToGame;
-
-    public static ChessClient getInstance() {
-        if (instance == null) {
-            instance = new ChessClient();
-        }
-        return instance;
-    }
+    private final ServerFacade serverFacade;
+    private ClientState state;
 
     private ChessClient() {
         serverFacade = new ServerFacade();
@@ -37,6 +30,13 @@ public class ChessClient {
         authToken = null;
         userIDToDatabaseID = new HashMap<>();
         userIDToGame = new TreeMap<>();
+    }
+
+    public static ChessClient getInstance() {
+        if (instance == null) {
+            instance = new ChessClient();
+        }
+        return instance;
     }
 
     public static String getAuthToken() {

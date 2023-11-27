@@ -1,6 +1,6 @@
 package ui;
 
-public class PostLoginRepl extends Repl{
+public class PostLoginRepl extends Repl {
 
     public PostLoginRepl() {
         super();

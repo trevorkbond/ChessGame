@@ -1,16 +1,6 @@
 package ui;
 
-import chess.ChessBoardImpl;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.Rook;
 import client.ChessClient;
-import ui.EscapeSequences;
-import ui.InGameRepl;
-import ui.PreloginRepl;
-import ui.Repl;
-
-import javax.swing.*;
 
 public class Main {
 

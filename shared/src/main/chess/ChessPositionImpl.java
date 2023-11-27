@@ -4,15 +4,6 @@ import java.util.Objects;
 
 public class ChessPositionImpl implements ChessPosition {
     private int row;
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
-    }
-
     private int column;
 
     public ChessPositionImpl(int row, int column) {
@@ -25,9 +16,17 @@ public class ChessPositionImpl implements ChessPosition {
         return row;
     }
 
+    public void setRow(int row) {
+        this.row = row;
+    }
+
     @Override
     public int getColumn() {
         return column;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
     }
 
     public ChessPosition getVerticalMove(int rowMove) {
