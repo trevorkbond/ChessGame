@@ -2,16 +2,17 @@ package ui;
 
 import chess.*;
 import client.ChessClient;
+import client.WebSocketFacade;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-public class InGameRepl extends Repl {
+public class GameUI extends Repl {
 
     private static final int BOARD_SIZE_IN_SQUARES = 9;
 
-    public InGameRepl() throws Exception {
+    public GameUI() throws Exception {
         super();
     }
 

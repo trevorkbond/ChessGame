@@ -12,7 +12,7 @@ import result.Result;
  * color is specified, adds the caller as the requested color to the game. If no color is specified the user is
  * joined as an observer.
  */
-public class JoinGameService {
+public class GameService {
 
     /**
      * Processes a join game request
@@ -31,4 +31,6 @@ public class JoinGameService {
         gameDAO.claimSpot(request.getGameID(), request.getPlayerColor(), authToken.getUsername());
         return new Result(null);
     }
+
+
 }

@@ -5,7 +5,7 @@ import dao.GameDAO;
 import dataAccess.DataAccessException;
 import request.JoinGameRequest;
 import result.Result;
-import services.JoinGameService;
+import services.GameService;
 import spark.Request;
 import spark.Response;
 
@@ -32,7 +32,7 @@ public class JoinGameHandler extends Handler {
         try {
             if (request.requestMethod().equalsIgnoreCase("put")) {
                 JoinGameRequest requestObject = (JoinGameRequest) gsonToRequest(JoinGameRequest.class, request);
-                JoinGameService service = new JoinGameService();
+                GameService service = new GameService();
                 Connection connection = getDatabaseConnection();
                 AuthDAO authDAO = new AuthDAO(connection);
                 GameDAO gameDAO = new GameDAO(connection);

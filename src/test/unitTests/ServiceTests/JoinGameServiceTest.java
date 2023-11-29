@@ -9,19 +9,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import request.JoinGameRequest;
-import services.JoinGameService;
+import services.GameService;
 import unitTests.UnitTest;
 
 import java.sql.SQLException;
 
 class JoinGameServiceTest extends UnitTest {
 
-    private JoinGameService joinGameService;
+    private GameService joinGameService;
 
     @BeforeEach
     void setUp() throws DataAccessException, SQLException {
         initializeAndClearDAOs();
-        joinGameService = new JoinGameService();
+        joinGameService = new GameService();
         gameDAO.resetIDCounter();
 
         // add a few new games, some with players and some without spots reserved

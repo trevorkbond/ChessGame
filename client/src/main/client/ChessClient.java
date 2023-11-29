@@ -9,9 +9,10 @@ import request.LoginRequest;
 import request.RegisterRequest;
 import result.ListGamesResult;
 import result.LoginRegisterResult;
-import ui.InGameRepl;
+import ui.GameUI;
 import ui.PostLoginRepl;
 import ui.PreloginRepl;
+import webSocketMessages.userCommands.JoinPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class ChessClient {
     private final ServerFacade serverFacade;
     private WebSocketFacade webSocketFacade;
     private ClientState state;
+    private static String clientUsername;
 
     public static void main(String[] args) throws Exception {
         PreloginRepl prelogin = new PreloginRepl();
@@ -38,7 +40,7 @@ public class ChessClient {
         } catch (Exception e) {
             System.out.println("Some wack websocket thing happened\n" + e.getStackTrace());
         }
-        InGameRepl inGame = new InGameRepl();
+        GameUI inGame = new GameUI();
         while (!client.getState().equals(ChessClient.ClientState.QUIT)) {
             if (client.getState().equals(ChessClient.ClientState.LOGGED_OUT)) {
                 prelogin.run(ChessClient.ClientState.QUIT, "Welcome to ChessGame. Please sign in or register to play.\n");
@@ -101,6 +103,7 @@ public class ChessClient {
         LoginRegisterResult result = serverFacade.register(request);
         authToken = result.getAuthToken();
         setState(ClientState.LOGGED_IN);
+        clientUsername = username;
         return String.format("You have logged in as %s.", result.getUsername());
     }
 
@@ -111,6 +114,7 @@ public class ChessClient {
         LoginRegisterResult result = serverFacade.login(request);
         authToken = result.getAuthToken();
         setState(ClientState.LOGGED_IN);
+        clientUsername = username;
         return String.format("You have logged in as %s.", result.getUsername());
     }
 
@@ -152,7 +156,10 @@ public class ChessClient {
         ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(params.get(1));
 
         JoinGameRequest request = new JoinGameRequest(team, databaseID);
+        JoinPlayer webSocketMessage = new JoinPlayer(authToken, databaseID, team, clientUsername);
+        webSocketFacade.joinPlayer(webSocketMessage);
         serverFacade.joinGame(request, authToken);
+
         setState(ClientState.IN_GAME);
         return String.format("You have joined game with ID %d", gameID);
     }

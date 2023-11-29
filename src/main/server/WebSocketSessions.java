@@ -10,6 +10,7 @@ public class WebSocketSessions {
 
     public void addSessionToGame(int gameID, String username, Session session) {
         sessionMap.put(gameID, new HashMap<>(){{put(username, session);}});
+        System.out.println("After adding session in WSSessions:\n" + sessionMap);
     }
 
     public void removeSessionFromGame(int gameID, String username) {

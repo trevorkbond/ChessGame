@@ -1,6 +1,8 @@
 package client;
 
 import org.eclipse.jetty.websocket.api.annotations.*;
+import ui.Repl;
+import webSocketMessages.userCommands.JoinPlayer;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -31,6 +33,10 @@ public class WebSocketFacade extends Endpoint {
 
     @OnWebSocketError
     public void onError(Throwable t) {
+    }
+
+    public void joinPlayer(JoinPlayer message) throws IOException {
+        this.session.getBasicRemote().sendText(Repl.objectToJson(message));
     }
 
     public void sendMessage() throws IOException {
