@@ -2,12 +2,16 @@ package client;
 
 import chess.ChessGame;
 import models.Game;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
 import result.ListGamesResult;
 import result.LoginRegisterResult;
+import ui.InGameRepl;
+import ui.PostLoginRepl;
+import ui.PreloginRepl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,23 +19,48 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 
+@WebSocket
 public class ChessClient {
     private static String authToken;
     private static ChessClient instance;
     private static HashMap<Integer, Integer> userIDToDatabaseID;
     private static TreeMap<Integer, Game> userIDToGame;
     private final ServerFacade serverFacade;
+    private WebSocketFacade webSocketFacade;
     private ClientState state;
 
-    private ChessClient() {
+    public static void main(String[] args) throws Exception {
+        PreloginRepl prelogin = new PreloginRepl();
+        PostLoginRepl postlogin = new PostLoginRepl();
+        ChessClient client = null;
+        try {
+            client = ChessClient.getInstance();
+        } catch (Exception e) {
+            System.out.println("Some wack websocket thing happened\n" + e.getStackTrace());
+        }
+        InGameRepl inGame = new InGameRepl();
+        while (!client.getState().equals(ChessClient.ClientState.QUIT)) {
+            if (client.getState().equals(ChessClient.ClientState.LOGGED_OUT)) {
+                prelogin.run(ChessClient.ClientState.QUIT, "Welcome to ChessGame. Please sign in or register to play.\n");
+            } else if (client.getState().equals(ChessClient.ClientState.LOGGED_IN)) {
+                postlogin.run(ChessClient.ClientState.LOGGED_OUT, "Please select from the following commands.\n");
+            } else if (client.getState().equals(ChessClient.ClientState.IN_GAME)) {
+                inGame.run();
+            }
+        }
+        System.out.println("Goodbye!");
+    }
+
+    private ChessClient() throws Exception {
         serverFacade = new ServerFacade();
+        webSocketFacade = new WebSocketFacade();
         state = ClientState.LOGGED_OUT;
         authToken = null;
         userIDToDatabaseID = new HashMap<>();
         userIDToGame = new TreeMap<>();
     }
 
-    public static ChessClient getInstance() {
+    public static ChessClient getInstance() throws Exception {
         if (instance == null) {
             instance = new ChessClient();
         }

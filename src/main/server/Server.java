@@ -1,12 +1,14 @@
 package server;
 
 import dataAccess.Database;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import services.handlers.*;
 import spark.Spark;
 
 /**
  * The Server class sets up the server with JavaSpark and routes requests to their respective handlers.
  */
+@WebSocket
 public class Server {
     public static Database database = new Database();
 
@@ -20,6 +22,7 @@ public class Server {
     public static void run() {
         Spark.port(8080);
         Spark.externalStaticFileLocation("web");
+        Spark.webSocket("/connect", WebSocketHandler.class);
 
         RegisterHandler registerHandler = RegisterHandler.getInstance();
         ClearHandler clearHandler = ClearHandler.getInstance();
@@ -36,5 +39,6 @@ public class Server {
         Spark.post("/session", (loginHandler::handleRequest));
         Spark.put("/game", (joinGameHandler::handleRequest));
         Spark.get("/game", (listGamesHandler::handleRequest));
+
     }
 }

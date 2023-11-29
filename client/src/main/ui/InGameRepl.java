@@ -11,7 +11,7 @@ public class InGameRepl extends Repl {
 
     private static final int BOARD_SIZE_IN_SQUARES = 9;
 
-    public InGameRepl() {
+    public InGameRepl() throws Exception {
         super();
     }
 

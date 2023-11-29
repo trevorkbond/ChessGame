@@ -15,7 +15,7 @@ public class Repl {
 
     protected ChessClient client;
 
-    public Repl() {
+    public Repl() throws Exception {
         client = ChessClient.getInstance();
         validLengths = new HashMap<>();
     }

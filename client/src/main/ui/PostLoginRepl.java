@@ -2,7 +2,7 @@ package ui;
 
 public class PostLoginRepl extends Repl {
 
-    public PostLoginRepl() {
+    public PostLoginRepl() throws Exception {
         super();
         validLengths.put("create", 2);
         validLengths.put("list", 1);

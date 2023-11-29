@@ -2,7 +2,7 @@ package ui;
 
 public class PreloginRepl extends Repl {
 
-    public PreloginRepl() {
+    public PreloginRepl() throws Exception {
         super();
         validLengths.put("register", 4);
         validLengths.put("login", 3);
