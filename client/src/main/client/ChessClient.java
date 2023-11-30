@@ -33,7 +33,6 @@ public class ChessClient {
 
     private ChessClient() throws Exception {
         serverFacade = new ServerFacade();
-        webSocketFacade = new WebSocketFacade(this);
         state = ClientState.LOGGED_OUT;
         authToken = null;
         userIDToDatabaseID = new HashMap<>();
@@ -81,7 +80,7 @@ public class ChessClient {
         this.state = state;
     }
 
-    public String executeCommand(String command, ArrayList<String> params) throws IOException, InvalidResponseException {
+    public String executeCommand(String command, ArrayList<String> params) throws Exception {
         return switch (command) {
             case "register" -> register(params);
             case "login" -> login(params);
@@ -139,7 +138,7 @@ public class ChessClient {
         return gameListToString();
     }
 
-    public String join(ArrayList<String> params) throws IOException, InvalidResponseException {
+    public String join(ArrayList<String> params) throws Exception {
         int gameID;
         try {
             gameID = Integer.parseInt(params.get(0));
@@ -158,6 +157,8 @@ public class ChessClient {
         JoinGameRequest request = new JoinGameRequest(team, databaseID);
         JoinPlayer webSocketMessage = new JoinPlayer(authToken, databaseID, team, clientUsername);
         serverFacade.joinGame(request, authToken);
+
+        webSocketFacade = new WebSocketFacade(this);
         webSocketFacade.joinPlayer(webSocketMessage);
 
         setState(ClientState.IN_GAME);

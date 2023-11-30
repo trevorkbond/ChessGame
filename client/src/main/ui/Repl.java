@@ -77,6 +77,8 @@ public class Repl {
                 return client.executeCommand(command, subParams);
             } catch (IOException e) {
                 return handleIOException(e);
+            } catch (Exception e) {
+                return e.getMessage();
             }
         }
     }

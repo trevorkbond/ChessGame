@@ -13,7 +13,11 @@ import java.util.HashMap;
 
 @WebSocket
 public class WebSocketHandler extends Endpoint {
-    private WebSocketSessions webSocketSessions = new WebSocketSessions();
+    private static WebSocketSessions webSocketSessions;
+
+    public WebSocketHandler() {
+        webSocketSessions = WebSocketSessions.getInstance();
+    }
 
     public static Object jsonToObject(Class desiredClass, String message) {
         GsonBuilder builder = new GsonBuilder();
@@ -45,6 +49,7 @@ public class WebSocketHandler extends Endpoint {
     private void joinPlayer(Session session, JoinPlayer command) throws IOException {
         webSocketSessions.addSessionToGame(command.getGameID(), command.getUsername(), session);
         String broadcast = command.getUsername() + " joined the game.";
+        System.out.println("sessions after join:\n" + webSocketSessions);
         broadcastMessage(command.getGameID(), broadcast, command.getUsername());
     }
 
@@ -54,9 +59,7 @@ public class WebSocketHandler extends Endpoint {
     }
 
     private void broadcastMessage(int gameID, String message, String exceptThisUser) throws IOException {
-        System.out.println("in broadCastMessage");
         HashMap<String, Session> sessions = webSocketSessions.getSessionsForGame(gameID);
-        System.out.println("Here's sessions map:\n" + webSocketSessions);
         for (String user : sessions.keySet()) {
             if (!user.equals(exceptThisUser)) {
                 sessions.get(user).getRemote().sendString(message);
