@@ -4,19 +4,24 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
-import services.GameService;
 import webSocketMessages.userCommands.JoinPlayer;
-import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import java.io.IOException;
+import java.util.HashMap;
 
 @WebSocket
 public class WebSocketHandler extends Endpoint {
     private WebSocketSessions webSocketSessions = new WebSocketSessions();
 
-    private GameService gameService = new GameService();
+    public static Object jsonToObject(Class desiredClass, String message) {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+
+        Gson gson = builder.create();
+        return gson.fromJson(message, desiredClass);
+    }
 
     @OnWebSocketClose
     public void onClose(Session session, int errorCode, String msg) {
@@ -37,13 +42,26 @@ public class WebSocketHandler extends Endpoint {
         }
     }
 
-    private void joinPlayer(Session session, JoinPlayer command) {
+    private void joinPlayer(Session session, JoinPlayer command) throws IOException {
         webSocketSessions.addSessionToGame(command.getGameID(), command.getUsername(), session);
+        String broadcast = command.getUsername() + " joined the game.";
+        broadcastMessage(command.getGameID(), broadcast, command.getUsername());
     }
 
     private JoinPlayer getCommand(String message) {
         //FIXME: need to figure out how to deal with other commandTypes
         return (JoinPlayer) jsonToObject(JoinPlayer.class, message);
+    }
+
+    private void broadcastMessage(int gameID, String message, String exceptThisUser) throws IOException {
+        System.out.println("in broadCastMessage");
+        HashMap<String, Session> sessions = webSocketSessions.getSessionsForGame(gameID);
+        System.out.println("Here's sessions map:\n" + webSocketSessions);
+        for (String user : sessions.keySet()) {
+            if (!user.equals(exceptThisUser)) {
+                sessions.get(user).getRemote().sendString(message);
+            }
+        }
     }
 
     @OnWebSocketConnect
@@ -52,14 +70,5 @@ public class WebSocketHandler extends Endpoint {
 
     @Override
     public void onOpen(javax.websocket.Session session, EndpointConfig endpointConfig) {
-
-    }
-
-    public static Object jsonToObject(Class desiredClass, String message) {
-        GsonBuilder builder = new GsonBuilder();
-        builder.setPrettyPrinting();
-
-        Gson gson = builder.create();
-        return gson.fromJson(message, desiredClass);
     }
 }

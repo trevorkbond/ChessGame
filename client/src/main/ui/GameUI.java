@@ -2,7 +2,6 @@ package ui;
 
 import chess.*;
 import client.ChessClient;
-import client.WebSocketFacade;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;

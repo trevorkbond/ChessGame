@@ -4,7 +4,6 @@ import client.ChessClient;
 import client.InvalidResponseException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import spark.Request;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,6 +20,12 @@ public class Repl {
     public Repl() throws Exception {
         client = ChessClient.getInstance();
         validLengths = new HashMap<>();
+    }
+
+    public static String objectToJson(Object object) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.toJson(object);
     }
 
     public void run(ChessClient.ClientState quitState, String welcome) {
@@ -123,12 +128,6 @@ public class Repl {
         } else {
             return null;
         }
-    }
-
-    public static String objectToJson(Object object) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        return gson.toJson(object);
     }
 
     public void setInfoPrinting() {

@@ -26,10 +26,19 @@ public class ChessClient {
     private static ChessClient instance;
     private static HashMap<Integer, Integer> userIDToDatabaseID;
     private static TreeMap<Integer, Game> userIDToGame;
+    private static String clientUsername;
     private final ServerFacade serverFacade;
     private WebSocketFacade webSocketFacade;
     private ClientState state;
-    private static String clientUsername;
+
+    private ChessClient() throws Exception {
+        serverFacade = new ServerFacade();
+        webSocketFacade = new WebSocketFacade(this);
+        state = ClientState.LOGGED_OUT;
+        authToken = null;
+        userIDToDatabaseID = new HashMap<>();
+        userIDToGame = new TreeMap<>();
+    }
 
     public static void main(String[] args) throws Exception {
         PreloginRepl prelogin = new PreloginRepl();
@@ -51,15 +60,6 @@ public class ChessClient {
             }
         }
         System.out.println("Goodbye!");
-    }
-
-    private ChessClient() throws Exception {
-        serverFacade = new ServerFacade();
-        webSocketFacade = new WebSocketFacade();
-        state = ClientState.LOGGED_OUT;
-        authToken = null;
-        userIDToDatabaseID = new HashMap<>();
-        userIDToGame = new TreeMap<>();
     }
 
     public static ChessClient getInstance() throws Exception {
@@ -157,8 +157,8 @@ public class ChessClient {
 
         JoinGameRequest request = new JoinGameRequest(team, databaseID);
         JoinPlayer webSocketMessage = new JoinPlayer(authToken, databaseID, team, clientUsername);
-        webSocketFacade.joinPlayer(webSocketMessage);
         serverFacade.joinGame(request, authToken);
+        webSocketFacade.joinPlayer(webSocketMessage);
 
         setState(ClientState.IN_GAME);
         return String.format("You have joined game with ID %d", gameID);

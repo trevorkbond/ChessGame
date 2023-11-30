@@ -6,11 +6,23 @@ import java.util.HashMap;
 
 public class WebSocketSessions {
 
-    private HashMap<Integer, HashMap<String, Session>> sessionMap = new HashMap<>();
+    private static final HashMap<Integer, HashMap<String, Session>> sessionMap = new HashMap<>();
+
+    @Override
+    public String toString() {
+        StringBuilder mapString = new StringBuilder("sessionMap: ");
+        for (Integer gameID : sessionMap.keySet()) {
+            mapString.append("gameID: ").append(gameID);
+            mapString.append(", usernames: ").append(sessionMap.get(gameID).keySet()).append("\n");
+        }
+        return mapString.toString();
+    }
 
     public void addSessionToGame(int gameID, String username, Session session) {
-        sessionMap.put(gameID, new HashMap<>(){{put(username, session);}});
-        System.out.println("After adding session in WSSessions:\n" + sessionMap);
+        sessionMap.put(gameID, new HashMap<>() {{
+            put(username, session);
+        }});
+        System.out.println("After addSessionToGame:\n" + this);
     }
 
     public void removeSessionFromGame(int gameID, String username) {
