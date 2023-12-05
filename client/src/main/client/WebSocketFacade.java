@@ -9,6 +9,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import ui.GameUI;
 import ui.Repl;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.serverNotifications.LoadGame;
@@ -30,9 +31,7 @@ public class WebSocketFacade extends Endpoint {
         this.session = container.connectToServer(this, uri);
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
-                System.out.println("client heard: " + message);
                 ServerMessage serverMessage = getMessage(message);
-                System.out.println("made it out");
                 switch (serverMessage.getServerMessageType()) {
                     case LOAD_GAME -> loadGame((LoadGame) serverMessage);
                     case NOTIFICATION -> System.out.println(message);
@@ -83,8 +82,7 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public void loadGame(LoadGame message) {
-        System.out.println("in loadGame");
-        client.setClientGame(message.getGame());
+        GameUI.setClientGame(message.getGame());
     }
 
     public void sendMessage() throws IOException {

@@ -11,13 +11,22 @@ import java.util.Scanner;
 public class GameUI extends Repl {
 
     private static final int BOARD_SIZE_IN_SQUARES = 9;
+    private static ChessGameImpl clientGame;
+
+    public static void setClientGame(ChessGameImpl passedClientGame) {
+        clientGame = passedClientGame;
+    }
+
+    public static ChessGameImpl getClientGame() {
+        return clientGame;
+    }
 
     public GameUI() throws Exception {
         super();
     }
 
-    public void run(ChessGame.TeamColor teamColor, ChessBoardImpl chessBoard) {
-        printBoard(chessBoard, teamColor);
+    public void run(ChessGame.TeamColor teamColor) {
+        printBoard(clientGame.getBoard(), teamColor);
         Scanner scanner = new Scanner(System.in);
         String result = "";
         while (true) {
@@ -26,8 +35,8 @@ public class GameUI extends Repl {
                 client.setState(ChessClient.ClientState.LOGGED_IN);
                 break;
             }
-            printBoard(chessBoard, ChessGame.TeamColor.WHITE);
-            printBoard(chessBoard, ChessGame.TeamColor.BLACK);
+            printBoard(clientGame.getBoard(), ChessGame.TeamColor.WHITE);
+            printBoard(clientGame.getBoard(), ChessGame.TeamColor.BLACK);
         }
     }
 

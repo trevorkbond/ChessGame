@@ -33,11 +33,6 @@ public class ChessClient {
     private final ServerFacade serverFacade;
     private WebSocketFacade webSocketFacade;
     private ClientState state;
-    private ChessGameImpl clientGame;
-
-    public void setClientGame(ChessGameImpl clientGame) {
-        this.clientGame = clientGame;
-    }
 
     private ChessClient() throws Exception {
         serverFacade = new ServerFacade();
@@ -63,8 +58,8 @@ public class ChessClient {
             } else if (client.getState().equals(ChessClient.ClientState.LOGGED_IN)) {
                 postlogin.run(ChessClient.ClientState.LOGGED_OUT, "Please select from the following commands.\n");
             } else if (client.getState().equals(ChessClient.ClientState.IN_GAME)) {
-                if (client.clientGame != null) {
-                    inGame.run(teamColor, client.clientGame.getBoard());
+                if (GameUI.getClientGame() != null) {
+                    inGame.run(teamColor);
                 }
             }
         }
@@ -166,7 +161,7 @@ public class ChessClient {
         teamColor = team;
 
         JoinGameRequest request = new JoinGameRequest(team, databaseID);
-        JoinPlayer webSocketMessage = new JoinPlayer(authToken, databaseID, team, clientUsername);
+        JoinPlayer webSocketMessage = new JoinPlayer(authToken, databaseID, team);
         serverFacade.joinGame(request, authToken);
 
         webSocketFacade = new WebSocketFacade(this);

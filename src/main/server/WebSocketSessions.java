@@ -24,39 +24,39 @@ public class WebSocketSessions {
         StringBuilder mapString = new StringBuilder("sessionMap: ");
         for (Integer gameID : sessionMap.keySet()) {
             mapString.append("gameID: ").append(gameID);
-            mapString.append(", usernames: ").append(sessionMap.get(gameID).keySet()).append("\n");
+            mapString.append(", authTokens: ").append(sessionMap.get(gameID).keySet()).append("\n");
         }
         mapString.append("size: ").append(sessionMap.size());
         return mapString.toString();
     }
 
-    public void addSessionToGame(int gameID, String username, Session session) {
+    public void addSessionToGame(int gameID, String authToken, Session session) {
         if (sessionMap.containsKey(gameID)) {
             HashMap<String, Session> innerMap = sessionMap.get(gameID);
-            innerMap.put(username, session);
+            innerMap.put(authToken, session);
         } else {
             HashMap<String, Session> innerMap = new HashMap<>();
-            innerMap.put(username, session);
+            innerMap.put(authToken, session);
             sessionMap.put(gameID, innerMap);
         }
     }
 
-    public void removeSessionFromGame(int gameID, String username) {
-        sessionMap.get(gameID).remove(username);
+    public void removeSessionFromGame(int gameID, String authToken){
+        sessionMap.get(gameID).remove(authToken);
     }
 
     public void removeSession(Session session) {
         Integer foundID = null;
-        String foundUsername = null;
+        String foundToken = null;
         for (Integer gameID : sessionMap.keySet()) {
-            for (String username : sessionMap.get(gameID).keySet()) {
-                if (sessionMap.get(gameID).get(username).equals(session)) {
+            for (String authToken : sessionMap.get(gameID).keySet()) {
+                if (sessionMap.get(gameID).get(authToken).equals(session)) {
                     foundID = gameID;
-                    foundUsername = username;
+                    foundToken = authToken;
                 }
             }
         }
-        sessionMap.get(foundID).remove(foundUsername);
+        sessionMap.get(foundID).remove(foundToken);
         System.out.println("sessions after closed connection:\n" + this);
     }
 
