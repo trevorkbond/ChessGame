@@ -1,6 +1,8 @@
 package client;
 
+import chess.ChessBoardImpl;
 import chess.ChessGame;
+import chess.ChessGameImpl;
 import models.Game;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import request.CreateGameRequest;
@@ -27,9 +29,15 @@ public class ChessClient {
     private static HashMap<Integer, Integer> userIDToDatabaseID;
     private static TreeMap<Integer, Game> userIDToGame;
     private static String clientUsername;
+    private static ChessGame.TeamColor teamColor;
     private final ServerFacade serverFacade;
     private WebSocketFacade webSocketFacade;
     private ClientState state;
+    private ChessGameImpl clientGame;
+
+    public void setClientGame(ChessGameImpl clientGame) {
+        this.clientGame = clientGame;
+    }
 
     private ChessClient() throws Exception {
         serverFacade = new ServerFacade();
@@ -55,7 +63,9 @@ public class ChessClient {
             } else if (client.getState().equals(ChessClient.ClientState.LOGGED_IN)) {
                 postlogin.run(ChessClient.ClientState.LOGGED_OUT, "Please select from the following commands.\n");
             } else if (client.getState().equals(ChessClient.ClientState.IN_GAME)) {
-                inGame.run();
+                if (client.clientGame != null) {
+                    inGame.run(teamColor, client.clientGame.getBoard());
+                }
             }
         }
         System.out.println("Goodbye!");
@@ -153,6 +163,7 @@ public class ChessClient {
             throw new InvalidResponseException("Bad request. Please try again");
         }
         ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(params.get(1));
+        teamColor = team;
 
         JoinGameRequest request = new JoinGameRequest(team, databaseID);
         JoinPlayer webSocketMessage = new JoinPlayer(authToken, databaseID, team, clientUsername);

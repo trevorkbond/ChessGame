@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class ChessGameImpl implements ChessGame {
-    private ChessBoard board;
+    private ChessBoardImpl board;
     private TeamColor teamTurn;
 
     public ChessGameImpl() {
@@ -198,12 +198,12 @@ public class ChessGameImpl implements ChessGame {
     }
 
     @Override
-    public ChessBoard getBoard() {
+    public ChessBoardImpl getBoard() {
         return board;
     }
 
     @Override
     public void setBoard(ChessBoard board) {
-        this.board = board;
+        this.board = (ChessBoardImpl) board;
     }
 }

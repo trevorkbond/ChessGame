@@ -2,6 +2,7 @@ package ui;
 
 import chess.*;
 import client.ChessClient;
+import models.ChessBoardAdapter;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -15,11 +16,8 @@ public class GameUI extends Repl {
         super();
     }
 
-    public void run() {
-        ChessBoardImpl chessBoard = new ChessBoardImpl();
-        chessBoard.resetBoard();
-        printBoard(chessBoard, ChessGame.TeamColor.WHITE);
-        printBoard(chessBoard, ChessGame.TeamColor.BLACK);
+    public void run(ChessGame.TeamColor teamColor, ChessBoardImpl chessBoard) {
+        printBoard(chessBoard, teamColor);
         Scanner scanner = new Scanner(System.in);
         String result = "";
         while (true) {

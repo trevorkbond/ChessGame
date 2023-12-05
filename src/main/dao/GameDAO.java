@@ -177,7 +177,7 @@ public class GameDAO extends DAO {
     private ChessGameImpl gameFromJSON(String json) {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
-        builder.registerTypeAdapter(ChessBoard.class, new ChessBoardAdapter());
+        builder.registerTypeAdapter(ChessBoardImpl.class, new ChessBoardAdapter());
 
         Gson gson = builder.create();
         return gson.fromJson(json, ChessGameImpl.class);
