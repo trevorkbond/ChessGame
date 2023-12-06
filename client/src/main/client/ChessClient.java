@@ -15,6 +15,7 @@ import result.LoginRegisterResult;
 import ui.GameUI;
 import ui.PostLoginRepl;
 import ui.PreloginRepl;
+import webSocketMessages.userCommands.JoinObserver;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.MakeMove;
 import webSocketMessages.userCommands.UserGameCommand;
@@ -179,16 +180,22 @@ public class ChessClient {
         return String.format("You have joined game with ID %d", joinGameID);
     }
 
-    public String observe(ArrayList<String> params) throws IOException, InvalidResponseException {
-        int gameID = Integer.parseInt(params.get(0));
-        Integer databaseID = userIDToDatabaseID.get(gameID);
+    public String observe(ArrayList<String> params) throws Exception {
+        int joinGameID = Integer.parseInt(params.get(0));
+        Integer databaseID = userIDToDatabaseID.get(joinGameID);
         if (databaseID == null) {
             throw new InvalidResponseException("Error observing game. Try listing games again or check given game ID.");
         }
 
+        gameID = userIDToDatabaseID.get(joinGameID);
+
         JoinGameRequest request = new JoinGameRequest(null, databaseID);
         serverFacade.joinGame(request, authToken);
-        return String.format("You are observing game with ID %d", gameID);
+
+        JoinObserver socketMessage = new JoinObserver(authToken, gameID, clientUsername);
+        webSocketFacade = new WebSocketFacade(this);
+        webSocketFacade.joinObserver(socketMessage);
+        return String.format("You are observing game with ID %d", joinGameID);
     }
 
     public String move(ArrayList<String> params) throws InvalidResponseException, IOException {

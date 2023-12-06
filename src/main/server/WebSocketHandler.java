@@ -21,6 +21,7 @@ import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.serverNotifications.LoadGame;
 import webSocketMessages.serverNotifications.ServerError;
 import webSocketMessages.serverNotifications.ServerNotification;
+import webSocketMessages.userCommands.JoinObserver;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.MakeMove;
 import webSocketMessages.userCommands.UserGameCommand;
@@ -71,6 +72,7 @@ public class WebSocketHandler extends Endpoint {
         switch (command.getCommandType()) {
             case JOIN_PLAYER -> joinPlayer(session, (JoinPlayer) command);
             case MAKE_MOVE -> makeMove(session, (MakeMove) command);
+            case JOIN_OBSERVER -> joinObserver(session, (JoinObserver) command);
         }
     }
 
@@ -79,20 +81,40 @@ public class WebSocketHandler extends Endpoint {
             checkAuth(command.getGameID(), command.getAuthString());
             checkTeamNotTaken(command.getGameID(), command.getPlayerColor(), command.getAuthString());
 
-            webSocketSessions.addSessionToGame(command.getGameID(), command.getAuthString(), session);
-            ServerNotification broadcast = new ServerNotification(ServerMessage.ServerMessageType.NOTIFICATION,
-                    command.getUsername() + " joined the game as a player on team " + command.getPlayerColor());
-            String broadcastMessage = objectToJson(broadcast);
-            broadcastMessage(command.getGameID(), broadcastMessage, command.getAuthString());
+            int gameID = command.getGameID();
+            String authString = command.getAuthString();
+            String broadcastString = command.getUsername() + " joined the game as a player on team " + command.getPlayerColor();
 
-            ChessGameImpl game = gameDAO.findGame(command.getGameID()).getGame();
-            LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, game);
-            String sendMessage = objectToJson(loadGame);
-            sendMessage(command.getGameID(), sendMessage, command.getAuthString());
+            joinHelper(session, gameID, authString, broadcastString);
         } catch (DataAccessException e) {
             webSocketSessions.addSessionToGame(command.getGameID(), command.getAuthString(), session);
             sendErrorMessage(command.getGameID(), command.getAuthString(), e.getMessage());
         }
+    }
+
+    private void joinObserver(Session session, JoinObserver command) throws IOException {
+        try {
+            checkAuth(command.getGameID(), command.getAuthString());
+
+            int gameID = command.getGameID();
+            String authString = command.getAuthString();
+            String broadcastString = command.getUsername() + " joined the game as an observer";
+
+            joinHelper(session, gameID, authString, broadcastString);
+        } catch (DataAccessException e) {
+            webSocketSessions.addSessionToGame(command.getGameID(), command.getAuthString(), session);
+            sendErrorMessage(command.getGameID(), command.getAuthString(), e.getMessage());
+        }
+    }
+
+    private void joinHelper(Session session, int gameID, String authString, String broadcastMessage) throws IOException, DataAccessException {
+        webSocketSessions.addSessionToGame(gameID, authString, session);
+        ServerNotification broadcast = new ServerNotification(ServerMessage.ServerMessageType.NOTIFICATION, broadcastMessage);
+        broadcastMessage(gameID, objectToJson(broadcast), authString);
+
+        ChessGameImpl game = gameDAO.findGame(gameID).getGame();
+        LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, game);
+        sendMessage(gameID, objectToJson(loadGame), authString);
     }
 
     private void checkAuth(int gameID, String token) throws DataAccessException {
@@ -146,6 +168,7 @@ public class WebSocketHandler extends Endpoint {
     }
 
     private UserGameCommand getCommand(String message) {
+        System.out.println("in Handler usercommand: " + message);
         UserGameCommand command = (UserGameCommand) jsonToObject(UserGameCommand.class, message);
         Class desiredClass = getDesiredClass(command);
         return (UserGameCommand) jsonToObject(desiredClass, message);
@@ -154,7 +177,7 @@ public class WebSocketHandler extends Endpoint {
     private Class getDesiredClass(UserGameCommand command) {
         return switch (command.getCommandType()) {
             case JOIN_PLAYER -> JoinPlayer.class;
-            case JOIN_OBSERVER -> null;
+            case JOIN_OBSERVER -> JoinObserver.class;
             case MAKE_MOVE -> MakeMove.class;
             case LEAVE -> null;
             case RESIGN -> null;

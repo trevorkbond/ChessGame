@@ -14,6 +14,7 @@ import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.serverNotifications.LoadGame;
 import webSocketMessages.serverNotifications.ServerError;
 import webSocketMessages.serverNotifications.ServerNotification;
+import webSocketMessages.userCommands.JoinObserver;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.MakeMove;
 
@@ -81,6 +82,10 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public void joinPlayer(JoinPlayer message) throws IOException {
+        this.session.getBasicRemote().sendText(Repl.objectToJson(message));
+    }
+
+    public void joinObserver(JoinObserver message) throws IOException {
         this.session.getBasicRemote().sendText(Repl.objectToJson(message));
     }
 
