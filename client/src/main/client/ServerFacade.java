@@ -1,6 +1,5 @@
 package client;
 
-import chess.ChessBoard;
 import chess.ChessBoardImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

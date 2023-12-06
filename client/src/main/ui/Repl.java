@@ -28,6 +28,14 @@ public class Repl {
         return gson.toJson(object);
     }
 
+    public static void resetBackground() {
+        System.out.print("\u001b[0m");
+    }
+
+    public static void setBackground(String background) {
+        System.out.print(background);
+    }
+
     public void run(ChessClient.ClientState quitState, String welcome) {
         System.out.println(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
         System.out.println(welcome);
@@ -64,7 +72,7 @@ public class Repl {
 
     }
 
-    private String eval(String selection, ChessClient.ClientState quitState) throws InvalidResponseException {
+    protected String eval(String selection, ChessClient.ClientState quitState) throws InvalidResponseException {
         String[] args = selection.split(" ");
         ArrayList<String> params = new ArrayList<>(Arrays.asList(args));
         String command = args[0];
@@ -134,14 +142,6 @@ public class Repl {
 
     public void setInfoPrinting() {
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE);
-    }
-
-    public void resetBackground() {
-        System.out.print("\u001b[0m");
-    }
-
-    public void setBackground(String background) {
-        System.out.print(background);
     }
 
     public void resetTextPrint() {

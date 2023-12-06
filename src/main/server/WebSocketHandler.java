@@ -2,32 +2,31 @@ package server;
 
 import chess.ChessBoardImpl;
 import chess.ChessGame;
+import chess.ChessMove;
 import chess.ChessGameImpl;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.internal.bind.DateTypeAdapter;
 import dao.AuthDAO;
 import dao.GameDAO;
 import dao.UserDAO;
 import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.ChessBoardAdapter;
+import models.ChessMoveAdapter;
 import models.Game;
-import models.User;
-import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.serverNotifications.LoadGame;
-import webSocketMessages.serverNotifications.ServerNotificationError;
+import webSocketMessages.serverNotifications.ServerError;
+import webSocketMessages.serverNotifications.ServerNotification;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.MakeMove;
 import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.HashMap;
@@ -50,6 +49,7 @@ public class WebSocketHandler extends Endpoint {
     public static Object jsonToObject(Class desiredClass, String message) {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
+        builder.registerTypeAdapter(ChessMove.class, new ChessMoveAdapter());
 
         Gson gson = builder.create();
         return gson.fromJson(message, desiredClass);
@@ -75,48 +75,51 @@ public class WebSocketHandler extends Endpoint {
     }
 
     private void joinPlayer(Session session, JoinPlayer command) throws IOException, DataAccessException {
-        checkAuth(command.getGameID(), command.getAuthString());
-//        checkTeamNotTaken(command.getGameID(), command.getTeamColor(), command.getAuthString());
-
-        webSocketSessions.addSessionToGame(command.getGameID(), command.getAuthString(), session);
-        ServerNotificationError broadcast = new ServerNotificationError(ServerMessage.ServerMessageType.NOTIFICATION, command.getAuthString() + " joined the game.");
-        String broadcastMessage = objectToJson(broadcast);
-        broadcastMessage(command.getGameID(), broadcastMessage, command.getAuthString());
-
-        ChessGameImpl game = gameDAO.findGame(command.getGameID()).getGame();
-        LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, game);
-        String sendMessage = objectToJson(loadGame);
-        sendMessage(command.getGameID(), sendMessage, command.getAuthString());
-    }
-
-    private void checkAuth(int gameID, String token) throws IOException {
-        AuthToken authToken = new AuthToken(null, token);
         try {
-            authDAO.findToken(authToken);
+            checkAuth(command.getGameID(), command.getAuthString());
+            checkTeamNotTaken(command.getGameID(), command.getPlayerColor(), command.getAuthString());
+
+            webSocketSessions.addSessionToGame(command.getGameID(), command.getAuthString(), session);
+            ServerNotification broadcast = new ServerNotification(ServerMessage.ServerMessageType.NOTIFICATION,
+                    command.getUsername() + " joined the game as a player on team " + command.getPlayerColor());
+            String broadcastMessage = objectToJson(broadcast);
+            broadcastMessage(command.getGameID(), broadcastMessage, command.getAuthString());
+
+            ChessGameImpl game = gameDAO.findGame(command.getGameID()).getGame();
+            LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, game);
+            String sendMessage = objectToJson(loadGame);
+            sendMessage(command.getGameID(), sendMessage, command.getAuthString());
         } catch (DataAccessException e) {
-            ServerNotificationError error = new ServerNotificationError(ServerMessage.ServerMessageType.ERROR, e.getMessage());
-            sendMessage(gameID, objectToJson(error), token);
+            webSocketSessions.addSessionToGame(command.getGameID(), command.getAuthString(), session);
+            sendErrorMessage(command.getGameID(), command.getAuthString(), e.getMessage());
         }
     }
 
-    private void checkTeamNotTaken(int gameID, ChessGame.TeamColor teamColor, String token) throws IOException {
-        try {
-            Game foundGame = gameDAO.findGame(gameID);
-            if (teamColor.equals(ChessGame.TeamColor.BLACK) && foundGame.getBlackUsername() != null) {
-                sendErrorMessage(gameID, token, "Error: team already taken");
-            } else if (teamColor.equals(ChessGame.TeamColor.WHITE) && foundGame.getWhiteUsername() != null) {
-                sendErrorMessage(gameID, token, "Error: team already taken");
+    private void checkAuth(int gameID, String token) throws DataAccessException {
+        authDAO.findToken(new AuthToken(null, token));
+    }
+
+    private void checkTeamNotTaken(int gameID, ChessGame.TeamColor teamColor, String token) throws DataAccessException {
+        Game foundGame = gameDAO.findGame(gameID);
+        if (teamColor.equals(ChessGame.TeamColor.BLACK) && foundGame.getBlackUsername() != null) {
+            AuthToken foundToken = authDAO.findToken(new AuthToken(null, token));
+            if (!foundToken.getUsername().equals(foundGame.getBlackUsername())) {
+                System.out.println("Black team taken");
+                throw new DataAccessException("Error: team already taken");
             }
-        } catch (DataAccessException e) {
-            sendErrorMessage(gameID, token, e.getMessage());
+        } else if (teamColor.equals(ChessGame.TeamColor.WHITE) && foundGame.getWhiteUsername() != null) {
+            AuthToken foundToken = authDAO.findToken(new AuthToken(null, token));
+            if (!foundToken.getUsername().equals(foundGame.getWhiteUsername())) {
+                System.out.println("White team taken");
+                throw new DataAccessException("Error: team already taken");
+            }
         }
     }
 
     private void sendErrorMessage(int gameID, String token, String message) throws IOException {
-        ServerNotificationError error = new ServerNotificationError(ServerMessage.ServerMessageType.ERROR, message);
+        ServerError error = new ServerError(ServerMessage.ServerMessageType.ERROR, message);
         sendMessage(gameID, objectToJson(error), token);
     }
-
 
 
     private String objectToJson(Object o) {
@@ -126,9 +129,20 @@ public class WebSocketHandler extends Endpoint {
         return gson.toJson(o);
     }
 
-    private void makeMove(Session session, MakeMove command) throws DataAccessException, InvalidMoveException {
-        gameDAO.updateGame(command.getGameID(), command.getChessMove());
+    private void makeMove(Session session, MakeMove command) throws DataAccessException, IOException {
+        try {
+            ChessGameImpl updatedGame = gameDAO.updateGame(command.getGameID(), command.getChessMove());
 
+            LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, updatedGame);
+            sendMessage(command.getGameID(), objectToJson(loadGame), command.getAuthString());
+            broadcastMessage(command.getGameID(), objectToJson(loadGame), command.getAuthString());
+
+            ServerNotification notification = new ServerNotification(ServerMessage.ServerMessageType.NOTIFICATION, command.getUsername() + " made a move");
+            broadcastMessage(command.getGameID(), objectToJson(notification), command.getAuthString());
+        }
+        catch (InvalidMoveException e) {
+            sendErrorMessage(command.getGameID(), command.getAuthString(), e.getMessage());
+        }
     }
 
     private UserGameCommand getCommand(String message) {

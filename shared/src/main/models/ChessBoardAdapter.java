@@ -3,7 +3,6 @@ package models;
 import chess.ChessBoard;
 import chess.ChessBoardImpl;
 import chess.ChessPiece;
-import chess.ChessPieceImpl;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;

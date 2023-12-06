@@ -3,13 +3,13 @@ package chess;
 import java.util.Objects;
 
 public class ChessMoveImpl implements chess.ChessMove {
-    private final ChessPosition startPosition;
-    private final ChessPosition endPosition;
+    private final ChessPositionImpl startPosition;
+    private final ChessPositionImpl endPosition;
     private final ChessPiece.PieceType promotionPiece;
 
     public ChessMoveImpl(ChessPosition start, ChessPosition end, ChessPiece.PieceType piece) {
-        startPosition = start;
-        endPosition = end;
+        startPosition = (ChessPositionImpl) start;
+        endPosition = (ChessPositionImpl) end;
         promotionPiece = piece;
     }
 

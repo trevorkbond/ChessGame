@@ -4,7 +4,6 @@ import chess.ChessBoardImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import models.ChessBoardAdapter;
-import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
@@ -13,7 +12,10 @@ import ui.GameUI;
 import ui.Repl;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.serverNotifications.LoadGame;
+import webSocketMessages.serverNotifications.ServerError;
+import webSocketMessages.serverNotifications.ServerNotification;
 import webSocketMessages.userCommands.JoinPlayer;
+import webSocketMessages.userCommands.MakeMove;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -34,7 +36,8 @@ public class WebSocketFacade extends Endpoint {
                 ServerMessage serverMessage = getMessage(message);
                 switch (serverMessage.getServerMessageType()) {
                     case LOAD_GAME -> loadGame((LoadGame) serverMessage);
-                    case NOTIFICATION -> System.out.println(message);
+                    case NOTIFICATION -> displayNotification((ServerNotification) serverMessage);
+                    case ERROR -> displayError((ServerError) serverMessage);
                 }
             }
         });
@@ -56,8 +59,8 @@ public class WebSocketFacade extends Endpoint {
     private Class getDesiredClass(ServerMessage message) {
         return switch (message.getServerMessageType()) {
             case LOAD_GAME -> LoadGame.class;
-            case ERROR -> null;
-            case NOTIFICATION -> null;
+            case NOTIFICATION -> ServerNotification.class;
+            case ERROR -> ServerError.class;
         };
     }
 
@@ -81,12 +84,20 @@ public class WebSocketFacade extends Endpoint {
         this.session.getBasicRemote().sendText(Repl.objectToJson(message));
     }
 
-    public void loadGame(LoadGame message) {
-        GameUI.setClientGame(message.getGame());
+    public void makeMove(MakeMove message) throws IOException {
+        this.session.getBasicRemote().sendText(Repl.objectToJson(message));
     }
 
-    public void sendMessage() throws IOException {
-        this.session.getBasicRemote().sendText("This is a message");
+    private void loadGame(LoadGame message) {
+        GameUI.setClientGame(message.getGame(), ChessClient.getTeamColor());
+    }
+
+    private void displayNotification(ServerNotification notification) {
+        System.out.println(notification.getMessage());
+    }
+
+    private void displayError(ServerError notification) {
+        System.out.println(notification.getErrorMessage());
     }
 
     @Override

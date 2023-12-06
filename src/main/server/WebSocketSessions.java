@@ -8,15 +8,16 @@ public class WebSocketSessions {
 
     private static HashMap<Integer, HashMap<String, Session>> sessionMap;
     private static WebSocketSessions instance;
+
+    private WebSocketSessions() {
+        sessionMap = new HashMap<>();
+    }
+
     public static WebSocketSessions getInstance() {
         if (instance == null) {
             instance = new WebSocketSessions();
         }
         return instance;
-    }
-
-    private WebSocketSessions() {
-        sessionMap = new HashMap<>();
     }
 
     @Override
@@ -41,7 +42,7 @@ public class WebSocketSessions {
         }
     }
 
-    public void removeSessionFromGame(int gameID, String authToken){
+    public void removeSessionFromGame(int gameID, String authToken) {
         sessionMap.get(gameID).remove(authToken);
     }
 

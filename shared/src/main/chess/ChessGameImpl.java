@@ -79,11 +79,11 @@ public class ChessGameImpl implements ChessGame {
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
         if (board.getPiece(move.getStartPosition()) == null) {
-            throw new InvalidMoveException("There isn't a piece at the start position of this move");
+            throw new InvalidMoveException("Error: There isn't a piece at the start position of this move");
         } else {
             TeamColor movingColor = board.getPiece(move.getStartPosition()).getTeamColor();
             if (getTeamTurn() != movingColor) {
-                throw new InvalidMoveException("It isn't this team's turn");
+                throw new InvalidMoveException("Error: It isn't this team's turn");
             }
             ChessBoardImpl tempBoard = (ChessBoardImpl) board;
             ChessPiece movePiece = board.getPiece(move.getStartPosition());
@@ -96,7 +96,7 @@ public class ChessGameImpl implements ChessGame {
                 }
             }
             if (!moveInValid) {
-                throw new InvalidMoveException("This piece can't move in that way");
+                throw new InvalidMoveException("Error: This piece can't move in that way");
             }
             if (move.getPromotionPiece() != null) {
                 tempBoard.removePiece(move.getEndPosition());
@@ -110,7 +110,7 @@ public class ChessGameImpl implements ChessGame {
             if (isInCheck(movingColor)) {
                 tempBoard.removePiece(move.getEndPosition());
                 tempBoard.addPiece(move.getStartPosition(), movePiece);
-                throw new InvalidMoveException("Your king will be in check with this move");
+                throw new InvalidMoveException("Error: Your king will be in check with this move");
             }
             setTeamTurn(getOtherColor(getTeamTurn()));
         }

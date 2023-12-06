@@ -114,7 +114,7 @@ public class GameDAO extends DAO {
         }
     }
 
-    public void updateGame(int gameID, ChessMove move) throws DataAccessException, InvalidMoveException {
+    public ChessGameImpl updateGame(int gameID, ChessMove move) throws DataAccessException, InvalidMoveException {
         Game foundGame = findGame(gameID);
         if (foundGame == null) {
             throw new DataAccessException("Error: bad request");
@@ -130,6 +130,7 @@ public class GameDAO extends DAO {
         } catch (SQLException e) {
             handleSQLException(e);
         }
+        return gameState;
     }
 
     /**

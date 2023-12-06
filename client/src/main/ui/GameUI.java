@@ -2,45 +2,34 @@ package ui;
 
 import chess.*;
 import client.ChessClient;
-import models.ChessBoardAdapter;
+import client.InvalidResponseException;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class GameUI extends Repl {
 
     private static final int BOARD_SIZE_IN_SQUARES = 9;
     private static ChessGameImpl clientGame;
 
-    public static void setClientGame(ChessGameImpl passedClientGame) {
+    public GameUI() throws Exception {
+        super();
+        validLengths.put("move", 3);
+        validLengths.put("quit", 1);
+    }
+
+    public static void setClientGame(ChessGameImpl passedClientGame, ChessGame.TeamColor teamColor) {
         clientGame = passedClientGame;
+        printBoard(clientGame.getBoard(), teamColor);
     }
 
     public static ChessGameImpl getClientGame() {
         return clientGame;
     }
 
-    public GameUI() throws Exception {
-        super();
-    }
-
-    public void run(ChessGame.TeamColor teamColor) {
-        printBoard(clientGame.getBoard(), teamColor);
-        Scanner scanner = new Scanner(System.in);
-        String result = "";
-        while (true) {
-            result = scanner.nextLine();
-            if (result.equals("quit")) {
-                client.setState(ChessClient.ClientState.LOGGED_IN);
-                break;
-            }
-            printBoard(clientGame.getBoard(), ChessGame.TeamColor.WHITE);
-            printBoard(clientGame.getBoard(), ChessGame.TeamColor.BLACK);
-        }
-    }
-
-    public void printBoard(ChessBoard board, ChessGame.TeamColor teamView) {
+    public static void printBoard(ChessBoard board, ChessGame.TeamColor teamView) {
         printHeader(teamView);
         for (int row = 1; row < BOARD_SIZE_IN_SQUARES; row++) {
             printRowNumber(teamView, row);
@@ -48,7 +37,7 @@ public class GameUI extends Repl {
                 ChessPositionImpl position = new ChessPositionImpl(0, 0);
                 if (teamView.equals(ChessGame.TeamColor.BLACK)) {
                     position.setRow(row);
-                    position.setColumn(col);
+                    position.setColumn(BOARD_SIZE_IN_SQUARES - col);
                 } else if (teamView.equals(ChessGame.TeamColor.WHITE)) {
                     position.setRow(BOARD_SIZE_IN_SQUARES - row);
                     position.setColumn(col);
@@ -62,14 +51,14 @@ public class GameUI extends Repl {
         printHeader(teamView);
     }
 
-    private void printSquare(ChessPiece chessPiece, int row, int col) {
+    private static void printSquare(ChessPiece chessPiece, int row, int col) {
         PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         String background = getBackground(row, col);
         setBackground(background);
         out.print(getPieceSequence(chessPiece));
     }
 
-    private void printRowNumber(ChessGame.TeamColor color, int row) {
+    private static void printRowNumber(ChessGame.TeamColor color, int row) {
         if (color.equals(ChessGame.TeamColor.WHITE)) {
             System.out.print(" " + (BOARD_SIZE_IN_SQUARES - row) + " ");
         } else {
@@ -77,7 +66,7 @@ public class GameUI extends Repl {
         }
     }
 
-    private void printHeader(ChessGame.TeamColor team) {
+    private static void printHeader(ChessGame.TeamColor team) {
         if (team.equals(ChessGame.TeamColor.WHITE)) {
             System.out.print(EscapeSequences.EMPTY);
             for (char c = 'a'; c <= 'h'; c++) {
@@ -93,7 +82,7 @@ public class GameUI extends Repl {
         }
     }
 
-    private String getBackground(int row, int column) {
+    private static String getBackground(int row, int column) {
         if (row % 2 == 0) {
             if (column % 2 == 0) {
                 return EscapeSequences.SET_BG_COLOR_DARK_GREY;
@@ -109,7 +98,7 @@ public class GameUI extends Repl {
         }
     }
 
-    private String getPieceSequence(ChessPiece piece) {
+    private static String getPieceSequence(ChessPiece piece) {
         if (piece == null) {
             return EscapeSequences.EMPTY;
         }
@@ -135,6 +124,33 @@ public class GameUI extends Repl {
             };
         }
         return null;
+    }
+
+    public void run(ChessGame.TeamColor teamColor, ChessClient.ClientState quitState) throws InterruptedException {
+        while (clientGame == null) {
+            TimeUnit.MILLISECONDS.sleep(400);
+        }
+        Scanner scanner = new Scanner(System.in);
+        String result = "";
+        while (true) {
+            String selection = scanner.nextLine();
+            try {
+                result = eval(selection, quitState);
+
+                if (result.equals("quit")) {
+                    client.setState(ChessClient.ClientState.LOGGED_IN);
+                    break;
+                }
+            } catch (InvalidResponseException e) {
+                setInfoPrinting();
+                System.out.println(e.getMessage());
+                System.out.println(help());
+            }
+        }
+    }
+
+    private String help() {
+        return "TODO: implement help in GameUI";
     }
 
 }

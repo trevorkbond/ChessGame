@@ -1,8 +1,9 @@
 package client;
 
-import chess.ChessBoardImpl;
 import chess.ChessGame;
-import chess.ChessGameImpl;
+import chess.ChessMove;
+import chess.ChessMoveImpl;
+import chess.ChessPositionImpl;
 import models.Game;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import request.CreateGameRequest;
@@ -15,6 +16,8 @@ import ui.GameUI;
 import ui.PostLoginRepl;
 import ui.PreloginRepl;
 import webSocketMessages.userCommands.JoinPlayer;
+import webSocketMessages.userCommands.MakeMove;
+import webSocketMessages.userCommands.UserGameCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ public class ChessClient {
     private static HashMap<Integer, Integer> userIDToDatabaseID;
     private static TreeMap<Integer, Game> userIDToGame;
     private static String clientUsername;
+    private static Integer gameID;
     private static ChessGame.TeamColor teamColor;
     private final ServerFacade serverFacade;
     private WebSocketFacade webSocketFacade;
@@ -40,6 +44,10 @@ public class ChessClient {
         authToken = null;
         userIDToDatabaseID = new HashMap<>();
         userIDToGame = new TreeMap<>();
+    }
+
+    public static ChessGame.TeamColor getTeamColor() {
+        return teamColor;
     }
 
     public static void main(String[] args) throws Exception {
@@ -58,9 +66,7 @@ public class ChessClient {
             } else if (client.getState().equals(ChessClient.ClientState.LOGGED_IN)) {
                 postlogin.run(ChessClient.ClientState.LOGGED_OUT, "Please select from the following commands.\n");
             } else if (client.getState().equals(ChessClient.ClientState.IN_GAME)) {
-                if (GameUI.getClientGame() != null) {
-                    inGame.run(teamColor);
-                }
+                inGame.run(teamColor, ClientState.LOGGED_IN);
             }
         }
         System.out.println("Goodbye!");
@@ -95,6 +101,7 @@ public class ChessClient {
             case "join" -> join(params);
             case "clear" -> clear();
             case "observe" -> observe(params);
+            case "move" -> move(params);
             default -> throw new IllegalStateException("Unexpected value: " + command);
         };
     }
@@ -144,13 +151,13 @@ public class ChessClient {
     }
 
     public String join(ArrayList<String> params) throws Exception {
-        int gameID;
+        int joinGameID;
         try {
-            gameID = Integer.parseInt(params.get(0));
+            joinGameID = Integer.parseInt(params.get(0));
         } catch (NumberFormatException e) {
             throw new InvalidResponseException("Bad request. Please try again.");
         }
-        Integer databaseID = userIDToDatabaseID.get(gameID);
+        Integer databaseID = userIDToDatabaseID.get(joinGameID);
         if (databaseID == null) {
             throw new InvalidResponseException("Error joining game. Try listing games again or check given game ID.");
         }
@@ -159,16 +166,17 @@ public class ChessClient {
         }
         ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(params.get(1));
         teamColor = team;
+        gameID = userIDToDatabaseID.get(joinGameID);
 
         JoinGameRequest request = new JoinGameRequest(team, databaseID);
-        JoinPlayer webSocketMessage = new JoinPlayer(authToken, databaseID, team);
+        JoinPlayer webSocketMessage = new JoinPlayer(authToken, databaseID, team, clientUsername);
         serverFacade.joinGame(request, authToken);
 
         webSocketFacade = new WebSocketFacade(this);
         webSocketFacade.joinPlayer(webSocketMessage);
-
         setState(ClientState.IN_GAME);
-        return String.format("You have joined game with ID %d", gameID);
+
+        return String.format("You have joined game with ID %d", joinGameID);
     }
 
     public String observe(ArrayList<String> params) throws IOException, InvalidResponseException {
@@ -180,8 +188,41 @@ public class ChessClient {
 
         JoinGameRequest request = new JoinGameRequest(null, databaseID);
         serverFacade.joinGame(request, authToken);
-        setState(ClientState.IN_GAME);
         return String.format("You are observing game with ID %d", gameID);
+    }
+
+    public String move(ArrayList<String> params) throws InvalidResponseException, IOException {
+        ChessMoveImpl chessMove = getMoveFromCommand(params.get(0), params.get(1));
+        MakeMove moveRequest = new MakeMove(authToken, gameID, chessMove, clientUsername, UserGameCommand.CommandType.MAKE_MOVE);
+
+        webSocketFacade.makeMove(moveRequest);
+        return "Attempting to make given move";
+    }
+
+    private ChessMoveImpl getMoveFromCommand(String start, String end) throws InvalidResponseException {
+        if (start.length() > 2 || end.length() > 2) {
+            throw new InvalidResponseException("Invalid move. Please try again");
+        }
+        int startColumn = charToColumnIndex(start.charAt(0));
+        int startRow = Integer.parseInt(String.valueOf(start.charAt(1)));
+        if (startRow < 1 || startRow > 8 || startColumn < 1 || startColumn > 8) {
+            throw new InvalidResponseException("Invalid move. Please try again");
+        }
+        ChessPositionImpl startPosition = new ChessPositionImpl(startRow, startColumn);
+
+        int endColumn = charToColumnIndex(end.charAt(0));
+        int endRow = Integer.parseInt(String.valueOf(end.charAt(1)));
+        if (endRow < 1 || endRow > 8 || endColumn < 1 || endColumn > 8) {
+            throw new InvalidResponseException("Invalid move. Please try again");
+        }
+        ChessPositionImpl endPosition = new ChessPositionImpl(endRow, endColumn);
+
+        //TODO: handle pawn promotion
+        return new ChessMoveImpl(startPosition, endPosition, null);
+    }
+
+    private int charToColumnIndex(char column) {
+        return column - 'a' + 1;
     }
 
     public String clear() throws IOException {
