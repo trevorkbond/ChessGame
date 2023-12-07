@@ -57,7 +57,9 @@ public class WebSocketSessions {
                 }
             }
         }
-        sessionMap.get(foundID).remove(foundToken);
+        if (sessionMap.get(foundID) != null) {
+            sessionMap.get(foundID).remove(foundToken);
+        }
     }
 
     public HashMap<String, Session> getSessionsForGame(int gameID) {

@@ -17,7 +17,7 @@ public class GameUI extends Repl {
     public GameUI() throws Exception {
         super();
         validLengths.put("move", 3);
-        validLengths.put("quit", 1);
+        validLengths.put("leave", 1);
         validLengths.put("resign", 1);
     }
 

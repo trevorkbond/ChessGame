@@ -4,6 +4,7 @@ import chess.ChessBoardImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import models.ChessBoardAdapter;
+import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
@@ -14,10 +15,7 @@ import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.serverNotifications.LoadGame;
 import webSocketMessages.serverNotifications.ServerError;
 import webSocketMessages.serverNotifications.ServerNotification;
-import webSocketMessages.userCommands.JoinObserver;
-import webSocketMessages.userCommands.JoinPlayer;
-import webSocketMessages.userCommands.MakeMove;
-import webSocketMessages.userCommands.Resign;
+import webSocketMessages.userCommands.*;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -96,6 +94,10 @@ public class WebSocketFacade extends Endpoint {
 
     public void resign(Resign resign) throws IOException {
         this.session.getBasicRemote().sendText(Repl.objectToJson(resign));
+    }
+
+    public void leave(Leave leave) throws IOException {
+        this.session.getBasicRemote().sendText(Repl.objectToJson(leave));
     }
 
     private void loadGame(LoadGame message) {

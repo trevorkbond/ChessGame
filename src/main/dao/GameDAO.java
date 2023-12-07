@@ -106,7 +106,7 @@ public class GameDAO extends DAO {
         }
     }
 
-    private void updateUsername(int gameID, String username, String userToChange) throws DataAccessException {
+    public void updateUsername(int gameID, String username, String userToChange) throws DataAccessException {
         String updateSQL = "update game set " + userToChange + " = ? where gameID = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(updateSQL)) {
@@ -137,7 +137,7 @@ public class GameDAO extends DAO {
         return gameState;
     }
 
-    public Game updateGameOver(int gameID) throws DataAccessException {
+    public void updateGameOver(int gameID) throws DataAccessException {
         Game foundGame = findGame(gameID);
         if (foundGame == null) {
             throw new DataAccessException("Error: bad request");
@@ -149,7 +149,6 @@ public class GameDAO extends DAO {
         } catch (SQLException e) {
             handleSQLException(e);
         }
-        return findGame(gameID);
     }
 
     /**
@@ -186,7 +185,9 @@ public class GameDAO extends DAO {
                 String gameJSON = rs.getString(5);
 
                 ChessGameImpl game = gameFromJSON(gameJSON);
-                games.add(new Game(game, gameID, whiteUsername, blackUsername, gameName));
+                Game addGame = new Game(game, gameID, whiteUsername, blackUsername, gameName);
+                addGame.setGameOver(rs.getInt(6) != 0);
+                games.add(addGame);
             }
         } catch (SQLException e) {
             handleSQLException(e);

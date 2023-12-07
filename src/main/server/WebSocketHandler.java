@@ -72,6 +72,7 @@ public class WebSocketHandler extends Endpoint {
             case MAKE_MOVE -> makeMove(session, (MakeMove) command);
             case JOIN_OBSERVER -> joinObserver(session, (JoinObserver) command);
             case RESIGN -> resign(session, (Resign) command);
+            case LEAVE -> leave(session, (Leave) command);
         }
     }
 
@@ -196,6 +197,9 @@ public class WebSocketHandler extends Endpoint {
         try {
             checkAuth(command.getGameID(), command.getAuthString());
             checkValidGameID(command.getGameID());
+            checkNotObserver(command.getGameID(), command.getAuthString());
+            Game foundGame = gameDAO.findGame(command.getGameID());
+            checkGameNotOver(foundGame);
 
             gameDAO.updateGameOver(command.getGameID());
             String resignedUser = authDAO.findToken(new AuthToken(null, command.getAuthString())).getUsername();
@@ -204,6 +208,47 @@ public class WebSocketHandler extends Endpoint {
         } catch (DataAccessException e) {
             webSocketSessions.addSessionToGame(command.getGameID(), command.getAuthString(), session);
             sendErrorMessage(command.getGameID(), command.getAuthString(), e.getMessage());
+        } catch (InvalidMoveException e) {
+            sendErrorMessage(command.getGameID(), command.getAuthString(), e.getMessage());
+        }
+    }
+
+    private void leave(Session session, Leave command) throws IOException {
+        try {
+            checkAuth(command.getGameID(), command.getAuthString());
+            checkValidGameID(command.getGameID());
+
+            String username = authDAO.findToken(new AuthToken(null, command.getAuthString())).getUsername();
+            String userPosition = getUserPosition(command.getGameID(), command.getAuthString());
+            if (userPosition != null) {
+                gameDAO.updateUsername(command.getGameID(), null, userPosition);
+            }
+
+            ServerNotification notification = new ServerNotification(ServerMessage.ServerMessageType.NOTIFICATION, username + " left the game");
+            broadcastMessage(command.getGameID(), objectToJson(notification), command.getAuthString());
+
+            webSocketSessions.removeSessionFromGame(command.getGameID(), command.getAuthString());
+        } catch (DataAccessException e) {
+            sendErrorMessage(command.getGameID(), command.getAuthString(), e.getMessage());
+        }
+    }
+
+    private String getUserPosition(int gameID, String authToken) throws DataAccessException {
+        Game foundGame = gameDAO.findGame(gameID);
+        String username = authDAO.findToken(new AuthToken(null, authToken)).getUsername();
+        if (username.equals(foundGame.getBlackUsername())) {
+            return "blackUsername";
+        } else if (username.equals(foundGame.getWhiteUsername())) {
+            return "whiteUsername";
+        }
+        return null;
+    }
+
+    private void checkNotObserver(int gameID, String authString) throws DataAccessException {
+        String username = authDAO.findToken(new AuthToken(null, authString)).getUsername();
+        Game foundGame = gameDAO.findGame(gameID);
+        if (!username.equals(foundGame.getWhiteUsername()) && !username.equals(foundGame.getBlackUsername())) {
+            throw new DataAccessException("Error: you are an observer and cannot resign a game");
         }
     }
 
@@ -261,7 +306,7 @@ public class WebSocketHandler extends Endpoint {
             case JOIN_PLAYER -> JoinPlayer.class;
             case JOIN_OBSERVER -> JoinObserver.class;
             case MAKE_MOVE -> MakeMove.class;
-            case LEAVE -> null;
+            case LEAVE -> Leave.class;
             case RESIGN -> Resign.class;
         };
     }

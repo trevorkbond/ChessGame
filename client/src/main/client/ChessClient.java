@@ -101,6 +101,7 @@ public class ChessClient {
             case "observe" -> observe(params);
             case "move" -> move(params);
             case "resign" -> resign();
+            case "leave" -> leave();
             default -> throw new IllegalStateException("Unexpected value: " + command);
         };
     }
@@ -200,7 +201,15 @@ public class ChessClient {
         Resign resign = new Resign(authToken, gameID);
 
         webSocketFacade.resign(resign);
-        return "Requested to resign";
+        return "Requesting to resign";
+    }
+
+    public String leave() throws IOException {
+        Leave leave = new Leave(authToken, gameID);
+
+        webSocketFacade.leave(leave);
+        gameID = null;
+        return "quit";
     }
 
     public String move(ArrayList<String> params) throws InvalidResponseException, IOException {

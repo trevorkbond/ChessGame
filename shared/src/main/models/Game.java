@@ -119,7 +119,7 @@ public class Game {
         return gameName + ":\n" +
                 "\tWhite Player: " + (whiteUsername == null ? "not taken" : whiteUsername) + '\n' +
                 "\tBlack Player: " + (blackUsername == null ? "not taken" : blackUsername) + '\n' +
-                (gameOver ? "This game is over and cannot be played further\n" : "");
+                (gameOver ? "\tThis game is over and cannot be played further\n" : "");
     }
 
     @Override
