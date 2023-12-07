@@ -18,6 +18,7 @@ public class GameUI extends Repl {
         super();
         validLengths.put("move", 3);
         validLengths.put("quit", 1);
+        validLengths.put("resign", 1);
     }
 
     public static void setClientGame(ChessGameImpl passedClientGame, ChessGame.TeamColor teamColor) {
@@ -142,7 +143,6 @@ public class GameUI extends Repl {
                     break;
                 }
             } catch (InvalidResponseException e) {
-                setInfoPrinting();
                 System.out.println(e.getMessage());
                 System.out.println(help());
             }

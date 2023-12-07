@@ -15,10 +15,7 @@ import result.LoginRegisterResult;
 import ui.GameUI;
 import ui.PostLoginRepl;
 import ui.PreloginRepl;
-import webSocketMessages.userCommands.JoinObserver;
-import webSocketMessages.userCommands.JoinPlayer;
-import webSocketMessages.userCommands.MakeMove;
-import webSocketMessages.userCommands.UserGameCommand;
+import webSocketMessages.userCommands.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -103,6 +100,7 @@ public class ChessClient {
             case "clear" -> clear();
             case "observe" -> observe(params);
             case "move" -> move(params);
+            case "resign" -> resign();
             default -> throw new IllegalStateException("Unexpected value: " + command);
         };
     }
@@ -196,6 +194,13 @@ public class ChessClient {
         webSocketFacade = new WebSocketFacade(this);
         webSocketFacade.joinObserver(socketMessage);
         return String.format("You are observing game with ID %d", joinGameID);
+    }
+
+    public String resign() throws IOException {
+        Resign resign = new Resign(authToken, gameID);
+
+        webSocketFacade.resign(resign);
+        return "Requested to resign";
     }
 
     public String move(ArrayList<String> params) throws InvalidResponseException, IOException {

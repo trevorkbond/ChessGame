@@ -17,6 +17,7 @@ import webSocketMessages.serverNotifications.ServerNotification;
 import webSocketMessages.userCommands.JoinObserver;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.MakeMove;
+import webSocketMessages.userCommands.Resign;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -91,6 +92,10 @@ public class WebSocketFacade extends Endpoint {
 
     public void makeMove(MakeMove message) throws IOException {
         this.session.getBasicRemote().sendText(Repl.objectToJson(message));
+    }
+
+    public void resign(Resign resign) throws IOException {
+        this.session.getBasicRemote().sendText(Repl.objectToJson(resign));
     }
 
     private void loadGame(LoadGame message) {

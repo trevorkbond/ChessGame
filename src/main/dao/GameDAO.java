@@ -33,11 +33,12 @@ public class GameDAO extends DAO {
         }
         ChessGameImpl chessGame = game.getGame();
         chessGame.getBoard().resetBoard();
-        String insertSQL = "insert into game (gameName, game) values (?, ?)";
+        String insertSQL = "insert into game (gameName, game, gameOver) values (?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(insertSQL,
                 Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, game.getGameName());
             stmt.setString(2, gameToJson(chessGame));
+            stmt.setInt(3, 0);
 
             if (stmt.executeUpdate() == 1) {
                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
@@ -70,9 +71,12 @@ public class GameDAO extends DAO {
                 String blackUsername = rs.getString(3);
                 String gameName = rs.getString(4);
                 String gameJSON = rs.getString(5);
+                int gameOver = rs.getInt(6);
 
                 ChessGameImpl game = gameFromJSON(gameJSON);
-                return new Game(game, foundGameID, whiteUsername, blackUsername, gameName);
+                Game returnGame = new Game(game, foundGameID, whiteUsername, blackUsername, gameName);
+                returnGame.setGameOver(gameOver != 0);
+                return returnGame;
             } else {
                 return null;
             }
@@ -131,6 +135,21 @@ public class GameDAO extends DAO {
             handleSQLException(e);
         }
         return gameState;
+    }
+
+    public Game updateGameOver(int gameID) throws DataAccessException {
+        Game foundGame = findGame(gameID);
+        if (foundGame == null) {
+            throw new DataAccessException("Error: bad request");
+        }
+        String updateSQL = "update game set gameOver = 1 where gameID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(updateSQL)) {
+            stmt.setInt(1, gameID);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+        return findGame(gameID);
     }
 
     /**

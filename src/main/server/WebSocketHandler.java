@@ -21,10 +21,7 @@ import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.serverNotifications.LoadGame;
 import webSocketMessages.serverNotifications.ServerError;
 import webSocketMessages.serverNotifications.ServerNotification;
-import webSocketMessages.userCommands.JoinObserver;
-import webSocketMessages.userCommands.JoinPlayer;
-import webSocketMessages.userCommands.MakeMove;
-import webSocketMessages.userCommands.UserGameCommand;
+import webSocketMessages.userCommands.*;
 
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
@@ -74,6 +71,7 @@ public class WebSocketHandler extends Endpoint {
             case JOIN_PLAYER -> joinPlayer(session, (JoinPlayer) command);
             case MAKE_MOVE -> makeMove(session, (MakeMove) command);
             case JOIN_OBSERVER -> joinObserver(session, (JoinObserver) command);
+            case RESIGN -> resign(session, (Resign) command);
         }
     }
 
@@ -136,7 +134,6 @@ public class WebSocketHandler extends Endpoint {
 
     private void checkTeamNotTaken(int gameID, ChessGame.TeamColor teamColor, String token) throws DataAccessException {
         Game foundGame = gameDAO.findGame(gameID);
-        System.out.println("In checkTeamNotTaken, found game:\n" + foundGame);
         if (teamColor.equals(ChessGame.TeamColor.BLACK)) {
             if (foundGame.getBlackUsername() != null) {
                 AuthToken foundToken = authDAO.findToken(new AuthToken(null, token));
@@ -176,6 +173,7 @@ public class WebSocketHandler extends Endpoint {
             Game foundGame = gameDAO.findGame(command.getGameID());
             ChessGame.TeamColor moveColor = foundGame.getGame().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor();
             checkCorrectUsername(moveColor, command.getAuthString(), foundGame);
+            checkGameNotOver(foundGame);
 
             ChessGameImpl updatedGame = gameDAO.updateGame(command.getGameID(), command.getMove());
 
@@ -185,10 +183,61 @@ public class WebSocketHandler extends Endpoint {
 
             ServerNotification notification = new ServerNotification(ServerMessage.ServerMessageType.NOTIFICATION, command.getUsername() + " made a move");
             broadcastMessage(command.getGameID(), objectToJson(notification), command.getAuthString());
+
+            checkIfInCheck(foundGame, moveColor, updatedGame, command.getGameID(), command.getAuthString());
         }
         catch (InvalidMoveException e) {
             sendErrorMessage(command.getGameID(), command.getAuthString(), e.getMessage());
         }
+    }
+
+
+    private void resign(Session session, Resign command) throws IOException {
+        try {
+            checkAuth(command.getGameID(), command.getAuthString());
+            checkValidGameID(command.getGameID());
+
+            gameDAO.updateGameOver(command.getGameID());
+            String resignedUser = authDAO.findToken(new AuthToken(null, command.getAuthString())).getUsername();
+            notifyEveryone(resignedUser + " resigned, the game is over", command.getAuthString(), command.getGameID());
+
+        } catch (DataAccessException e) {
+            webSocketSessions.addSessionToGame(command.getGameID(), command.getAuthString(), session);
+            sendErrorMessage(command.getGameID(), command.getAuthString(), e.getMessage());
+        }
+    }
+
+    private void checkGameNotOver(Game foundGame) throws InvalidMoveException {
+        if (foundGame.isGameOver()) {
+            throw new InvalidMoveException("Error: This game is over");
+        }
+    }
+
+    private void checkIfInCheck(Game foundGame, ChessGame.TeamColor moveColor, ChessGameImpl game, int gameID, String authString) throws IOException, DataAccessException {
+        ChessGame.TeamColor otherColor = null;
+        String inCheckUser = null;
+        if (moveColor.equals(ChessGame.TeamColor.WHITE)) {
+            otherColor = ChessGame.TeamColor.BLACK;
+            inCheckUser = foundGame.getBlackUsername();
+        } else {
+            otherColor = ChessGame.TeamColor.WHITE;
+            inCheckUser = foundGame.getWhiteUsername();
+        }
+        if (game.isInCheckmate(otherColor)) {
+            gameDAO.updateGameOver(gameID);
+            notifyEveryone(inCheckUser + " is in checkmate\nThe game is over", authString, gameID);
+        } else if (game.isInStalemate(otherColor)) {
+            gameDAO.updateGameOver(gameID);
+            notifyEveryone("The game is in a stalemate\nThe game is over", authString, gameID);
+        } else if (game.isInCheck(otherColor)) {
+            notifyEveryone(inCheckUser + " is in check", authString, gameID);
+        }
+    }
+
+    private void notifyEveryone(String message, String authString, int gameID) throws IOException {
+        ServerNotification notification = new ServerNotification(ServerMessage.ServerMessageType.NOTIFICATION, message);
+        sendMessage(gameID, objectToJson(notification), authString);
+        broadcastMessage(gameID, objectToJson(notification), authString);
     }
 
     private void checkCorrectUsername(ChessGame.TeamColor moveColor, String authString, Game game) throws DataAccessException, InvalidMoveException {
@@ -213,7 +262,7 @@ public class WebSocketHandler extends Endpoint {
             case JOIN_OBSERVER -> JoinObserver.class;
             case MAKE_MOVE -> MakeMove.class;
             case LEAVE -> null;
-            case RESIGN -> null;
+            case RESIGN -> Resign.class;
         };
     }
 

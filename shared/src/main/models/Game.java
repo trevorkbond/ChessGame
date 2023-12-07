@@ -30,6 +30,7 @@ public class Game {
      * The username for the player on black team
      */
     private String blackUsername;
+    private boolean gameOver;
 
     /**
      * A constructor for a Game model
@@ -48,6 +49,10 @@ public class Game {
         this.gameName = gameName;
     }
 
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
     public Game(ChessGameImpl game, String whiteUsername, String blackUsername, String gameName) {
         this.game = game;
         this.whiteUsername = whiteUsername;
@@ -63,6 +68,7 @@ public class Game {
     public Game(String gameName) {
         game = new ChessGameImpl();
         this.gameName = gameName;
+        this.gameOver = false;
     }
 
     public String getGameName() {
@@ -104,11 +110,16 @@ public class Game {
         return gameID == game.gameID;
     }
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
     @Override
     public String toString() {
         return gameName + ":\n" +
                 "\tWhite Player: " + (whiteUsername == null ? "not taken" : whiteUsername) + '\n' +
-                "\tBlack Player: " + (blackUsername == null ? "not taken" : blackUsername) + '\n';
+                "\tBlack Player: " + (blackUsername == null ? "not taken" : blackUsername) + '\n' +
+                (gameOver ? "This game is over and cannot be played further\n" : "");
     }
 
     @Override
