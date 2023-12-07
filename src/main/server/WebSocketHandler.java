@@ -28,6 +28,7 @@ import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.HashMap;
@@ -79,6 +80,7 @@ public class WebSocketHandler extends Endpoint {
     private void joinPlayer(Session session, JoinPlayer command) throws IOException, DataAccessException {
         try {
             checkAuth(command.getGameID(), command.getAuthString());
+            checkValidGameID(command.getGameID());
             checkTeamNotTaken(command.getGameID(), command.getPlayerColor(), command.getAuthString());
 
             int gameID = command.getGameID();
@@ -95,6 +97,7 @@ public class WebSocketHandler extends Endpoint {
     private void joinObserver(Session session, JoinObserver command) throws IOException {
         try {
             checkAuth(command.getGameID(), command.getAuthString());
+            checkValidGameID(command.getGameID());
 
             int gameID = command.getGameID();
             String authString = command.getAuthString();
@@ -118,22 +121,39 @@ public class WebSocketHandler extends Endpoint {
     }
 
     private void checkAuth(int gameID, String token) throws DataAccessException {
-        authDAO.findToken(new AuthToken(null, token));
+        AuthToken foundToken = authDAO.findToken(new AuthToken(null, token));
+        if (foundToken == null) {
+            throw new DataAccessException("Error: authToken not valid");
+        }
+    }
+
+    private void checkValidGameID(int gameID) throws DataAccessException {
+        Game foundGame = gameDAO.findGame(gameID);
+        if (foundGame == null) {
+            throw new DataAccessException("Error: game not found");
+        }
     }
 
     private void checkTeamNotTaken(int gameID, ChessGame.TeamColor teamColor, String token) throws DataAccessException {
         Game foundGame = gameDAO.findGame(gameID);
-        if (teamColor.equals(ChessGame.TeamColor.BLACK) && foundGame.getBlackUsername() != null) {
-            AuthToken foundToken = authDAO.findToken(new AuthToken(null, token));
-            if (!foundToken.getUsername().equals(foundGame.getBlackUsername())) {
-                System.out.println("Black team taken");
-                throw new DataAccessException("Error: team already taken");
+        System.out.println("In checkTeamNotTaken, found game:\n" + foundGame);
+        if (teamColor.equals(ChessGame.TeamColor.BLACK)) {
+            if (foundGame.getBlackUsername() != null) {
+                AuthToken foundToken = authDAO.findToken(new AuthToken(null, token));
+                if (!foundToken.getUsername().equals(foundGame.getBlackUsername())) {
+                    throw new DataAccessException("Error: team already taken");
+                }
+            } else {
+                throw new DataAccessException("Error: Tried to join empty team");
             }
-        } else if (teamColor.equals(ChessGame.TeamColor.WHITE) && foundGame.getWhiteUsername() != null) {
-            AuthToken foundToken = authDAO.findToken(new AuthToken(null, token));
-            if (!foundToken.getUsername().equals(foundGame.getWhiteUsername())) {
-                System.out.println("White team taken");
-                throw new DataAccessException("Error: team already taken");
+        } else if (teamColor.equals(ChessGame.TeamColor.WHITE)) {
+            if (foundGame.getWhiteUsername() != null) {
+                AuthToken foundToken = authDAO.findToken(new AuthToken(null, token));
+                if (!foundToken.getUsername().equals(foundGame.getWhiteUsername())) {
+                    throw new DataAccessException("Error: team already taken");
+                }
+            } else {
+                throw new DataAccessException("Error: Tried to join empty team");
             }
         }
     }
@@ -153,7 +173,11 @@ public class WebSocketHandler extends Endpoint {
 
     private void makeMove(Session session, MakeMove command) throws DataAccessException, IOException {
         try {
-            ChessGameImpl updatedGame = gameDAO.updateGame(command.getGameID(), command.getChessMove());
+            Game foundGame = gameDAO.findGame(command.getGameID());
+            ChessGame.TeamColor moveColor = foundGame.getGame().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor();
+            checkCorrectUsername(moveColor, command.getAuthString(), foundGame);
+
+            ChessGameImpl updatedGame = gameDAO.updateGame(command.getGameID(), command.getMove());
 
             LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, updatedGame);
             sendMessage(command.getGameID(), objectToJson(loadGame), command.getAuthString());
@@ -167,8 +191,17 @@ public class WebSocketHandler extends Endpoint {
         }
     }
 
+    private void checkCorrectUsername(ChessGame.TeamColor moveColor, String authString, Game game) throws DataAccessException, InvalidMoveException {
+        AuthToken userToken = authDAO.findToken(new AuthToken(null, authString));
+        String username = userToken.getUsername();
+        if (moveColor.equals(ChessGame.TeamColor.BLACK) && !game.getBlackUsername().equals(username)) {
+            throw new InvalidMoveException("Error: You cannot move for the other team");
+        } else if (moveColor.equals(ChessGame.TeamColor.WHITE) && !game.getWhiteUsername().equals(username)) {
+            throw new InvalidMoveException("Error: You cannot move for the other team");
+        }
+    }
+
     private UserGameCommand getCommand(String message) {
-        System.out.println("in Handler usercommand: " + message);
         UserGameCommand command = (UserGameCommand) jsonToObject(UserGameCommand.class, message);
         Class desiredClass = getDesiredClass(command);
         return (UserGameCommand) jsonToObject(desiredClass, message);

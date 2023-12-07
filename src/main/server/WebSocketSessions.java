@@ -58,7 +58,6 @@ public class WebSocketSessions {
             }
         }
         sessionMap.get(foundID).remove(foundToken);
-        System.out.println("sessions after closed connection:\n" + this);
     }
 
     public HashMap<String, Session> getSessionsForGame(int gameID) {
