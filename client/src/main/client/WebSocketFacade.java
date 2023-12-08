@@ -4,7 +4,6 @@ import chess.ChessBoardImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import models.ChessBoardAdapter;
-import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;

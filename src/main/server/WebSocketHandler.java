@@ -1,10 +1,6 @@
 package server;
 
-import chess.ChessBoardImpl;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessGameImpl;
-import chess.InvalidMoveException;
+import chess.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dao.AuthDAO;
@@ -25,7 +21,6 @@ import webSocketMessages.userCommands.*;
 
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.HashMap;
@@ -186,8 +181,7 @@ public class WebSocketHandler extends Endpoint {
             broadcastMessage(command.getGameID(), objectToJson(notification), command.getAuthString());
 
             checkIfInCheck(foundGame, moveColor, updatedGame, command.getGameID(), command.getAuthString());
-        }
-        catch (InvalidMoveException e) {
+        } catch (InvalidMoveException e) {
             sendErrorMessage(command.getGameID(), command.getAuthString(), e.getMessage());
         }
     }

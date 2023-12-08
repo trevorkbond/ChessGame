@@ -1,6 +1,5 @@
 package models;
 
-import chess.ChessBoard;
 import chess.ChessMove;
 import chess.ChessMoveImpl;
 import com.google.gson.JsonDeserializationContext;

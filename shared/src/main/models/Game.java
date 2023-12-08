@@ -49,10 +49,6 @@ public class Game {
         this.gameName = gameName;
     }
 
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
-
     public Game(ChessGameImpl game, String whiteUsername, String blackUsername, String gameName) {
         this.game = game;
         this.whiteUsername = whiteUsername;
@@ -112,6 +108,10 @@ public class Game {
 
     public boolean isGameOver() {
         return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 
     @Override

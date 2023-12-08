@@ -1,7 +1,6 @@
 package client;
 
 import chess.ChessGame;
-import chess.ChessMove;
 import chess.ChessMoveImpl;
 import chess.ChessPositionImpl;
 import models.Game;
@@ -81,6 +80,31 @@ public class ChessClient {
         return authToken;
     }
 
+    public static ChessMoveImpl getMoveFromCommand(String start, String end) throws InvalidResponseException {
+        if (start.length() > 2 || end.length() > 2) {
+            throw new InvalidResponseException("Invalid move. Please try again");
+        }
+
+        ChessPositionImpl startPosition = getMoveHelper(start);
+        ChessPositionImpl endPosition = getMoveHelper(end);
+
+        //TODO: handle pawn promotion
+        return new ChessMoveImpl(startPosition, endPosition, null);
+    }
+
+    public static ChessPositionImpl getMoveHelper(String moveCommand) throws InvalidResponseException {
+        int startColumn = charToColumnIndex(moveCommand.charAt(0));
+        int startRow = Integer.parseInt(String.valueOf(moveCommand.charAt(1)));
+        if (startRow < 1 || startRow > 8 || startColumn < 1 || startColumn > 8) {
+            throw new InvalidResponseException("Invalid move. Please try again");
+        }
+        return new ChessPositionImpl(startRow, startColumn);
+    }
+
+    public static int charToColumnIndex(char column) {
+        return column - 'a' + 1;
+    }
+
     public ClientState getState() {
         return state;
     }
@@ -102,6 +126,8 @@ public class ChessClient {
             case "move" -> move(params);
             case "resign" -> resign();
             case "leave" -> leave();
+            case "redraw" -> redraw();
+            case "highlight" -> highlight(params);
             default -> throw new IllegalStateException("Unexpected value: " + command);
         };
     }
@@ -194,6 +220,7 @@ public class ChessClient {
         JoinObserver socketMessage = new JoinObserver(authToken, gameID, clientUsername);
         webSocketFacade = new WebSocketFacade(this);
         webSocketFacade.joinObserver(socketMessage);
+        setState(ClientState.IN_GAME);
         return String.format("You are observing game with ID %d", joinGameID);
     }
 
@@ -212,38 +239,32 @@ public class ChessClient {
         return "quit";
     }
 
+    public String redraw() {
+        ChessGame.TeamColor drawColor = null;
+        if (teamColor == null) {
+            drawColor = ChessGame.TeamColor.WHITE;
+        } else {
+            drawColor = teamColor;
+        }
+        return "redraw " + String.valueOf(drawColor);
+    }
+
+    public String highlight(ArrayList<String> params) {
+        ChessGame.TeamColor drawColor = null;
+        if (teamColor == null) {
+            drawColor = ChessGame.TeamColor.WHITE;
+        } else {
+            drawColor = teamColor;
+        }
+        return "highlight " + String.valueOf(drawColor) + " " + params.get(0);
+    }
+
     public String move(ArrayList<String> params) throws InvalidResponseException, IOException {
         ChessMoveImpl chessMove = getMoveFromCommand(params.get(0), params.get(1));
         MakeMove moveRequest = new MakeMove(authToken, gameID, chessMove, clientUsername, UserGameCommand.CommandType.MAKE_MOVE);
 
         webSocketFacade.makeMove(moveRequest);
         return "Attempting to make given move";
-    }
-
-    private ChessMoveImpl getMoveFromCommand(String start, String end) throws InvalidResponseException {
-        if (start.length() > 2 || end.length() > 2) {
-            throw new InvalidResponseException("Invalid move. Please try again");
-        }
-        int startColumn = charToColumnIndex(start.charAt(0));
-        int startRow = Integer.parseInt(String.valueOf(start.charAt(1)));
-        if (startRow < 1 || startRow > 8 || startColumn < 1 || startColumn > 8) {
-            throw new InvalidResponseException("Invalid move. Please try again");
-        }
-        ChessPositionImpl startPosition = new ChessPositionImpl(startRow, startColumn);
-
-        int endColumn = charToColumnIndex(end.charAt(0));
-        int endRow = Integer.parseInt(String.valueOf(end.charAt(1)));
-        if (endRow < 1 || endRow > 8 || endColumn < 1 || endColumn > 8) {
-            throw new InvalidResponseException("Invalid move. Please try again");
-        }
-        ChessPositionImpl endPosition = new ChessPositionImpl(endRow, endColumn);
-
-        //TODO: handle pawn promotion
-        return new ChessMoveImpl(startPosition, endPosition, null);
-    }
-
-    private int charToColumnIndex(char column) {
-        return column - 'a' + 1;
     }
 
     public String clear() throws IOException {
